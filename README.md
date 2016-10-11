@@ -110,3 +110,60 @@ public static class Holder extends ButterKnifeViewHolder {
     }
 }
 ```
+
+## Handle item status and save changes into the model
+It's possible to alo change the model associated to an item directly from the ViewHolder. This is useful for example to notify status changes and to persist them. Imagine we need to persist a toggle button status when the user presses on it. How do we do that? Let's see an example:
+```java
+public class TextWithButtonItem extends AdapterItem<TextWithButtonItem.Holder> {
+
+    private static final String PARAM_PRESSED = "pressed";
+
+    private String text;
+    private boolean pressed = false;
+
+    public TextWithButtonItem(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public void onItemChanged(Bundle dataChanged) {
+        pressed = dataChanged.getBoolean(PARAM_PRESSED, false);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.item_text_with_button;
+    }
+
+    @Override
+    protected void bind(TextWithButtonItem.Holder holder) {
+        holder.textView.setText(text);
+        holder.button.setChecked(pressed);
+    }
+
+    public static class Holder extends ButterKnifeViewHolder {
+
+        @BindView(R.id.textView)
+        TextView textView;
+
+        @BindView(R.id.toggleButton)
+        ToggleButton button;
+
+        public Holder(View itemView, RecyclerAdapterNotifier adapter) {
+            super(itemView, adapter);
+        }
+
+        @OnClick(R.id.toggleButton)
+        public void onToggleClick() {
+            Bundle data = new Bundle();
+            data.putBoolean(PARAM_PRESSED, button.isChecked());
+            getAdapter().notifyItemChanged(this, data);
+        }
+    }
+}
+```
+In the `Holder` we have added a click listener to the `ToggleButton` (in this example with ButterKnife, but you can do that also without it). When the user presses the toggle button, the `RecyclerAdapter` gets notified that something has changed in a particular position:
+```java
+getAdapter().notifyItemChanged(this, data);
+```
+Then, the adapter calls the `onItemChanged` method of the item corresponding to the position of the ViewHolder, and the item has a chance to update its internal data or to do something else. After that, the `RecyclerAdapter` updates the corresponding item by calling the `bind` method. In this way you can safely handle the internal state of each item.
