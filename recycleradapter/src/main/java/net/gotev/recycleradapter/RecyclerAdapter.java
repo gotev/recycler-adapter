@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- * Helper class to easily work with Android's {@link android.support.v7.widget.RecyclerView.Adapter}.
+ * Helper class to easily work with Android's RecyclerView.Adapter.
  * @author Aleksandar Gotev
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHolder>
