@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RecyclerAdapterDemo</string>
+    <string name="remove_all_items_of_a_kind">Remove all example1</string>
+    <string name="remove_last_of_a_kind">Remove last example2</string>
+</resources>
