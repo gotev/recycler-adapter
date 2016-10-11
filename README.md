@@ -62,7 +62,7 @@ public class ExampleItem extends AdapterItem<ExampleItem.Holder> {
 }
 ```
 
-### 3. Instantiate RecyclerView and add items
+### 4. Instantiate RecyclerView and add items
 In your Activity (`onCreate` method) or Fragment (`onCreateView` method):
 ```java
 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
