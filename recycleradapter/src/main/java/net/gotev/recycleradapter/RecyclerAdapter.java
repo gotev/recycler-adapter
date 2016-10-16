@@ -2,6 +2,7 @@ package net.gotev.recycleradapter;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
@@ -69,6 +70,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
             types.put(viewId, item);
         }
         items.add(item);
+        notifyItemInserted(items.size() - 1);
         return this;
     }
 
@@ -127,13 +129,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * @param clazz class of the items to be removed
      */
     public void removeAllItemsWithClass(Class<? extends AdapterItem> clazz) {
+        removeAllItemsWithClass(clazz, new RemoveListener() {
+            @Override
+            public boolean hasToBeRemoved(AdapterItem item) {
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Removes all the items with a certain class from this adapter and automatically notifies changes.
+     * @param clazz class of the items to be removed
+     * @param listener listener invoked for every item that is found. If the callback returns true,
+     *                 the item will be removed. If it returns false, the item will not be removed
+     */
+    public void removeAllItemsWithClass(Class<? extends AdapterItem> clazz, RemoveListener listener) {
+        if (clazz == null)
+            throw new IllegalArgumentException("The class of the items can't be null!");
+
+        if (listener == null)
+            throw new IllegalArgumentException("RemoveListener can't be null!");
+
         if (items.isEmpty())
             return;
+
+        boolean atLeastOneElementHasBeenRemoved = false;
 
         Iterator<AdapterItem> iterator = items.iterator();
         while (iterator.hasNext()) {
             AdapterItem item = iterator.next();
-            if (item.getClass().getName().equals(clazz.getName())) {
+            if (item.getClass().getName().equals(clazz.getName()) && listener.hasToBeRemoved(item)) {
+                atLeastOneElementHasBeenRemoved = true;
                 iterator.remove();
             }
         }
@@ -144,7 +170,30 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
             types.remove(id);
         }
 
-        notifyDataSetChanged();
+        if (atLeastOneElementHasBeenRemoved)
+            notifyDataSetChanged();
+    }
+
+    /**
+     * Gets the last item with a given class, together with its position.
+     * @param clazz class of the item to search
+     * @return Pair with position and AdapterItem or null if the adapter is empty or no items
+     * exists with the given class
+     */
+    public Pair<Integer, AdapterItem> getLastItemWithClass(Class<? extends AdapterItem> clazz) {
+        if (clazz == null)
+            throw new IllegalArgumentException("The class of the items can't be null!");
+
+        if (items.isEmpty())
+            return null;
+
+        for (int i = items.size() - 1; i >= 0; i--) {
+            if (items.get(i).getClass().getName().equals(clazz.getName())) {
+                return new Pair<>(i, items.get(i));
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -175,5 +224,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
         items.remove(position);
         notifyItemRemoved(position);
+    }
+
+    /**
+     * Gets an item at a given position.
+     * @param position item position
+     * @return {@link AdapterItem} or null if the adapter is empty or the position is out of bounds
+     */
+    public AdapterItem getItemAtPosition(int position) {
+        if (items.isEmpty() || position < 0 || position >= items.size())
+            return null;
+
+        return items.get(position);
     }
 }
