@@ -112,7 +112,7 @@ public static class Holder extends ButterKnifeViewHolder {
 ```
 
 ## Handle item status and save changes into the model
-It's possible to alo change the model associated to an item directly from the ViewHolder. This is useful for example to notify status changes and to persist them. Imagine we need to persist a toggle button status when the user presses on it. How do we do that? Let's see an example:
+It's possible to also change the model associated to an item directly from the ViewHolder. This is useful for example to notify status changes and to persist them. Imagine we need to persist a toggle button status when the user presses on it. How do we do that? Let's see an example:
 ```java
 public class TextWithButtonItem extends AdapterItem<TextWithButtonItem.Holder> {
 
