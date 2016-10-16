@@ -237,4 +237,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
         return items.get(position);
     }
+
+    /**
+     * Clears all the elements in the adapter.
+     */
+    public void clear() {
+        items.clear();
+        notifyDataSetChanged();
+    }
 }
