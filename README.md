@@ -1,6 +1,6 @@
 ## Basic usage
 ### 1. Declare RecyclerView
-In your layout resource file (e.g. activity_main.xml) place the following:
+In your layout resource file (e.g. `activity_main.xml`) place the following:
 ```xml
 <android.support.v7.widget.RecyclerView
     android:id="@+id/recycler_view"
@@ -75,7 +75,7 @@ adapter.add(new ExampleItem("test"));
 ```
 
 ## Using ButterKnife
-You can safely use ButterKnife in your ViewHolders. Example:
+You can safely use [ButterKnife](https://github.com/JakeWharton/butterknife) in your ViewHolders. Example:
 ```java
 public static class Holder extends RecyclerAdapterViewHolder {
 
