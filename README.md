@@ -1,6 +1,23 @@
-## Basic usage
-### 1. Declare RecyclerView
-In your layout resource file (e.g. `activity_main.xml`) place the following:
+# Recycler Adapter [![Build Status](https://travis-ci.org/gotev/recycler-adapter.svg?branch=master)](https://travis-ci.org/gotev/recycler-adapter)
+Makes the use of RecyclerView easier, modular and less error-prone.
+
+Standard `RecyclerView.Adapter` is tedious to work with and often makes you write spaghetti-code or to concentrate all your items logic into the adapter itself, which is really bad. This library was born to be able to have the following for each element in a recycler view:
+
+* an xml layout file, in which to define the item's view
+* a model file (which can be a POJO)
+* a view model file (called `Item`), in which to specify the binding between the model and the view and in which to handle user interactions with the item.
+
+In this way every item of the recycler view has its own set of files, resulting in a cleaner code base.
+
+## Setup
+In your gradle dependencies add:
+```groovy
+compile 'net.gotev:recycleradapter:1.0'
+```
+
+## Basic usage tutorial
+### 1. Declare the RecyclerView
+In your layout resource file or where you want the `RecyclerView` (e.g. `activity_main.xml`) add the following:
 ```xml
 <android.support.v7.widget.RecyclerView
     android:id="@+id/recycler_view"
@@ -73,6 +90,15 @@ recyclerView.setAdapter(adapter);
 //add items
 adapter.add(new ExampleItem("test"));
 ```
+
+## RecyclerView with different kind of items
+You can have more than one kind of item in your `RecyclerView`. Just implement a different `AdapterItem` for every type you want to support, and then just add it into the adapter:
+```java
+adapter.add(new ExampleItem("example item"));
+adapter.add(new TextWithButtonItem("text with button"));
+```
+
+Checkout the example app provided to get a real example in action.
 
 ## Using ButterKnife
 You can safely use [ButterKnife](https://github.com/JakeWharton/butterknife) in your ViewHolders. Example:
