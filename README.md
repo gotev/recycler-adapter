@@ -10,7 +10,7 @@ In your layout resource file (e.g. `activity_main.xml`) place the following:
 ```
 
 ### 2. Create your item layout
-Create your item layout. For example:
+Create your item layout (e.g. `item_example.xml`). For example:
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
