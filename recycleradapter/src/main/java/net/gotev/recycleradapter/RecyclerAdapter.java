@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Helper class to easily work with Android's RecyclerView.Adapter.
@@ -192,14 +192,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         if (items.isEmpty())
             return;
 
-        boolean atLeastOneElementHasBeenRemoved = false;
-
-        Iterator<AdapterItem> iterator = items.iterator();
+        ListIterator<AdapterItem> iterator = items.listIterator();
+        int index;
         while (iterator.hasNext()) {
+            index = iterator.nextIndex();
             AdapterItem item = iterator.next();
             if (item.getClass().getName().equals(clazz.getName()) && listener.hasToBeRemoved(item)) {
-                atLeastOneElementHasBeenRemoved = true;
                 iterator.remove();
+                notifyItemRemoved(index);
             }
         }
 
@@ -208,9 +208,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
             typeIds.remove(clazz.getName());
             types.remove(id);
         }
-
-        if (atLeastOneElementHasBeenRemoved)
-            notifyDataSetChanged();
     }
 
     /**
@@ -281,8 +278,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * Clears all the elements in the adapter.
      */
     public void clear() {
+        int itemsSize = items.size();
         items.clear();
-        notifyDataSetChanged();
+        if (itemsSize > 0) {
+            notifyItemRangeRemoved(0, itemsSize);
+        }
     }
 
     private boolean adapterIsEmptyAndEmptyItemIsDefined() {
