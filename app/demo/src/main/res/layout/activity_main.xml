@@ -18,7 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/remove_last_item_of_a_kind" />
+        android:layout_above="@+id/add_item" />
 
     <Button
         android:text="@string/remove_all_items_of_a_kind"
@@ -34,6 +34,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/remove_last_item_of_a_kind"
         android:layout_above="@+id/remove_all_items_of_a_kind"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_item"
+        android:id="@+id/add_item"
+        android:layout_above="@+id/remove_last_item_of_a_kind"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -2,4 +2,6 @@
     <string name="app_name">RecyclerAdapterDemo</string>
     <string name="remove_all_items_of_a_kind">Remove all example items</string>
     <string name="remove_last_of_a_kind">Remove last text with button item</string>
+    <string name="empty_list">No items in the list</string>
+    <string name="add_item">Add item</string>
 </resources>
