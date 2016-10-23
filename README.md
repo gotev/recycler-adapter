@@ -12,7 +12,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## Setup
 In your gradle dependencies add:
 ```groovy
-compile 'net.gotev:recycleradapter:1.0.3'
+compile 'net.gotev:recycleradapter:1.0.4'
 ```
 
 ## Basic usage tutorial
