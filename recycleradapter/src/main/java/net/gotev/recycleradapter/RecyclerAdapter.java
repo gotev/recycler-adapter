@@ -90,7 +90,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         // first item gets added and an empty item has been configured
         if (items.size() == 1 && emptyItem != null) {
             notifyItemRemoved(0);
-            notifyItemRangeRemoved(0, 1);
         }
         notifyItemInserted(items.size() - 1);
         return this;
