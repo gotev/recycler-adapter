@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import net.gotev.recycleradapter.RecyclerAdapter;
 
 import java.util.Random;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         adapter = new RecyclerAdapter();
+        adapter.setEmptyItem(new EmptyItem(getString(R.string.empty_list)));
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
@@ -54,5 +56,10 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.remove_last_item_of_a_kind)
     public void onRemoveLastItemOfAkind() {
         adapter.removeLastItemWithClass(TextWithButtonItem.class);
+    }
+
+    @OnClick(R.id.add_item)
+    public void onAddItem() {
+        adapter.add(new ExampleItem("added item " + UUID.randomUUID().toString()));
     }
 }

@@ -100,6 +100,16 @@ adapter.add(new TextWithButtonItem("text with button"));
 
 Checkout the example app provided to get a real example in action.
 
+## Empty item
+It's often useful to display something on the screen when the RecyclerView is empty. To do so, simply implement a new `Item` just as you would do with a normal item in the list, then:
+```java
+adapter.setEmptyItem(yourEmptyItem);
+```
+wherever you need it in your code. It doesn't necessarily have to be invoked before
+```java
+recyclerView.setAdapter(adapter);
+```
+
 ## Using ButterKnife
 You can safely use [ButterKnife](https://github.com/JakeWharton/butterknife) in your ViewHolders. Example:
 ```java

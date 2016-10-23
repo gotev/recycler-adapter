@@ -25,6 +25,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     private LinkedHashMap<String, Integer> typeIds;
     private LinkedHashMap<Integer, AdapterItem> types;
     private List<AdapterItem> items;
+    private AdapterItem emptyItem;
+    private int emptyItemId;
 
     /**
      * Applies swipe gesture detection on a RecyclerView items.
@@ -54,6 +56,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         typeIds = new LinkedHashMap<>();
         types = new LinkedHashMap<>();
         items = new ArrayList<>();
+        emptyItem = null;
+    }
+
+    /**
+     * Sets the item to show when the recycler adapter is empty.
+     * @param item item to show when the recycler adapter is empty
+     */
+    public void setEmptyItem(AdapterItem item) {
+        emptyItem = item;
+        emptyItemId = ViewIdGenerator.generateViewId();
+
+        if (items.isEmpty())
+            notifyItemInserted(0);
     }
 
     /**
@@ -70,12 +85,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
             types.put(viewId, item);
         }
         items.add(item);
+
+        // this is necessary to prevent IndexOutOfBoundsException on RecyclerView when the
+        // first item gets added and an empty item has been configured
+        if (items.size() == 1 && emptyItem != null) {
+            notifyItemRemoved(0);
+            notifyItemRangeRemoved(0, 1);
+        }
         notifyItemInserted(items.size() - 1);
         return this;
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (adapterIsEmptyAndEmptyItemIsDefined()) {
+            return emptyItemId;
+        }
+
         AdapterItem item = items.get(position);
         String className = item.getClass().getName();
         return typeIds.get(className);
@@ -84,7 +110,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     @Override
     public RecyclerAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         try {
-            AdapterItem item = types.get(viewType);
+            AdapterItem item;
+
+            if (adapterIsEmptyAndEmptyItemIsDefined() && viewType == emptyItemId) {
+                item = emptyItem;
+            } else {
+                item = types.get(viewType);
+            }
+
             Context ctx = parent.getContext();
             View view = LayoutInflater.from(ctx).inflate(item.getLayoutId(), parent, false);
             return item.getViewHolder(view, this);
@@ -109,11 +142,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     @Override
     @SuppressWarnings("unchecked")
     public void onBindViewHolder(RecyclerAdapterViewHolder holder, int position) {
-        items.get(position).bind(holder);
+        if (adapterIsEmptyAndEmptyItemIsDefined()) {
+            emptyItem.bind(holder);
+        } else {
+            items.get(position).bind(holder);
+        }
     }
 
     @Override
     public int getItemCount() {
+        if (adapterIsEmptyAndEmptyItemIsDefined())
+            return 1;
+
         return items.size();
     }
 
@@ -244,5 +284,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     public void clear() {
         items.clear();
         notifyDataSetChanged();
+    }
+
+    private boolean adapterIsEmptyAndEmptyItemIsDefined() {
+        return items.isEmpty() && emptyItem != null;
     }
 }
