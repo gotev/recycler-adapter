@@ -79,20 +79,47 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     public RecyclerAdapter add(AdapterItem item) {
         String className = item.getClass().getName();
 
+        registerItemClass(item, className);
+        items.add(item);
+        removeEmptyItemIfItHasBeenConfigured();
+
+        notifyItemInserted(items.size() - 1);
+        return this;
+    }
+
+    /**
+     * Adds a new item to this adapter
+     * @param item item to add
+     * @param position position at which to add the element. The item previously at
+     *                 (position) will be at (position + 1) and the same for all the subsequent
+     *                 elements
+     * @return {@link RecyclerAdapter}
+     */
+    public RecyclerAdapter addAtPosition(AdapterItem item, int position) {
+        String className = item.getClass().getName();
+
+        registerItemClass(item, className);
+        items.add(position, item);
+        removeEmptyItemIfItHasBeenConfigured();
+
+        notifyItemInserted(position);
+        return this;
+    }
+
+    private void registerItemClass(AdapterItem item, String className) {
         if (!typeIds.containsKey(className)) {
             int viewId = ViewIdGenerator.generateViewId();
             typeIds.put(className, viewId);
             types.put(viewId, item);
         }
-        items.add(item);
+    }
 
+    private void removeEmptyItemIfItHasBeenConfigured() {
         // this is necessary to prevent IndexOutOfBoundsException on RecyclerView when the
         // first item gets added and an empty item has been configured
         if (items.size() == 1 && emptyItem != null) {
             notifyItemRemoved(0);
         }
-        notifyItemInserted(items.size() - 1);
-        return this;
     }
 
     @Override
