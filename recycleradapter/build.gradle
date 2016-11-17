@@ -10,12 +10,15 @@ def projectGroup = "net.gotev"
 group = projectGroup
 version = "1.0.5"
 
+def sdkVersion = 24;
+def toolsVersion = "24.0.3"
+
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    compileSdkVersion sdkVersion
+    buildToolsVersion toolsVersion
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion sdkVersion
         versionCode 6
         versionName version
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
