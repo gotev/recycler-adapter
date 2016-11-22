@@ -186,6 +186,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     @Override
     public void notifyItemChanged(RecyclerAdapterViewHolder holder, Bundle dataChanged) {
         int position = holder.getAdapterPosition();
+
+        if (position < 0 || position >= items.size())
+            return;
+
         items.get(position).onItemChanged(dataChanged);
         notifyItemChanged(position);
     }
