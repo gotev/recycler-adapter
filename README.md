@@ -208,4 +208,12 @@ In the `Holder` we have added a click listener to the `ToggleButton` (in this ex
 ```java
 getAdapter().notifyItemChanged(this, data);
 ```
-Then, the adapter calls the `onItemChanged` method of the item corresponding to the position of the ViewHolder, and the item has a chance to update its internal data or to do something else. After that, the `RecyclerAdapter` updates the corresponding item by calling the `bind` method. In this way you can safely handle the internal state of each item.
+Then, `RecyclerAdapter` calls the `onItemChanged` method of the item which invoked `notifyItemChanged`. In this method you can update the item's internal state. When `onItemChanged` method returns, `RecyclerAdapter` invokes the `RecyclerView.Adapter` `notifyItemChanged` method and as a result, the `bind` method gets called, so your item will be updated. In this way you can safely handle the internal state of each item.
+
+So, to recap, the lifecycle of the item status change is:
+```java
+getAdapter().notifyItemChanged(this, data);
+onItemChanged(Bundle dataChanged);
+//RecyclerAdapter calls notifyItemChanged
+bind(Holder holder)
+```
