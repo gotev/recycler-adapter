@@ -11,9 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
+
+import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
+import static android.support.v7.widget.helper.ItemTouchHelper.END;
+import static android.support.v7.widget.helper.ItemTouchHelper.START;
+import static android.support.v7.widget.helper.ItemTouchHelper.UP;
 
 /**
  * Helper class to easily work with Android's RecyclerView.Adapter.
@@ -318,5 +324,36 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     private boolean adapterIsEmptyAndEmptyItemIsDefined() {
         return items.isEmpty() && emptyItem != null;
+    }
+
+    /**
+     * Enables reordering of the list through drap and drop.
+     * @param recyclerView recycler view on which to apply the drag and drop
+     */
+    public void enableDragDrop(RecyclerView recyclerView) {
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, DOWN | UP | START | END);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                int sourcePosition = viewHolder.getAdapterPosition();
+                int targetPosition = target.getAdapterPosition();
+
+                Collections.swap(items, sourcePosition, targetPosition);
+                notifyItemMoved(sourcePosition, targetPosition);
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                //Do nothing here
+            }
+        });
+
+        touchHelper.attachToRecyclerView(recyclerView);
     }
 }

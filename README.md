@@ -12,7 +12,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## Setup
 In your gradle dependencies add:
 ```groovy
-compile 'net.gotev:recycleradapter:1.0.6'
+compile 'net.gotev:recycleradapter:1.1'
 ```
 
 ## Basic usage tutorial
@@ -89,6 +89,12 @@ recyclerView.setAdapter(adapter);
 
 //add items
 adapter.add(new ExampleItem("test"));
+```
+
+## Reorder items with drag & drop
+To be able to change the items order with drag & drop, just add this line:
+```java
+adapter.enableDragDrop(recyclerView);
 ```
 
 ## RecyclerView with different kind of items
