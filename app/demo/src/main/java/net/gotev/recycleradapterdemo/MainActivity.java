@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setEmptyItem(new EmptyItem(getString(R.string.empty_list)));
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
+        adapter.enableDragDrop(recyclerView);
 
         for (int i = 0; i < getRandom().nextInt(200) + 50; i++) {
             if (i % 2 == 0)
