@@ -1,5 +1,6 @@
 package net.gotev.recycleradapter;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -19,12 +20,14 @@ public abstract class RecyclerAdapterViewHolder extends RecyclerView.ViewHolder 
     }
 
     /**
-     * Gets the adapter in which this ViewHolder is contained.
-     * Used to notify the adapter that something has changed in the data model.
-     * @return {@link RecyclerAdapterNotifier} instance or null if the parent adapter has
-     * already been disposed
+     * Sends an event to the adapter.
+     * @param data additional event data
      */
-    protected RecyclerAdapterNotifier getAdapter() {
-        return adapter.get();
+    protected final void sendEvent(Bundle data) {
+        this.adapter.get().sendEvent(this, data);
+    }
+
+    protected final View findViewById(int id) {
+        return itemView.findViewById(id);
     }
 }

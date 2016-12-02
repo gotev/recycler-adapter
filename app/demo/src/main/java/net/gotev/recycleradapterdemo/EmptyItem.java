@@ -1,6 +1,5 @@
 package net.gotev.recycleradapterdemo;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,11 +18,6 @@ public class EmptyItem extends AdapterItem<EmptyItem.Holder> {
 
     public EmptyItem(String text) {
         this.text = text;
-    }
-
-    @Override
-    public void onItemChanged(Bundle dataChanged) {
-
     }
 
     @Override

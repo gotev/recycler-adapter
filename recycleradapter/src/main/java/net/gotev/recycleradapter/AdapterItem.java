@@ -14,10 +14,16 @@ import java.lang.reflect.ParameterizedType;
 public abstract class AdapterItem<T extends RecyclerAdapterViewHolder> {
 
     /**
-     * Gets called by {@link RecyclerAdapter#notifyItemChanged(RecyclerAdapterViewHolder, Bundle)}
-     * @param dataChanged bunde containing the model data that has been changed
+     * Gets called by {@link RecyclerAdapter#sendEvent(RecyclerAdapterViewHolder, Bundle)}
+     * @param position position at which the event happened
+     * @param data additional click data
+     * @return true if the view must be rebinded after this method returns (e.g. you updated some
+     *         data in the model and you want to display it), otherwise false (e.g. if you are
+     *         simply handling a click which does not involve data changes)
      */
-    public abstract void onItemChanged(Bundle dataChanged);
+    public boolean onEvent(int position, Bundle data) {
+        return false;
+    }
 
     /**
      * Creates a new ViewHolder instance, by inferring the ViewHolder type from the generic passed
@@ -31,7 +37,7 @@ public abstract class AdapterItem<T extends RecyclerAdapterViewHolder> {
      * @throws IllegalAccessException if a method, field or class has been declared with insufficient access control modifiers
      */
     @SuppressWarnings("unchecked")
-    final T getViewHolder(View view, RecyclerAdapterNotifier adapter)
+    T getViewHolder(View view, RecyclerAdapterNotifier adapter)
             throws NoSuchMethodException, InstantiationException,
             InvocationTargetException, IllegalAccessException {
 
