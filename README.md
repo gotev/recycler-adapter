@@ -1,4 +1,4 @@
-# Recycler Adapter [![Build Status](https://travis-ci.org/gotev/recycler-adapter.svg?branch=master)](https://travis-ci.org/gotev/recycler-adapter)
+# Recycler Adapter [![Build Status](https://travis-ci.org/gotev/recycler-adapter.svg?branch=master)](https://travis-ci.org/gotev/recycler-adapter) <a href="http://www.methodscount.com/?lib=net.gotev%3Arecycleradapter%3A1.2.1"><img src="https://img.shields.io/badge/Methods and size-core: 109 | deps: 9347 | 12 KB-e91e63.svg"/></a>
 Makes the use of RecyclerView easier, modular and less error-prone.
 
 Standard `RecyclerView.Adapter` is tedious to work with, because you have to write repetitive boilerplate and spaghetti code and to concentrate all your items view logic and binding into the adapter itself, which is really bad. This library was born to be able to have the following for each element in a recycler view:
@@ -11,7 +11,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## Setup
 In your gradle dependencies add:
 ```groovy
-compile 'net.gotev:recycleradapter:1.2'
+compile 'net.gotev:recycleradapter:1.2.1'
 ```
 
 ## Basic usage tutorial
