@@ -8,5 +8,5 @@ import android.os.Bundle;
  * @author Aleksandar Gotev
  */
 public interface RecyclerAdapterNotifier {
-    void notifyItemChanged(RecyclerAdapterViewHolder holder, Bundle dataChanged);
+    void sendEvent(RecyclerAdapterViewHolder holder, Bundle data);
 }

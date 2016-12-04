@@ -27,8 +27,9 @@ public class TextWithButtonItem extends AdapterItem<TextWithButtonItem.Holder> {
     }
 
     @Override
-    public void onItemChanged(Bundle dataChanged) {
-        pressed = dataChanged.getBoolean(PARAM_PRESSED, false);
+    public boolean onEvent(int position, Bundle data) {
+        pressed = data.getBoolean(PARAM_PRESSED, false);
+        return true;
     }
 
     @Override
@@ -58,7 +59,7 @@ public class TextWithButtonItem extends AdapterItem<TextWithButtonItem.Holder> {
         public void onToggleClick() {
             Bundle data = new Bundle();
             data.putBoolean(PARAM_PRESSED, button.isChecked());
-            getAdapter().notifyItemChanged(this, data);
+            sendEvent(data);
         }
     }
 }

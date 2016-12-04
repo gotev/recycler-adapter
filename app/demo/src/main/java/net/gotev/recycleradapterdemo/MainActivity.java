@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < getRandom().nextInt(200) + 50; i++) {
             if (i % 2 == 0)
-                adapter.add(new ExampleItem("example item " + i));
+                adapter.add(new ExampleItem(this, "example item " + i));
             else
                 adapter.add(new TextWithButtonItem("text with button " + i));
         }
@@ -61,6 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_item)
     public void onAddItem() {
-        adapter.add(new ExampleItem("added item " + UUID.randomUUID().toString()));
+        adapter.add(new ExampleItem(this, "added item " + UUID.randomUUID().toString()));
     }
 }
