@@ -10,14 +10,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="net.gotev.recycleradapterdemo.MainActivity">
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="search"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:id="@+id/search" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/search"
         android:layout_above="@+id/add_item" />
 
     <Button

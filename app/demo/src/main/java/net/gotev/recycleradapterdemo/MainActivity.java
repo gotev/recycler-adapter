@@ -13,6 +13,7 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,5 +63,10 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.add_item)
     public void onAddItem() {
         adapter.add(new ExampleItem(this, "added item " + UUID.randomUUID().toString()));
+    }
+
+    @OnTextChanged(R.id.search)
+    public void onSearchTextChanged(CharSequence search) {
+        adapter.filter(search.toString());
     }
 }

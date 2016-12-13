@@ -26,6 +26,15 @@ public abstract class AdapterItem<T extends RecyclerAdapterViewHolder> {
     }
 
     /**
+     * Gets called for every item when the {@link RecyclerAdapter#filter(String)} method gets called.
+     * @param searchTerm term to search for
+     * @return true if the items matches the search term, false otherwise
+     */
+    public boolean onFilter(final String searchTerm) {
+        return true;
+    }
+
+    /**
      * Creates a new ViewHolder instance, by inferring the ViewHolder type from the generic passed
      * to this class
      * @param view View to be passed to the ViewHolder

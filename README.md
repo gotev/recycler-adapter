@@ -8,13 +8,25 @@ Standard `RecyclerView.Adapter` is tedious to work with, because you have to wri
 
 In this way every item of the recycler view has its own set of files, resulting in a cleaner and easier to maintain code base.
 
-## Setup
+# Index
+* [Setup](#setup)
+* [Basic usage tutorial](#basicTutorial)
+* [Reorder items with drag & drop](#dragDrop)
+* [Adding different kind of items](#differentItems)
+* [Empty item](#emptyItem)
+* [Filter items](#filterItems)
+* [Using ButterKnife](#butterKnife)
+* [Handle clicks](#handleClicks)
+* [Handle item status](#handleItemStatus)
+* [Event lifecycle](#eventLifecycle)
+
+## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-compile 'net.gotev:recycleradapter:1.2.1'
+compile 'net.gotev:recycleradapter:1.3'
 ```
 
-## Basic usage tutorial
+## <a name="basicTutorial"></a>Basic usage tutorial
 ### 1. Declare the RecyclerView
 In your layout resource file or where you want the `RecyclerView` (e.g. `activity_main.xml`) add the following:
 ```xml
@@ -86,13 +98,13 @@ recyclerView.setAdapter(adapter);
 adapter.add(new ExampleItem("test"));
 ```
 
-## Reorder items with drag & drop
+## <a name="dragDrop"></a>Reorder items with drag & drop
 To be able to change the items order with drag & drop, just add this line:
 ```java
 adapter.enableDragDrop(recyclerView);
 ```
 
-## RecyclerView with different kind of items
+## <a name="differentItems"></a>Adding different kind of items
 You can have more than one kind of item in your `RecyclerView`. Just implement a different `AdapterItem` for every type you want to support, and then just add it into the adapter:
 ```java
 adapter.add(new ExampleItem("example item"));
@@ -101,7 +113,7 @@ adapter.add(new TextWithButtonItem("text with button"));
 
 Checkout the example app provided to get a real example in action.
 
-## Empty item
+## <a name="emptyItem"></a>Empty item
 It's often useful to display something on the screen when the RecyclerView is empty. To do so, simply implement a new `Item` just as you would do with a normal item in the list, then:
 ```java
 adapter.setEmptyItem(yourEmptyItem);
@@ -111,7 +123,28 @@ wherever you need it in your code. It doesn't necessarily have to be invoked bef
 recyclerView.setAdapter(adapter);
 ```
 
-## Using ButterKnife
+## <a name="filterItems"></a>Filter items
+If you need to search items in your recycler view, you have to override this method in each one of your items implementation:
+```
+/**
+ * Gets called for every item when the {@link AdapterItem#onFilter(String)}
+ * method gets called.
+ *
+ * @param searchTerm term to search for
+ * @return true if the items matches the search term, false otherwise
+ */
+@Override
+public boolean onFilter(String searchTerm) {
+    return text.contains(searchTerm);
+}
+```
+then, to filter the recycler view, call:
+```java
+adapter.filter("search item");
+```
+and the recycler view will show only the items which matches the search term. To reset the search filter, pass `null` or an empty string.
+
+## <a name="butterKnife"></a>Using ButterKnife
 You can safely use [ButterKnife](https://github.com/JakeWharton/butterknife) in your ViewHolders. Example:
 ```java
 public static class Holder extends RecyclerAdapterViewHolder {
@@ -148,7 +181,7 @@ public static class Holder extends ButterKnifeViewHolder {
 }
 ```
 
-## Handle clicks
+## <a name="handleClicks"></a>Handle clicks
 One of the things which you may need is to set one or more click listeners to every item. How do you do that? Let's see an example.
 
 `item_example.xml`:
@@ -281,7 +314,7 @@ public boolean onEvent(int position, Bundle data) {
 ```
 Look at the [event lifecycle](#eventLifecycle) to have a better comprehension.
 
-## Handle item status and save changes into the model
+## <a name="handleItemStatus"></a>Handle item status and save changes into the model
 It's possible to also change the model associated to an item directly from the ViewHolder. This is useful for example to notify status changes and to persist them. Imagine we need to persist a toggle button status when the user presses on it. How do we do that? Let's see an example.
 
 `item_text_with_button.xml`:
