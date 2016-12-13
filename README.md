@@ -131,7 +131,7 @@ If you need to search items in your recycler view, you have to override this met
  * method gets called.
  *
  * @param searchTerm term to search for
- * @return true if the items matches the search term, false otherwise
+ * @return true if the item matches the search term, false otherwise
  */
 @Override
 public boolean onFilter(String searchTerm) {
