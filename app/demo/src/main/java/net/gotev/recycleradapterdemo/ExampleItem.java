@@ -25,6 +25,11 @@ public class ExampleItem extends AdapterItem<ExampleItem.Holder> {
     }
 
     @Override
+    public boolean onFilter(String searchTerm) {
+        return text.contains(searchTerm);
+    }
+
+    @Override
     public int getLayoutId() {
         return R.layout.item_example;
     }

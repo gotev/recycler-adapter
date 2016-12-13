@@ -30,9 +30,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     private LinkedHashMap<String, Integer> typeIds;
     private LinkedHashMap<Integer, AdapterItem> types;
-    private List<AdapterItem> items;
+    private List<AdapterItem> itemsList;
     private AdapterItem emptyItem;
     private int emptyItemId;
+
+    private List<AdapterItem> filtered;
+    private boolean showFiltered;
 
     /**
      * Applies swipe gesture detection on a RecyclerView items.
@@ -61,8 +64,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     public RecyclerAdapter() {
         typeIds = new LinkedHashMap<>();
         types = new LinkedHashMap<>();
-        items = new ArrayList<>();
+        itemsList = new ArrayList<>();
         emptyItem = null;
+    }
+
+    private List<AdapterItem> getItems() {
+        return showFiltered ? filtered : itemsList;
     }
 
     /**
@@ -73,7 +80,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         emptyItem = item;
         emptyItemId = ViewIdGenerator.generateViewId();
 
-        if (items.isEmpty())
+        if (getItems().isEmpty())
             notifyItemInserted(0);
     }
 
@@ -86,10 +93,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         String className = item.getClass().getName();
 
         registerItemClass(item, className);
-        items.add(item);
+        getItems().add(item);
         removeEmptyItemIfItHasBeenConfigured();
 
-        notifyItemInserted(items.size() - 1);
+        notifyItemInserted(getItems().size() - 1);
         return this;
     }
 
@@ -105,7 +112,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         String className = item.getClass().getName();
 
         registerItemClass(item, className);
-        items.add(position, item);
+        getItems().add(position, item);
         removeEmptyItemIfItHasBeenConfigured();
 
         notifyItemInserted(position);
@@ -123,7 +130,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     private void removeEmptyItemIfItHasBeenConfigured() {
         // this is necessary to prevent IndexOutOfBoundsException on RecyclerView when the
         // first item gets added and an empty item has been configured
-        if (items.size() == 1 && emptyItem != null) {
+        if (getItems().size() == 1 && emptyItem != null) {
             notifyItemRemoved(0);
         }
     }
@@ -134,7 +141,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
             return emptyItemId;
         }
 
-        AdapterItem item = items.get(position);
+        AdapterItem item = getItems().get(position);
         String className = item.getClass().getName();
         return typeIds.get(className);
     }
@@ -177,7 +184,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         if (adapterIsEmptyAndEmptyItemIsDefined()) {
             emptyItem.bind(holder);
         } else {
-            items.get(position).bind(holder);
+            getItems().get(position).bind(holder);
         }
     }
 
@@ -186,17 +193,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         if (adapterIsEmptyAndEmptyItemIsDefined())
             return 1;
 
-        return items.size();
+        return getItems().size();
     }
 
     @Override
     public void sendEvent(RecyclerAdapterViewHolder holder, Bundle data) {
         int position = holder.getAdapterPosition();
 
-        if (position < 0 || position >= items.size())
+        if (position < 0 || position >= getItems().size())
             return;
 
-        if (items.get(position).onEvent(position, data))
+        if (getItems().get(position).onEvent(position, data))
             notifyItemChanged(position);
     }
 
@@ -226,10 +233,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         if (listener == null)
             throw new IllegalArgumentException("RemoveListener can't be null!");
 
-        if (items.isEmpty())
+        if (getItems().isEmpty())
             return;
 
-        ListIterator<AdapterItem> iterator = items.listIterator();
+        ListIterator<AdapterItem> iterator = getItems().listIterator();
         int index;
         while (iterator.hasNext()) {
             index = iterator.nextIndex();
@@ -257,12 +264,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         if (clazz == null)
             throw new IllegalArgumentException("The class of the items can't be null!");
 
-        if (items.isEmpty())
+        if (getItems().isEmpty())
             return null;
 
-        for (int i = items.size() - 1; i >= 0; i--) {
-            if (items.get(i).getClass().getName().equals(clazz.getName())) {
-                return new Pair<>(i, items.get(i));
+        for (int i = getItems().size() - 1; i >= 0; i--) {
+            if (getItems().get(i).getClass().getName().equals(clazz.getName())) {
+                return new Pair<>(i, getItems().get(i));
             }
         }
 
@@ -274,12 +281,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * @param clazz class of the item to remove
      */
     public void removeLastItemWithClass(Class<? extends AdapterItem> clazz) {
-        if (items.isEmpty())
+        if (getItems().isEmpty())
             return;
 
-        for (int i = items.size() - 1; i >= 0; i--) {
-            if (items.get(i).getClass().getName().equals(clazz.getName())) {
-                items.remove(i);
+        for (int i = getItems().size() - 1; i >= 0; i--) {
+            if (getItems().get(i).getClass().getName().equals(clazz.getName())) {
+                getItems().remove(i);
                 notifyItemRemoved(i);
                 break;
             }
@@ -292,10 +299,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * @param position position to be removed
      */
     public void removeItemAtPosition(int position) {
-        if (items.isEmpty() || position < 0 || position >= items.size())
+        if (getItems().isEmpty() || position < 0 || position >= getItems().size())
             return;
 
-        items.remove(position);
+        getItems().remove(position);
         notifyItemRemoved(position);
     }
 
@@ -305,25 +312,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * @return {@link AdapterItem} or null if the adapter is empty or the position is out of bounds
      */
     public AdapterItem getItemAtPosition(int position) {
-        if (items.isEmpty() || position < 0 || position >= items.size())
+        if (getItems().isEmpty() || position < 0 || position >= getItems().size())
             return null;
 
-        return items.get(position);
+        return getItems().get(position);
     }
 
     /**
      * Clears all the elements in the adapter.
      */
     public void clear() {
-        int itemsSize = items.size();
-        items.clear();
+        int itemsSize = getItems().size();
+        getItems().clear();
         if (itemsSize > 0) {
             notifyItemRangeRemoved(0, itemsSize);
         }
     }
 
     private boolean adapterIsEmptyAndEmptyItemIsDefined() {
-        return items.isEmpty() && emptyItem != null;
+        return getItems().isEmpty() && emptyItem != null;
     }
 
     /**
@@ -342,7 +349,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
                 int sourcePosition = viewHolder.getAdapterPosition();
                 int targetPosition = target.getAdapterPosition();
 
-                Collections.swap(items, sourcePosition, targetPosition);
+                Collections.swap(getItems(), sourcePosition, targetPosition);
                 notifyItemMoved(sourcePosition, targetPosition);
 
                 return true;
@@ -355,5 +362,38 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         });
 
         touchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    /**
+     * Filters this adapter with a given search term and shows only the items which
+     * matches it.
+     * @param searchTerm search term
+     */
+    public void filter(final String searchTerm) {
+        if (itemsList == null || itemsList.isEmpty()) {
+            return;
+        }
+
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            showFiltered = false;
+            notifyDataSetChanged();
+            return;
+        }
+
+        if (filtered == null) {
+            filtered = new ArrayList<>();
+        } else {
+            filtered.clear();
+        }
+
+        for (AdapterItem item : itemsList) {
+            if (item.onFilter(searchTerm)) {
+                filtered.add(item);
+            }
+        }
+
+        showFiltered = true;
+        notifyDataSetChanged();
+
     }
 }

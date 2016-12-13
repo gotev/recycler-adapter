@@ -27,6 +27,11 @@ public class TextWithButtonItem extends AdapterItem<TextWithButtonItem.Holder> {
     }
 
     @Override
+    public boolean onFilter(String searchTerm) {
+        return text.contains(searchTerm);
+    }
+
+    @Override
     public boolean onEvent(int position, Bundle data) {
         pressed = data.getBoolean(PARAM_PRESSED, false);
         return true;
