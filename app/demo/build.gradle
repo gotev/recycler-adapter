@@ -32,4 +32,5 @@ dependencies {
     compile project(':recycleradapter')
     compile "com.jakewharton:butterknife:${butterKnifeVersion}"
     apt "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
+    compile "com.daimajia.swipelayout:library:1.2.0@aar"
 }

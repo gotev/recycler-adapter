@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import net.gotev.recycleradapter.RecyclerAdapter;
+import net.gotev.recycleradapterdemo.leavebehind.MyLeaveBehindItem;
 
 import java.util.Random;
 import java.util.UUID;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
         adapter.enableDragDrop(recyclerView);
+
+        adapter.add(new MyLeaveBehindItem("swipe to left to leave behind", "option"));
 
         for (int i = 0; i < getRandom().nextInt(200) + 50; i++) {
             if (i % 2 == 0)
