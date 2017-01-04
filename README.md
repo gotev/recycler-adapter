@@ -126,7 +126,7 @@ recyclerView.setAdapter(adapter);
 
 ## <a name="filterItems"></a>Filter items
 If you need to search items in your recycler view, you have to override this method in each one of your items implementation:
-```
+```java
 /**
  * Gets called for every item when the {@link AdapterItem#onFilter(String)}
  * method gets called.
