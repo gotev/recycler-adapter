@@ -99,6 +99,136 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     }
 
     /**
+     * Gets the position of an item in an adapter.
+     *
+     * For the method to work properly, all the items has to override the
+     * {@link AdapterItem#equals(Object)} and {@link AdapterItem#hashCode()} methods and
+     * implement the required business logic code to detect if two instances are referring to the
+     * same item (plus some other changes). Check the example in {@link RecyclerAdapter#add(AdapterItem)}
+     * @param item item object
+     * @return the item's position or -1 if the item does not exist
+     */
+    public int getItemPosition(AdapterItem item) {
+        return getItems().indexOf(item);
+    }
+
+    /**
+     * Adds an item into the adapter or updates it if already existing.
+     *
+     * For the update to work properly, all the items has to override the
+     * {@link AdapterItem#equals(Object)} and {@link AdapterItem#hashCode()} methods and
+     * implement the required business logic code to detect if two instances are referring to the
+     * same item (plus some other changes).
+     *
+     * As an example consider the following item
+     * (written in pseudocode, to write less code):
+     * <pre>
+     * Person extends AdapterItem {
+     *      String id;
+     *      String name;
+     *      String city;
+     * }
+     * </pre>
+     * in this case every person is uniquely identified by its id, while other data may change, so
+     * the {@link AdapterItem#equals(Object)} method will look like this:
+     *
+     * <pre>
+     * @Override
+     * public boolean equals(Object obj) {
+     *     if (this == obj) {
+     *         return true;
+     *     }
+     *
+     *     if (obj == null || getClass() != obj.getClass()) {
+     *         return false;
+     *     }
+     *
+     *     Person other = (Person) obj;
+     *     return other.getId().equals(id);
+     * }
+     * </pre>
+     *
+     * @param item item to add or update
+     * @return {@link RecyclerAdapter}
+     */
+    public RecyclerAdapter addOrUpdate(AdapterItem item) {
+        int itemIndex = getItemPosition(item);
+
+        if (itemIndex < 0) {
+            return add(item);
+        }
+
+        updateItemAtPosition(item, itemIndex);
+
+        return this;
+    }
+
+    private void updateItemAtPosition(AdapterItem item, int position) {
+        getItems().set(position, item);
+        notifyItemChanged(position);
+    }
+
+    /**
+     * Syncs the internal list of items with a list passed as parameter.
+     * Adds, updates or deletes internal items, with RecyclerView animations.
+     *
+     * For the sync to work properly, all the items has to override the
+     * {@link AdapterItem#equals(Object)} and {@link AdapterItem#hashCode()} methods and
+     * implement the required business logic code to detect if two instances are referring to the
+     * same item (plus some other changes). Check the example in {@link RecyclerAdapter#add(AdapterItem)}
+     * @param newItems list of new items. Passing a null or empty list will result in
+     *                 {@link RecyclerAdapter#clear()} method call.
+     * @return {@link RecyclerAdapter}
+     */
+    public RecyclerAdapter syncWithItems(List<AdapterItem> newItems) {
+        if (newItems == null || newItems.isEmpty()) {
+            clear();
+            return this;
+        }
+
+        ListIterator<AdapterItem> iterator = getItems().listIterator();
+
+        while (iterator.hasNext()) {
+            int internalListIndex = iterator.nextIndex();
+            AdapterItem item = iterator.next();
+
+            int indexInNewItemsList = newItems.indexOf(item);
+            // if the item does not exist in the new list, it means it has been deleted
+            if (indexInNewItemsList < 0) {
+                removeItemAtPosition(internalListIndex);
+            } else { // the item exists in the new list, so it needs to be updated
+                updateItemAtPosition(newItems.get(indexInNewItemsList), internalListIndex);
+                newItems.remove(indexInNewItemsList);
+            }
+        }
+
+        for (AdapterItem newItem : newItems) {
+            add(newItem);
+        }
+
+        return this;
+    }
+
+    /**
+     * Removes an item from the adapter.
+     *
+     * For the remove to work properly, all the items has to override the
+     * {@link AdapterItem#equals(Object)} and {@link AdapterItem#hashCode()} methods.
+     * Check the example in {@link RecyclerAdapter#addOrUpdate(AdapterItem)}
+     * @param item item to remove
+     * @return true if the item has been correctly removed or false if the item does not exist
+     */
+    public boolean removeItem(AdapterItem item) {
+        int itemIndex = getItems().indexOf(item);
+
+        if (itemIndex < 0) {
+            return false;
+        }
+
+        return removeItemAtPosition(itemIndex);
+    }
+
+    /**
      * Adds a new item to this adapter
      * @param item item to add
      * @param position position at which to add the element. The item previously at
@@ -296,12 +426,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * position specified is out of adapter bounds.
      * @param position position to be removed
      */
-    public void removeItemAtPosition(int position) {
+    public boolean removeItemAtPosition(int position) {
         if (getItems().isEmpty() || position < 0 || position >= getItems().size())
-            return;
+            return false;
 
         getItems().remove(position);
         notifyItemRemoved(position);
+
+        return true;
     }
 
     /**
