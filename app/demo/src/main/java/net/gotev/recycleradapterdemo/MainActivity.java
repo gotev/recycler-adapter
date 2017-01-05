@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import net.gotev.recycleradapter.RecyclerAdapter;
 import net.gotev.recycleradapterdemo.leavebehind.MyLeaveBehindItem;
@@ -50,6 +52,24 @@ public class MainActivity extends AppCompatActivity {
                 adapter.add(new ExampleItem(this, "example item " + i));
             else
                 adapter.add(new TextWithButtonItem("text with button " + i));
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sync_demo:
+                SyncActivity.show(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

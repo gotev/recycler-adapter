@@ -194,7 +194,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
             int indexInNewItemsList = newItems.indexOf(item);
             // if the item does not exist in the new list, it means it has been deleted
             if (indexInNewItemsList < 0) {
-                removeItemAtPosition(internalListIndex);
+                iterator.remove();
+                notifyItemRemoved(internalListIndex);
             } else { // the item exists in the new list, so it needs to be updated
                 updateItemAtPosition(newItems.get(indexInNewItemsList), internalListIndex);
                 newItems.remove(indexInNewItemsList);
