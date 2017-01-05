@@ -90,9 +90,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * @return {@link RecyclerAdapter}
      */
     public RecyclerAdapter add(AdapterItem item) {
-        String className = item.getClass().getName();
-
-        registerItemClass(item, className);
+        registerItemType(item);
         getItems().add(item);
         removeEmptyItemIfItHasBeenConfigured();
 
@@ -109,9 +107,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * @return {@link RecyclerAdapter}
      */
     public RecyclerAdapter addAtPosition(AdapterItem item, int position) {
-        String className = item.getClass().getName();
-
-        registerItemClass(item, className);
+        registerItemType(item);
         getItems().add(position, item);
         removeEmptyItemIfItHasBeenConfigured();
 
@@ -119,7 +115,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         return this;
     }
 
-    private void registerItemClass(AdapterItem item, String className) {
+    private void registerItemType(AdapterItem item) {
+        final String className = item.getClass().getName();
+
         if (!typeIds.containsKey(className)) {
             int viewId = ViewIdGenerator.generateViewId();
             typeIds.put(className, viewId);
