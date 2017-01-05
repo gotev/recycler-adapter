@@ -133,7 +133,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * the {@link AdapterItem#equals(Object)} method will look like this:
      *
      * <pre>
-     * @Override
      * public boolean equals(Object obj) {
      *     if (this == obj) {
      *         return true;
@@ -425,6 +424,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * Removes an item in a certain position. Does nothing if the adapter is empty or if the
      * position specified is out of adapter bounds.
      * @param position position to be removed
+     * @return true if the item has been removed, false if it doesn't exist or the position is
+     *         is out of bounds
      */
     public boolean removeItemAtPosition(int position) {
         if (getItems().isEmpty() || position < 0 || position >= getItems().size())
