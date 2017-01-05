@@ -179,7 +179,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      *                 {@link RecyclerAdapter#clear()} method call.
      * @return {@link RecyclerAdapter}
      */
-    public RecyclerAdapter syncWithItems(List<AdapterItem> newItems) {
+    public RecyclerAdapter syncWithItems(final List<? extends AdapterItem> newItems) {
         if (newItems == null || newItems.isEmpty()) {
             clear();
             return this;
@@ -424,7 +424,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * Removes an item in a certain position. Does nothing if the adapter is empty or if the
      * position specified is out of adapter bounds.
      * @param position position to be removed
-     * @return true if the item has been removed, false if it doesn't exist or the position is
+     * @return true if the item has been removed, false if it doesn't exist or the position
      *         is out of bounds
      */
     public boolean removeItemAtPosition(int position) {
