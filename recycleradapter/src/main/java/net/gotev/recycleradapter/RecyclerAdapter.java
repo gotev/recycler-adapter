@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -466,7 +467,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     }
 
     /**
-     * Enables reordering of the list through drap and drop.
+     * Enables reordering of the list through drag and drop, which is activated when the user
+     * long presses on an item.
      * @param recyclerView recycler view on which to apply the drag and drop
      */
     public void enableDragDrop(RecyclerView recyclerView) {
@@ -499,6 +501,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     /**
      * Filters this adapter with a given search term and shows only the items which
      * matches it.
+     *
+     * For the filter to work properly, each item must override the
+     * {@link AdapterItem#onFilter(String)} method and provide custom implementation.
      * @param searchTerm search term
      */
     public void filter(final String searchTerm) {
@@ -527,5 +532,55 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         showFiltered = true;
         notifyDataSetChanged();
 
+    }
+
+    /**
+     * Sort items.
+     *
+     * For this method to work properly, each item must override the
+     * {@link AdapterItem#compareTo(AdapterItem)} method.
+     * @param ascending true for ascending order (A-Z) or false for descending order (Z-A)
+     */
+    public void sort(boolean ascending) {
+        List<AdapterItem> items = getItems();
+
+        if (items == null || items.isEmpty())
+            return;
+
+        if (ascending) {
+            Collections.sort(items);
+        } else {
+            Collections.sort(items, Collections.<AdapterItem>reverseOrder());
+        }
+
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Sort items.
+     *
+     * With this method, the items doesn't have to override the
+     * {@link AdapterItem#compareTo(AdapterItem)} method, as the comparator is passed as
+     * argument and is responsible of item comparison. You can use this sort method if your items
+     * has to be sorted with many different strategies and not just one
+     * (e.g. order items by name, by date, ...).
+     * @param ascending true for ascending order (A-Z) or false for descending order (Z-A).
+     *                  Ascending order follows the passed comparator sorting algorithm order,
+     *                  descending order uses the inverse order
+     * @param comparator custom comparator implementation
+     */
+    public void sort(boolean ascending, Comparator<AdapterItem> comparator) {
+        List<AdapterItem> items = getItems();
+
+        if (items == null || items.isEmpty())
+            return;
+
+        if (ascending) {
+            Collections.sort(getItems(), comparator);
+        } else {
+            Collections.sort(getItems(), Collections.reverseOrder(comparator));
+        }
+
+        notifyDataSetChanged();
     }
 }

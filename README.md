@@ -11,11 +11,12 @@ In this way every item of the recycler view has its own set of files, resulting 
 # Index
 * [Setup](#setup)
 * [Basic usage tutorial](#basicTutorial)
-* [Reorder items with drag & drop](#dragDrop)
 * [Adding different kind of items](#differentItems)
 * [Empty item](#emptyItem)
 * [Filter items](#filterItems)
+* [Sort items](#sortItems)
 * [Using ButterKnife](#butterKnife)
+* [Reorder items with drag & drop](#dragDrop)
 * [Handle clicks](#handleClicks)
 * [Handle item status](#handleItemStatus)
 * [Event lifecycle](#eventLifecycle)
@@ -24,7 +25,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-compile 'net.gotev:recycleradapter:1.4'
+compile 'net.gotev:recycleradapter:1.5'
 ```
 
 ## <a name="basicTutorial"></a>Basic usage tutorial
@@ -99,12 +100,6 @@ recyclerView.setAdapter(adapter);
 adapter.add(new ExampleItem("test"));
 ```
 
-## <a name="dragDrop"></a>Reorder items with drag & drop
-To be able to change the items order with drag & drop, just add this line:
-```java
-adapter.enableDragDrop(recyclerView);
-```
-
 ## <a name="differentItems"></a>Adding different kind of items
 You can have more than one kind of item in your `RecyclerView`. Just implement a different `AdapterItem` for every type you want to support, and then just add it into the adapter:
 ```java
@@ -145,6 +140,89 @@ adapter.filter("search item");
 ```
 and the recycler view will show only the items which matches the search term. To reset the search filter, pass `null` or an empty string.
 
+## <a name="filterItems"></a>Sort items
+To sort items, you have the following possible approaches.
+
+### 1. Implement `compareTo` and call `sort` on the `RecyclerAdapter`
+This is the recommended approach if you have to sort all your items by a single criteria and you have a list with only one type of `Item`. Check [compareTo JavaDoc reference](https://developer.android.com/reference/java/lang/Comparable.html#compareTo(T)) for further information. In your `AdapterItem` implement:
+```java
+@Override
+public int compareTo(AdapterItem otherItem) {
+    // if the other item class is not the same, then
+    // this item should be put before it. -1 is only
+    // for example
+    if (otherItem.getClass() != getClass())
+        return -1;
+
+    RobotItem item = (RobotItem) otherItem;
+
+    // in this example item, we have a field named id
+    // of type int, and we want to sort elements by
+    // id
+    if (id == item.id)
+        return 0;
+
+    return id > item.id ? 1 : -1;
+}
+```
+
+Then call:
+```java
+adapter.sort(true); //true means ascending order (A-Z), false descending (Z-A)
+```
+You can see an example in action by looking at the code in the `SyncActivity` and `SyncItem` of the demo app.
+
+### 2. Provide a custom comparator implementation
+Your items doesn't necessarily have to implement `compareTo` for sorting purposes, as you can provide also the sorting implementation out of them, like this:
+```java
+adapter.sort(true, new Comparator<AdapterItem>() {
+    @Override
+    public int compare(AdapterItem itemA, AdapterItem itemB) {
+        if (itemA.getClass() == RobotItem.class
+            && itemB.getClass() == RobotItem.class) {
+            RobotItem first = (RobotItem) itemA;
+            RobotItem second = (RobotItem) itemB;
+            // compare two RobotItems and return a value
+        }
+        return 0;
+    }
+});
+```
+The first parameter indicates if you want to sort ascending (true) or descending (false). The second parameter is a custom `Comparator` implementation. This is the recommended approach if you want to be able to sort your items by different criteria, as you can simply pass the `Comparator` implementation of the sort type you want.
+
+### 3. Combining the two techniques
+You can also combine the two techniques described above. This is the recommended approach if you have a list with different kind of items, and you want to perform different kind of grouping between items of different kind, maintaining the same sorting strategy for elements of the same type. You can implement `compareTo` in everyone of your items, to sort the items of the same kind, and a custom `Comparable` which will handle comparison between diffent kinds of items, like this:
+```java
+adapter.sort(true, new Comparator<AdapterItem>() {
+    @Override
+    public int compare(AdapterItem itemA, AdapterItem itemB) {
+        // handle ordering of items of the same type with their
+        // internal compareTo implementation
+        if (itemA.getClass() == RobotItem.class
+            && itemB.getClass() == RobotItem.class) {
+            RobotItem first = (RobotItem) itemA;
+            RobotItem second = (RobotItem) itemB;
+            return first.compareTo(second);
+        }
+
+        if (itemA.getClass() == PersonItem.class
+            && itemB.getClass() == PersonItem.class) {
+            PersonItem first = (PersonItem) itemA;
+            PersonItem second = (PersonItem) itemB;
+            return first.compareTo(second);
+        }
+
+        // in this case, we want to put all the PersonItems
+        // before the RobotItems in our list
+        if (itemA.getClass() == PersonItem.class
+            && itemB.getClass() == RobotItem.class) {
+            return -1;
+        }
+        return 0;
+    }
+});
+```
+
 ## <a name="butterKnife"></a>Using ButterKnife
 You can safely use [ButterKnife](https://github.com/JakeWharton/butterknife) in your ViewHolders. Example:
 ```java
@@ -180,6 +258,12 @@ public static class Holder extends ButterKnifeViewHolder {
         super(itemView, adapter);
     }
 }
+```
+
+## <a name="dragDrop"></a>Reorder items with drag & drop
+To be able to change the items order with drag & drop, just add this line:
+```java
+adapter.enableDragDrop(recyclerView);
 ```
 
 ## <a name="handleClicks"></a>Handle clicks

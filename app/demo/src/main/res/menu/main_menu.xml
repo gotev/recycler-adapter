@@ -2,7 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Sync demo"
+    <item android:title="@string/sync"
         app:showAsAction="never|withText"
         android:visible="true"
         android:enabled="true"
