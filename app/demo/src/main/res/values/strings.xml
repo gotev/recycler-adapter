@@ -5,4 +5,6 @@
     <string name="empty_list">No items in the list</string>
     <string name="add_item">Add item</string>
     <string name="sync">Sync</string>
+    <string name="sort_ascending">Sort ascending (A-Z)</string>
+    <string name="sort_descending">Sort descending (Z-A)</string>
 </resources>

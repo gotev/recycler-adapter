@@ -1,6 +1,7 @@
 package net.gotev.recycleradapter;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 
@@ -11,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author Aleksandar Gotev
  * @param <T> ViewHolder subclass
  */
-public abstract class AdapterItem<T extends RecyclerAdapterViewHolder> {
+public abstract class AdapterItem<T extends RecyclerAdapterViewHolder> implements Comparable<AdapterItem> {
 
     /**
      * Gets called by {@link RecyclerAdapter#sendEvent(RecyclerAdapterViewHolder, Bundle)}
@@ -78,4 +79,9 @@ public abstract class AdapterItem<T extends RecyclerAdapterViewHolder> {
      * @param holder ViewHolder on which to bind data
      */
     protected abstract void bind(T holder);
+
+    @Override
+    public int compareTo(@NonNull AdapterItem otherItem) {
+        return 0;
+    }
 }

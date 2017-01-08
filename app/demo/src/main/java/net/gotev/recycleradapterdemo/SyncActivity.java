@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import net.gotev.recycleradapter.RecyclerAdapter;
 
@@ -46,6 +48,31 @@ public class SyncActivity extends AppCompatActivity {
         adapter.setEmptyItem(new EmptyItem(getString(R.string.empty_list)));
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sort_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item == null)
+            return false;
+
+        switch (item.getItemId()) {
+            case R.id.sort_ascending:
+                adapter.sort(true);
+                return true;
+
+            case R.id.sort_descending:
+                adapter.sort(false);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @OnClick(R.id.syncA)

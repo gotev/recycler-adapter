@@ -1,6 +1,9 @@
 package net.gotev.recycleradapterdemo;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+
+import net.gotev.recycleradapter.AdapterItem;
 
 /**
  * @author Aleksandar Gotev
@@ -27,5 +30,18 @@ public class SyncItem extends ExampleItem {
 
         SyncItem other = (SyncItem) obj;
         return id == other.id;
+    }
+
+    @Override
+    public int compareTo(@NonNull AdapterItem otherItem) {
+        if (otherItem.getClass() != getClass())
+            return -1;
+
+        SyncItem item = (SyncItem) otherItem;
+
+        if (id == item.id)
+            return 0;
+
+        return id > item.id ? 1 : -1;
     }
 }
