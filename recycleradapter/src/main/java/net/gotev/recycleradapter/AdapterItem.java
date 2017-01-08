@@ -1,10 +1,10 @@
 package net.gotev.recycleradapter;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
 
 /**
  * Abstract class to extend to create ViewHolders.
@@ -50,15 +50,21 @@ public abstract class AdapterItem<T extends RecyclerAdapterViewHolder> {
             throws NoSuchMethodException, InstantiationException,
             InvocationTargetException, IllegalAccessException {
 
-        // find the class of the generic type passed, to be able to get a new instance
-        // it it less performant than passing Class<T> directly in the costructor, but avoids
-        // writing additional code, making the subclasses stay lighter
-        Class<T> clazz = (Class<T>) ((ParameterizedType)getClass()
-                .getGenericSuperclass())
-                .getActualTypeArguments()[0];
+        // analyze all the public classes and interfaces that are members of the class represented
+        // by this Class object and search for the first RecyclerAdapterViewHolder
+        // implementation. This should also work if RecyclerAdapterViewHolder subclass
+        // hierarchy is present, as the first one should be the last of the subclasses
+        for (Class cl : getClass().getClasses()) {
+            if (RecyclerAdapterViewHolder.class.isAssignableFrom(cl)) {
+                Class<T> clazz = (Class<T>) cl;
+                return clazz.getConstructor(View.class, RecyclerAdapterNotifier.class)
+                        .newInstance(view, adapter);
+            }
+        }
 
-        return clazz.getConstructor(View.class, RecyclerAdapterNotifier.class)
-                .newInstance(view, adapter);
+        Log.e(getClass().getSimpleName(), "No ViewHolder implementation found!");
+        return null;
+
     }
 
     /**
