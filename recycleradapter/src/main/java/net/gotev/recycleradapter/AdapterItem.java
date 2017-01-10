@@ -63,7 +63,9 @@ public abstract class AdapterItem<T extends RecyclerAdapterViewHolder> implement
             }
         }
 
-        Log.e(getClass().getSimpleName(), "No ViewHolder implementation found!");
+        Log.e(getClass().getSimpleName(), "No ViewHolder implementation found! " +
+                "Please check that all your ViewHolder implementations are: 'public static' and " +
+                "not private or protected, otherwise reflection will not work!");
         return null;
 
     }
