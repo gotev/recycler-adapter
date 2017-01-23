@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * Abstract class to extend to create ViewHolders.
@@ -32,6 +33,24 @@ public abstract class AdapterItem<T extends RecyclerAdapterViewHolder> implement
      * @return true if the items matches the search term, false otherwise
      */
     public boolean onFilter(final String searchTerm) {
+        return true;
+    }
+
+    /**
+     * Gets called when you perform {@link RecyclerAdapter#syncWithItems(List)}, specifically when
+     * an item in the new list equals to this one (according to {@link AdapterItem#equals(Object)}
+     * implementation). In this case, the item has to decide whether or not it should be replaced
+     * by the new one. Generally this is useful when for example you have a person identified
+     * uniquely by ID (equals returns true if two items have the same ID), but you want to update
+     * the item only if the rest of the data has been changed.
+     * If you return false, the item will remain unchanged. If you return true, the item will be
+     * replaced by the new one, and RecyclerAdapter's notifyItemChanged method will be
+     * called to update the binding.
+     * @param newItem item in the new list whose {@link AdapterItem#equals(Object)} returns the
+     *                same value as this item
+     * @return true to replace this item with the new item, false otherwise
+     */
+    public boolean hasToBeReplacedBy(AdapterItem newItem) {
         return true;
     }
 
