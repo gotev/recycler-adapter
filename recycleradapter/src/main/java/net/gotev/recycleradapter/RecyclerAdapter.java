@@ -175,7 +175,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * For the sync to work properly, all the items has to override the
      * {@link AdapterItem#equals(Object)} and {@link AdapterItem#hashCode()} methods and
      * implement the required business logic code to detect if two instances are referring to the
-     * same item (plus some other changes). Check the example in {@link RecyclerAdapter#add(AdapterItem)}
+     * same item. Check the example in {@link RecyclerAdapter#add(AdapterItem)}.
+     * If two instances are referring to the same item, you can decide if the item should be
+     * replaced by the new one, by implementing {@link AdapterItem#hasToBeReplacedBy(AdapterItem)}.
+     * Check hasToBeReplacedBy method JavaDoc for more information.
      * @param newItems list of new items. Passing a null or empty list will result in
      *                 {@link RecyclerAdapter#clear()} method call.
      * @return {@link RecyclerAdapter}
@@ -197,8 +200,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
             if (indexInNewItemsList < 0) {
                 iterator.remove();
                 notifyItemRemoved(internalListIndex);
-            } else { // the item exists in the new list, so it needs to be updated
-                updateItemAtPosition(newItems.get(indexInNewItemsList), internalListIndex);
+            } else { // the item exists in the new list
+                AdapterItem newItem = newItems.get(indexInNewItemsList);
+                if (item.hasToBeReplacedBy(newItem)) { // the item needs to be updated
+                    updateItemAtPosition(newItem, internalListIndex);
+                }
                 newItems.remove(indexInNewItemsList);
             }
         }
