@@ -140,7 +140,7 @@ adapter.filter("search item");
 ```
 and the recycler view will show only the items which matches the search term. To reset the search filter, pass `null` or an empty string.
 
-## <a name="filterItems"></a>Sort items
+## <a name="sortItems"></a>Sort items
 To sort items, you have the following possible approaches.
 
 ### 1. Implement `compareTo` and call `sort` on the `RecyclerAdapter`
