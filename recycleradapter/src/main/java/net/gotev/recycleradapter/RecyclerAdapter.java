@@ -148,6 +148,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * }
      * </pre>
      *
+     * If the item already exists in the list, by impementing
+     * {@link AdapterItem#hasToBeReplacedBy(AdapterItem)} in your AdapterItem, you can decide
+     * when the new item should replace the existing one in the list, reducing the workload of
+     * the recycler view.
+     *
+     * Check hasToBeReplacedBy method JavaDoc for more information.
+     *
      * @param item item to add or update
      * @return {@link RecyclerAdapter}
      */
@@ -158,7 +165,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
             return add(item);
         }
 
-        updateItemAtPosition(item, itemIndex);
+        AdapterItem internalItem = getItems().get(itemIndex);
+        if (internalItem.hasToBeReplacedBy(item)) { // the item needs to be updated
+            updateItemAtPosition(item, itemIndex);
+        }
 
         return this;
     }
