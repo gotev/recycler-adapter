@@ -1,15 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 
+def targetSdk = 25
+
 android {
-    compileSdkVersion 25
-    buildToolsVersion "24.0.3"
+    compileSdkVersion targetSdk
+    buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "net.gotev.recycleradapterdemo"
         minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 4
-        versionName "1.5.1"
+        targetSdkVersion targetSdk
+        versionCode 5
+        versionName "1.5.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -20,14 +22,14 @@ android {
     }
 }
 
-def butterKnifeVersion = "8.4.0";
+def butterKnifeVersion = "8.5.1";
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:25.+'
     testCompile 'junit:junit:4.12'
     compile project(':recycleradapter')
     compile "com.jakewharton:butterknife:${butterKnifeVersion}"
