@@ -8,11 +8,11 @@ def projectName = "recycler-adapter"
 def projectDesc = "Easily create a RecyclerView Adapter"
 def projectGroup = "net.gotev"
 group = projectGroup
-version = "1.5.3"
+version = "1.6"
 
-def sdkVersion = 25;
-def toolsVersion = "25.0.0"
-def supportLibVersion = "25.+";
+def sdkVersion = 26;
+def toolsVersion = "26.0.1"
+def supportLibVersion = "26.0.1";
 
 android {
     compileSdkVersion sdkVersion
@@ -20,7 +20,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion sdkVersion
-        versionCode 15
+        versionCode 16
         versionName version
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
