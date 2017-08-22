@@ -1,17 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 
-def targetSdk = 25
+def targetSdk = 26
 
 android {
     compileSdkVersion targetSdk
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "net.gotev.recycleradapterdemo"
         minSdkVersion 16
         targetSdkVersion targetSdk
-        versionCode 5
-        versionName "1.5.3"
+        versionCode 6
+        versionName "1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -29,7 +29,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.+'
+    compile 'com.android.support:appcompat-v7:26.0.1'
     testCompile 'junit:junit:4.12'
     compile project(':recycleradapter')
     compile "com.jakewharton:butterknife:${butterKnifeVersion}"
