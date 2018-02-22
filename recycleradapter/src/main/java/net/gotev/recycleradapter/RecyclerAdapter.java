@@ -24,10 +24,11 @@ import static android.support.v7.widget.helper.ItemTouchHelper.UP;
 
 /**
  * Helper class to easily work with Android's RecyclerView.Adapter.
+ *
  * @author Aleksandar Gotev
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHolder>
-        implements RecyclerAdapterNotifier{
+        implements RecyclerAdapterNotifier {
 
     private LinkedHashMap<String, Integer> typeIds;
     private LinkedHashMap<Integer, AdapterItem> types;
@@ -40,8 +41,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Applies swipe gesture detection on a RecyclerView items.
+     *
      * @param recyclerView recycler view o which to apply the swipe gesture
-     * @param listener listener called when a swipe is performed on one of the items
+     * @param listener     listener called when a swipe is performed on one of the items
      */
     public static void applySwipeGesture(RecyclerView recyclerView, final SwipeListener listener) {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
@@ -75,6 +77,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Sets the item to show when the recycler adapter is empty.
+     *
      * @param item item to show when the recycler adapter is empty
      */
     public void setEmptyItem(AdapterItem item) {
@@ -87,6 +90,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Adds a new item to this adapter
+     *
      * @param item item to add
      * @return {@link RecyclerAdapter}
      */
@@ -101,11 +105,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Gets the position of an item in an adapter.
-     *
+     * <p>
      * For the method to work properly, all the items has to override the
      * {@link AdapterItem#equals(Object)} and {@link AdapterItem#hashCode()} methods and
      * implement the required business logic code to detect if two instances are referring to the
      * same item (plus some other changes). Check the example in {@link RecyclerAdapter#add(AdapterItem)}
+     *
      * @param item item object
      * @return the item's position or -1 if the item does not exist
      */
@@ -115,12 +120,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Adds an item into the adapter or updates it if already existing.
-     *
+     * <p>
      * For the update to work properly, all the items has to override the
      * {@link AdapterItem#equals(Object)} and {@link AdapterItem#hashCode()} methods and
      * implement the required business logic code to detect if two instances are referring to the
      * same item (plus some other changes).
-     *
+     * <p>
      * As an example consider the following item
      * (written in pseudocode, to write less code):
      * <pre>
@@ -132,7 +137,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * </pre>
      * in this case every person is uniquely identified by its id, while other data may change, so
      * the {@link AdapterItem#equals(Object)} method will look like this:
-     *
+     * <p>
      * <pre>
      * public boolean equals(Object obj) {
      *     if (this == obj) {
@@ -147,12 +152,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      *     return other.getId().equals(id);
      * }
      * </pre>
-     *
+     * <p>
      * If the item already exists in the list, by impementing
      * {@link AdapterItem#hasToBeReplacedBy(AdapterItem)} in your AdapterItem, you can decide
      * when the new item should replace the existing one in the list, reducing the workload of
      * the recycler view.
-     *
+     * <p>
      * Check hasToBeReplacedBy method JavaDoc for more information.
      *
      * @param item item to add or update
@@ -181,7 +186,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     /**
      * Syncs the internal list of items with a list passed as parameter.
      * Adds, updates or deletes internal items, with RecyclerView animations.
-     *
+     * <p>
      * For the sync to work properly, all the items has to override the
      * {@link AdapterItem#equals(Object)} and {@link AdapterItem#hashCode()} methods and
      * implement the required business logic code to detect if two instances are referring to the
@@ -189,6 +194,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      * If two instances are referring to the same item, you can decide if the item should be
      * replaced by the new one, by implementing {@link AdapterItem#hasToBeReplacedBy(AdapterItem)}.
      * Check hasToBeReplacedBy method JavaDoc for more information.
+     *
      * @param newItems list of new items. Passing a null or empty list will result in
      *                 {@link RecyclerAdapter#clear()} method call.
      * @return {@link RecyclerAdapter}
@@ -228,10 +234,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Removes an item from the adapter.
-     *
+     * <p>
      * For the remove to work properly, all the items has to override the
      * {@link AdapterItem#equals(Object)} and {@link AdapterItem#hashCode()} methods.
      * Check the example in {@link RecyclerAdapter#addOrUpdate(AdapterItem)}
+     *
      * @param item item to remove
      * @return true if the item has been correctly removed or false if the item does not exist
      */
@@ -247,7 +254,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Adds a new item to this adapter
-     * @param item item to add
+     *
+     * @param item     item to add
      * @param position position at which to add the element. The item previously at
      *                 (position) will be at (position + 1) and the same for all the subsequent
      *                 elements
@@ -333,6 +341,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         }
     }
 
+    /**
+     * Gives all the items in the adapter
+     *
+     * @return the list of items in the adapter
+     */
+    public List<AdapterItem> getItemsList() {
+        return itemsList;
+    }
+
     @Override
     public int getItemCount() {
         if (adapterIsEmptyAndEmptyItemIsDefined())
@@ -354,6 +371,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Removes all the items with a certain class from this adapter and automatically notifies changes.
+     *
      * @param clazz class of the items to be removed
      */
     public void removeAllItemsWithClass(Class<? extends AdapterItem> clazz) {
@@ -367,7 +385,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Removes all the items with a certain class from this adapter and automatically notifies changes.
-     * @param clazz class of the items to be removed
+     *
+     * @param clazz    class of the items to be removed
      * @param listener listener invoked for every item that is found. If the callback returns true,
      *                 the item will be removed. If it returns false, the item will not be removed
      */
@@ -401,6 +420,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Gets the last item with a given class, together with its position.
+     *
      * @param clazz class of the item to search
      * @return Pair with position and AdapterItem or null if the adapter is empty or no items
      * exists with the given class
@@ -423,6 +443,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Removes only the last item with a certain class from the adapter.
+     *
      * @param clazz class of the item to remove
      */
     public void removeLastItemWithClass(Class<? extends AdapterItem> clazz) {
@@ -441,9 +462,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     /**
      * Removes an item in a certain position. Does nothing if the adapter is empty or if the
      * position specified is out of adapter bounds.
+     *
      * @param position position to be removed
      * @return true if the item has been removed, false if it doesn't exist or the position
-     *         is out of bounds
+     * is out of bounds
      */
     public boolean removeItemAtPosition(int position) {
         if (getItems().isEmpty() || position < 0 || position >= getItems().size())
@@ -457,6 +479,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Gets an item at a given position.
+     *
      * @param position item position
      * @return {@link AdapterItem} or null if the adapter is empty or the position is out of bounds
      */
@@ -485,6 +508,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     /**
      * Enables reordering of the list through drag and drop, which is activated when the user
      * long presses on an item.
+     *
      * @param recyclerView recycler view on which to apply the drag and drop
      */
     public void enableDragDrop(RecyclerView recyclerView) {
@@ -517,9 +541,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
     /**
      * Filters this adapter with a given search term and shows only the items which
      * matches it.
-     *
+     * <p>
      * For the filter to work properly, each item must override the
      * {@link AdapterItem#onFilter(String)} method and provide custom implementation.
+     *
      * @param searchTerm search term
      */
     public void filter(final String searchTerm) {
@@ -552,9 +577,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Sort items.
-     *
+     * <p>
      * For this method to work properly, each item must override the
      * {@link AdapterItem#compareTo(AdapterItem)} method.
+     *
      * @param ascending true for ascending order (A-Z) or false for descending order (Z-A)
      */
     public void sort(boolean ascending) {
@@ -574,15 +600,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
 
     /**
      * Sort items.
-     *
+     * <p>
      * With this method, the items doesn't have to override the
      * {@link AdapterItem#compareTo(AdapterItem)} method, as the comparator is passed as
      * argument and is responsible of item comparison. You can use this sort method if your items
      * has to be sorted with many different strategies and not just one
      * (e.g. order items by name, by date, ...).
-     * @param ascending true for ascending order (A-Z) or false for descending order (Z-A).
-     *                  Ascending order follows the passed comparator sorting algorithm order,
-     *                  descending order uses the inverse order
+     *
+     * @param ascending  true for ascending order (A-Z) or false for descending order (Z-A).
+     *                   Ascending order follows the passed comparator sorting algorithm order,
+     *                   descending order uses the inverse order
      * @param comparator custom comparator implementation
      */
     public void sort(boolean ascending, Comparator<AdapterItem> comparator) {

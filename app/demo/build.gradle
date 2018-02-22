@@ -1,11 +1,10 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 
-def targetSdk = 26
+def targetSdk = 27
 
 android {
     compileSdkVersion targetSdk
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "net.gotev.recycleradapterdemo"
         minSdkVersion 16
@@ -22,17 +21,17 @@ android {
     }
 }
 
-def butterKnifeVersion = "8.5.1";
+def butterKnifeVersion = "8.8.1"
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.0.1'
-    testCompile 'junit:junit:4.12'
-    compile project(':recycleradapter')
-    compile "com.jakewharton:butterknife:${butterKnifeVersion}"
-    apt "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
-    compile "com.daimajia.swipelayout:library:1.2.0@aar"
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    testImplementation 'junit:junit:4.12'
+    implementation project(':recycleradapter')
+    implementation "com.jakewharton:butterknife:${butterKnifeVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
+    implementation "com.daimajia.swipelayout:library:1.2.0@aar"
 }
