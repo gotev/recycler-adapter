@@ -1,6 +1,10 @@
 language: android
 jdk: oraclejdk8
 script: ./gradlew clean build
+
+before_install:
+- yes | sdkmanager "platforms;android-27"
+
 android:
   components:
     # Uncomment the lines below if you want to
