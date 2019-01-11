@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def targetSdk = 27
+def targetSdk = 28
 
 android {
     compileSdkVersion targetSdk
@@ -9,9 +9,9 @@ android {
         applicationId "net.gotev.recycleradapterdemo"
         minSdkVersion 16
         targetSdkVersion targetSdk
-        versionCode 6
+        versionCode 7
         versionName "1.6"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -19,16 +19,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
-def butterKnifeVersion = "8.8.1"
+def butterKnifeVersion = "10.0.0"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha3', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     testImplementation 'junit:junit:4.12'
     implementation project(':recycleradapter')
     implementation "com.jakewharton:butterknife:${butterKnifeVersion}"
