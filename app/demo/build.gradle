@@ -1,16 +1,14 @@
 apply plugin: 'com.android.application'
 
-def targetSdk = 28
-
 android {
-    compileSdkVersion targetSdk
+    compileSdkVersion target_sdk
 
     defaultConfig {
-        applicationId "net.gotev.recycleradapterdemo"
-        minSdkVersion 16
-        targetSdkVersion targetSdk
-        versionCode 7
-        versionName "1.6"
+        applicationId demo_app_id
+        minSdkVersion min_sdk
+        targetSdkVersion target_sdk
+        versionCode version_code
+        versionName library_version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -22,21 +20,43 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
-def butterKnifeVersion = "10.0.0"
-
 dependencies {
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha3', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    testImplementation 'junit:junit:4.12'
-    implementation project(':recycleradapter')
+    // Testing - https://developer.android.com/training/testing/set-up-project
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+    // Core library
+    androidTestImplementation "androidx.test:core:$androidx_test_core_version"
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation "androidx.test:runner:$androidx_test_runner_version"
+    androidTestImplementation "androidx.test:rules:$androidx_test_rules_version"
+
+    // Assertions
+    androidTestImplementation "androidx.test.ext:junit:$androidx_test_ext_junit_version"
+    androidTestImplementation "androidx.test.ext:truth:$androidx_test_ext_truth_version"
+    androidTestImplementation "com.google.truth:truth:$truth_version"
+
+    // Espresso dependencies
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_test_espresso_version"
+
+    // Support
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
+    implementation 'com.google.android.material:material:1.0.0'
+
+    // ButterKnife
+    def butterKnifeVersion = "10.0.0"
     implementation "com.jakewharton:butterknife:${butterKnifeVersion}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
+
+    // Other 3rd party dependencies
     implementation "com.daimajia.swipelayout:library:1.2.0@aar"
+
+    implementation project(':recycleradapter')
+
 }
