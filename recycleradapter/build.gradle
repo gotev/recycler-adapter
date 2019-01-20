@@ -147,6 +147,7 @@ task javadoc(type: Javadoc) {
         links("http://docs.oracle.com/javase/7/docs/api/");
         linksOffline("http://d.android.com/reference", "${android.sdkDirectory}/docs/reference");
         setMemberLevel(JavadocMemberLevel.PUBLIC)
+        addStringOption('Xdoclint:none', '-quiet')
     }
 }
 

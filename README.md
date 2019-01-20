@@ -1,4 +1,4 @@
-# Recycler Adapter [![Build Status](https://travis-ci.org/gotev/recycler-adapter.svg?branch=master)](https://travis-ci.org/gotev/recycler-adapter) [![Javadocs](http://javadoc.io/badge/net.gotev/recycleradapter.svg)](http://javadoc.io/doc/net.gotev/recycleradapter) <a href="http://www.methodscount.com/?lib=net.gotev%3Arecycleradapter%3A1.5.3"><img src="https://img.shields.io/badge/Methods and size-core: 133 | deps: 11060 | 13 KB-e91e63.svg"/></a>
+# Recycler Adapter [![Build Status](https://travis-ci.org/gotev/recycler-adapter.svg?branch=master)](https://travis-ci.org/gotev/recycler-adapter) [![Javadocs](http://javadoc.io/badge/net.gotev/recycleradapter.svg)](http://javadoc.io/doc/net.gotev/recycleradapter)
 Makes the use of RecyclerView easier, modular and less error-prone.
 
 Standard `RecyclerView.Adapter` is tedious to work with, because you have to write repetitive boilerplate and spaghetti code and to concentrate all your items view logic and binding into the adapter itself, which is really bad. This library was born to be able to have the following for each element in a recycler view:
@@ -26,14 +26,14 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-implementation 'net.gotev:recycleradapter:1.7'
+implementation 'net.gotev:recycleradapter:1.8.0'
 ```
 
 ## <a name="basicTutorial"></a>Basic usage tutorial
 ### 1. Declare the RecyclerView
 In your layout resource file or where you want the `RecyclerView` (e.g. `activity_main.xml`) add the following:
 ```xml
-<android.support.v7.widget.RecyclerView
+<androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recycler_view"
     android:scrollbars="vertical"
     android:layout_width="match_parent"
@@ -493,4 +493,6 @@ onEvent(int position, Bundle dataChanged); // receive event in AdapterItem
 In the demo app provided with the library, you can also see how to implement the [leave behind material design pattern](https://material.io/guidelines/components/lists-controls.html#lists-controls-types-of-list-controls). All the changes involved into the implementation can be seen in [this commit](https://github.com/gotev/recycler-adapter/commit/fa240519025f98ba609395034f42e89d5bb777fd). This implementation has not been included into the base library deliberately, to avoid depending on external libraries just for a single kind of item implementation. You can easily import the needed code in your project from the demo app sources if you want to have leave behind implementation.
 
 ## <a name="contributors"></a>Contributors
-Thanks to [Kristiyan Petrov](https://github.com/kristiyanP) for the beta testing and code review
+Thanks to:
+* [Kristiyan Petrov](https://github.com/kristiyanP) for the beta testing and code review
+* [Nicola Gallazzi](https://github.com/ngallazzi) for helping transitioning the library to AndroidX
