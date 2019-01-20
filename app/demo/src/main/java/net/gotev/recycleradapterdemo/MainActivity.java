@@ -1,9 +1,9 @@
 package net.gotev.recycleradapterdemo;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new RecyclerAdapter();
         adapter.setEmptyItem(new EmptyItem(getString(R.string.empty_list)));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.setAdapter(adapter);
         adapter.enableDragDrop(recyclerView);
 

@@ -22,7 +22,7 @@ android {
         targetSdkVersion sdkVersion
         versionCode 17
         versionName version
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:recyclerview-v7:${supportLibVersion}"
+    compile 'androidx.recyclerview:recyclerview:1.0.0'
 }
 
 // add the following information to the file: local.properties situated in the parent directory of

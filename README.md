@@ -94,7 +94,7 @@ In your Activity (`onCreate` method) or Fragment (`onCreateView` method):
 ```java
 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 RecyclerAdapter adapter = new RecyclerAdapter();
-recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 recyclerView.setAdapter(adapter);
 
 //add items

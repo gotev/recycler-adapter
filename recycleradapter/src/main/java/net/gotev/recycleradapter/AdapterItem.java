@@ -1,7 +1,7 @@
 package net.gotev.recycleradapter;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 
