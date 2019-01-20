@@ -8,15 +8,13 @@ def projectName = "recycler-adapter"
 def projectDesc = "Easily create a RecyclerView Adapter"
 def projectGroup = "net.gotev"
 group = projectGroup
-version = "1.7"
+version = "1.8"
 
-def sdkVersion = 27
-def toolsVersion = "27.0.3"
-def supportLibVersion = "27.0.2"
+def sdkVersion = 28
 
 android {
     compileSdkVersion sdkVersion
-    buildToolsVersion toolsVersion
+
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion sdkVersion
@@ -24,19 +22,21 @@ android {
         versionName version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     lintOptions {
         abortOnError false
     }
 }
 
 dependencies {
-    compile 'androidx.recyclerview:recyclerview:1.0.0'
+    api 'androidx.recyclerview:recyclerview:1.0.0'
 }
 
 // add the following information to the file: local.properties situated in the parent directory of
