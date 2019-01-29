@@ -16,6 +16,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 * [Filter items](#filterItems)
 * [Sort items](#sortItems)
 * [Using ButterKnife](#butterKnife)
+* [Using Kotlin Android Extensions](#kotlinAndroidExt)
 * [Reorder items with drag & drop](#dragDrop)
 * [Handle clicks](#handleClicks)
 * [Handle item status](#handleItemStatus)
@@ -260,6 +261,9 @@ public static class Holder extends ButterKnifeViewHolder {
     }
 }
 ```
+
+## <a name="kotlinAndroidExt"></a>Using Kotlin Android Extensions
+If you use Kotlin in your project, you can also use Kotlin Android Extensions to bind your views in ViewHolder, but be careful to not fall in a common pitfall, explained very well here: https://proandroiddev.com/kotlin-android-extensions-using-view-binding-the-right-way-707cd0c9e648
 
 ## <a name="dragDrop"></a>Reorder items with drag & drop
 To be able to change the items order with drag & drop, just add this line:
