@@ -1,0 +1,14 @@
+package net.gotev.recycleradapterdemo.leavebehind
+
+import net.gotev.recycleradapter.AdapterItem
+import net.gotev.recycleradapterdemo.R
+
+/**
+ * Base adapter item to extend when implementing leave-behind material pattern.
+ * @author Aleksandar Gotev
+ */
+abstract class LeaveBehindAdapterItem<T : LeaveBehindViewHolder> : AdapterItem<T>() {
+
+    override fun getLayoutId() = R.layout.item_leave_behind
+
+}
