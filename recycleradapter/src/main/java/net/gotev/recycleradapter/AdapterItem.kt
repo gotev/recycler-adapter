@@ -1,9 +1,7 @@
 package net.gotev.recycleradapter
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-
 import java.lang.reflect.InvocationTargetException
 
 /**
@@ -71,7 +69,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(NoSuchMethodException::class, InstantiationException::class, InvocationTargetException::class, IllegalAccessException::class)
-    protected fun getViewHolder(view: View, adapter: RecyclerAdapterNotifier): T? {
+    internal fun getViewHolder(view: View, adapter: RecyclerAdapterNotifier): T {
 
         // analyze all the public classes and interfaces that are members of the class represented
         // by this Class object and search for the first RecyclerAdapterViewHolder
@@ -85,10 +83,9 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
             }
         }
 
-        Log.e(javaClass.simpleName, "No ViewHolder implementation found! " +
+        throw RuntimeException("${javaClass.simpleName} - No ViewHolder implementation found! " +
                 "Please check that all your ViewHolder implementations are: 'public static' and " +
                 "not private or protected, otherwise reflection will not work!")
-        return null
 
     }
 

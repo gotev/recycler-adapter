@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                adapter.filter(search.toString())
+                adapter.filter(search.text.toString())
             }
         })
     }

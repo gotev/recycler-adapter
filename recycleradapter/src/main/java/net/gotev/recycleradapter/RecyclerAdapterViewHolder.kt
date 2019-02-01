@@ -1,9 +1,8 @@
 package net.gotev.recycleradapter
 
 import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-
+import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
 
 /**
