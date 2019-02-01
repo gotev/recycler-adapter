@@ -82,7 +82,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
      */
     public void setEmptyItem(AdapterItem item) {
         emptyItem = item;
-        emptyItemId = ViewIdGenerator.generateViewId();
+        emptyItemId = View.generateViewId();
 
         if (getItems().isEmpty())
             notifyItemInserted(0);
@@ -274,7 +274,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapterViewHol
         final String className = item.getClass().getName();
 
         if (!typeIds.containsKey(className)) {
-            int viewId = ViewIdGenerator.generateViewId();
+            int viewId = View.generateViewId();
             typeIds.put(className, viewId);
             types.put(viewId, item);
         }

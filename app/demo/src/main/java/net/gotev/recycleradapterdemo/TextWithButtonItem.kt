@@ -23,8 +23,8 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
 
-    override fun onEvent(position: Int, data: Bundle): Boolean {
-        pressed = data.getBoolean(PARAM_PRESSED, false)
+    override fun onEvent(position: Int, data: Bundle?): Boolean {
+        pressed = data?.getBoolean(PARAM_PRESSED, false) ?: false
         return true
     }
 
