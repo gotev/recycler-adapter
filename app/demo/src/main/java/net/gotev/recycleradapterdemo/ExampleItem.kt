@@ -13,7 +13,8 @@ import net.gotev.recycleradapter.RecyclerAdapterNotifier
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 
 
-open class ExampleItem(private val context: Context, private val text: String) : AdapterItem<ExampleItem.Holder>() {
+open class ExampleItem(private val context: Context, private val text: String)
+    : AdapterItem<ExampleItem.Holder>() {
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
 
@@ -39,7 +40,8 @@ open class ExampleItem(private val context: Context, private val text: String) :
         holder.subtitleField.text = "subtitle"
     }
 
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier) : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+    class Holder(itemView: View, adapter: RecyclerAdapterNotifier)
+        : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
 
         override val containerView: View?
             get() = itemView

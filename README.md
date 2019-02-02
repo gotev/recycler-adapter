@@ -61,7 +61,8 @@ Create your item layout (e.g. `item_example.xml`). For example:
 
 ### 3. Create the item
 ```kotlin
-open class ExampleItem(private val context: Context, private val text: String) : AdapterItem<ExampleItem.Holder>() {
+open class ExampleItem(private val context: Context,
+                       private val text: String) : AdapterItem<ExampleItem.Holder>() {
 
     override fun getLayoutId() = R.layout.item_example
 
@@ -69,7 +70,8 @@ open class ExampleItem(private val context: Context, private val text: String) :
         holder.titleField.text = text
     }
 
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier) : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+    class Holder(itemView: View,
+                 adapter: RecyclerAdapterNotifier) : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
 
         override val containerView: View?
             get() = itemView
@@ -86,7 +88,7 @@ In your Activity (`onCreate` method) or Fragment (`onCreateView` method):
 val recyclerAdapter = RecyclerAdapter()
 
 recycler_view.apply { // recycler_view is the id of your Recycler View in the layout
-    layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
+    layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     adapter = recyclerAdapter
 }
 

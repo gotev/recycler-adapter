@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         recyclerAdapter.setEmptyItem(EmptyItem(getString(R.string.empty_list)))
 
         recycler_view.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
+            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = recyclerAdapter
             recyclerAdapter.enableDragDrop(this)
         }
