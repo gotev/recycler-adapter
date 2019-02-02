@@ -81,6 +81,8 @@ open class ExampleItem(private val context: Context, private val text: String)
 }
 ```
 
+`LayoutContainer` is from Kotlin Android Extensions and is not mandatory, but it prevents memory leaks. [Read the article linked here](#kotlinAndroidExt)
+
 ### 4. Instantiate RecyclerView and add items
 In your Activity (`onCreate` method) or Fragment (`onCreateView` method):
 
