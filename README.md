@@ -431,7 +431,7 @@ To complicate things, many times a single RecyclerView has to contain various gr
 So it gets pretty complicated, huh 😨? Don't worry, `RecyclerAdapter` to the rescue! 🙌🏼
 
 ### Selectable AdapterItem implementation
-From release `2..0.0` onwards, support for `selection groups` has been added.
+From release `2.0.0` onwards, support for `selection groups` has been added.
 
 1. First of all, override `getSelectionGroup` in your `AdapterItem`:
 ```kotlin
