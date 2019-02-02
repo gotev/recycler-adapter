@@ -1,4 +1,5 @@
-# Recycler Adapter [![Build Status](https://travis-ci.org/gotev/recycler-adapter.svg?branch=master)](https://travis-ci.org/gotev/recycler-adapter) [![Javadocs](http://javadoc.io/badge/net.gotev/recycleradapter.svg)](http://javadoc.io/doc/net.gotev/recycleradapter)
+# Recycler Adapter [![Build Status](https://travis-ci.org/gotev/recycler-adapter.svg?branch=master)](https://travis-ci.org/gotev/recycler-adapter)
+
 Makes the use of RecyclerView easier, modular and less error-prone.
 
 Standard `RecyclerView.Adapter` is tedious to work with, because you have to write repetitive boilerplate and spaghetti code and to concentrate all your items view logic and binding into the adapter itself, which is really bad. This library was born to be able to have the following for each element in a recycler view:
@@ -9,6 +10,7 @@ Standard `RecyclerView.Adapter` is tedious to work with, because you have to wri
 In this way every item of the recycler view has its own set of files, resulting in a cleaner and easier to maintain code base.
 
 # Index
+
 * [Setup](#setup)
 * [Basic usage tutorial](#basicTutorial)
 * [Adding different kind of items](#differentItems)
@@ -58,87 +60,80 @@ Create your item layout (e.g. `item_example.xml`). For example:
 ```
 
 ### 3. Create the item
-```java
-public class ExampleItem extends AdapterItem<ExampleItem.Holder> {
+```kotlin
+open class ExampleItem(private val context: Context, private val text: String) : AdapterItem<ExampleItem.Holder>() {
 
-    private String text;
+    override fun getLayoutId() = R.layout.item_example
 
-    public ExampleItem(String text) {
-        this.text = text;
+    override fun bind(holder: ExampleItem.Holder) {
+        holder.titleField.text = text
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.item_example;
-    }
+    class Holder(itemView: View, adapter: RecyclerAdapterNotifier) : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
 
-    @Override
-    protected void bind(ExampleItem.Holder holder) {
-        holder.textView.setText(text);
-    }
+        override val containerView: View?
+            get() = itemView
 
-    public static class Holder extends RecyclerAdapterViewHolder {
-
-        TextView textView;
-
-        public Holder(View itemView, RecyclerAdapterNotifier adapter) {
-            super(itemView, adapter);
-
-            textView = (TextView) findViewById(R.id.textView);
-        }
+        internal val titleField: TextView by lazy { title }
     }
 }
 ```
 
 ### 4. Instantiate RecyclerView and add items
 In your Activity (`onCreate` method) or Fragment (`onCreateView` method):
-```java
-RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-RecyclerAdapter adapter = new RecyclerAdapter();
-recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-recyclerView.setAdapter(adapter);
+
+```kotlin
+val recyclerAdapter = RecyclerAdapter()
+
+recycler_view.apply { // recycler_view is the id of your Recycler View in the layout
+    layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
+    adapter = recyclerAdapter
+}
 
 //add items
-adapter.add(new ExampleItem("test"));
+recyclerAdapter.add(ExampleItem("test"))
 ```
 
 ## <a name="differentItems"></a>Adding different kind of items
 You can have more than one kind of item in your `RecyclerView`. Just implement a different `AdapterItem` for every type you want to support, and then just add it into the adapter:
-```java
-adapter.add(new ExampleItem("example item"));
-adapter.add(new TextWithButtonItem("text with button"));
+
+```kotlin
+recyclerAdapter.add(ExampleItem("example item"))
+recyclerAdapter.add(TextWithButtonItem("text with button"))
 ```
 
 Checkout the example app provided to get a real example in action.
 
 ## <a name="emptyItem"></a>Empty item
 It's often useful to display something on the screen when the RecyclerView is empty. To do so, simply implement a new `Item` just as you would do with a normal item in the list, then:
-```java
-adapter.setEmptyItem(yourEmptyItem);
+
+```kotlin
+recyclerAdapter.setEmptyItem(yourEmptyItem)
 ```
 wherever you need it in your code. It doesn't necessarily have to be invoked before
-```java
-recyclerView.setAdapter(adapter);
+
+```kotlin
+recyclerView.setAdapter(recyclerAdapter)
 ```
 
 ## <a name="filterItems"></a>Filter items
 If you need to search items in your recycler view, you have to override this method in each one of your items implementation:
-```java
+
+```kotlin
 /**
- * Gets called for every item when the {@link AdapterItem#onFilter(String)}
- * method gets called.
- *
+ * Gets called for every item when the [RecyclerAdapter.filter] method gets called.
  * @param searchTerm term to search for
- * @return true if the item matches the search term, false otherwise
+ * @return true if the items matches the search term, false otherwise
  */
-@Override
-public boolean onFilter(String searchTerm) {
-    return text.contains(searchTerm);
+open fun onFilter(searchTerm: String): Boolean {
+    return textField.contains(searchTerm)
 }
 ```
+
 then, to filter the recycler view, call:
-```java
-adapter.filter("search item");
+
+```kotlin
+recyclerAdapter.filter("search item")
 ```
 and the recycler view will show only the items which matches the search term. To reset the search filter, pass `null` or an empty string.
 
@@ -147,30 +142,25 @@ To sort items, you have the following possible approaches.
 
 ### 1. Implement `compareTo` and call `sort` on the `RecyclerAdapter`
 This is the recommended approach if you have to sort all your items by a single criteria and you have a list with only one type of `Item`. Check [compareTo JavaDoc reference](https://developer.android.com/reference/java/lang/Comparable.html#compareTo(T)) for further information. In your `AdapterItem` implement:
-```java
-@Override
-public int compareTo(AdapterItem otherItem) {
-    // if the other item class is not the same, then
-    // this item should be put before it. -1 is only
-    // for example
-    if (otherItem.getClass() != getClass())
-        return -1;
 
-    RobotItem item = (RobotItem) otherItem;
+```kotlin
+override fun compareTo(other: AdapterItem<*>): Int {
+    if (other.javaClass != javaClass)
+        return -1
 
-    // in this example item, we have a field named id
-    // of type int, and we want to sort elements by
-    // id
+    val item = other as SyncItem
+
     if (id == item.id)
-        return 0;
+        return 0
 
-    return id > item.id ? 1 : -1;
+    return if (id > item.id) 1 else -1
 }
 ```
 
 Then call:
-```java
-adapter.sort(true); //true means ascending order (A-Z), false descending (Z-A)
+
+```kotlin
+recyclerAdapter.sort(ascending = true)
 ```
 You can see an example in action by looking at the code in the `SyncActivity` and `SyncItem` of the demo app.
 
@@ -226,49 +216,16 @@ adapter.sort(true, new Comparator<AdapterItem>() {
 ```
 
 ## <a name="butterKnife"></a>Using ButterKnife
-You can safely use [ButterKnife](https://github.com/JakeWharton/butterknife) in your ViewHolders. Example:
-```java
-public static class Holder extends RecyclerAdapterViewHolder {
-
-    @BindView(R.id.textView)
-    TextView textView;
-
-    public Holder(View itemView, RecyclerAdapterNotifier adapter) {
-        super(itemView, adapter);
-        ButterKnife.bind(this, itemView);
-    }
-}
-```
-
-If you are using [ButterKnife](https://github.com/JakeWharton/butterknife) in your project and you want to minimize boilerplate code in your ViewHolders, you can extend `RecyclerAdapterViewHolder`, implement ButterKnife in it, and then extend all of your ViewHolders from it:
-```java
-public abstract class ButterKnifeViewHolder extends RecyclerAdapterViewHolder {
-    public ButterKnifeViewHolder(View itemView, RecyclerAdapterNotifier adapter) {
-        super(itemView, adapter);
-        ButterKnife.bind(this, itemView);
-    }
-}
-```
-Then you can use it like this:
-```java
-public static class Holder extends ButterKnifeViewHolder {
-
-    @BindView(R.id.textView)
-    TextView textView;
-
-    public Holder(View itemView, RecyclerAdapterNotifier adapter) {
-        super(itemView, adapter);
-    }
-}
-```
+You can safely use [ButterKnife](https://github.com/JakeWharton/butterknife) in your ViewHolders, however Kotlin Android Extensions are more widely used and recommended.
 
 ## <a name="kotlinAndroidExt"></a>Using Kotlin Android Extensions
 If you use Kotlin in your project, you can also use Kotlin Android Extensions to bind your views in ViewHolder, but be careful to not fall in a common pitfall, explained very well here: https://proandroiddev.com/kotlin-android-extensions-using-view-binding-the-right-way-707cd0c9e648
 
 ## <a name="dragDrop"></a>Reorder items with drag & drop
 To be able to change the items order with drag & drop, just add this line:
-```java
-adapter.enableDragDrop(recyclerView);
+
+```kotlin
+recyclerAdapter.enableDragDrop(recyclerView)
 ```
 
 ## <a name="handleClicks"></a>Handle clicks

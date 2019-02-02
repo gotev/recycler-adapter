@@ -24,34 +24,34 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val adapter = RecyclerAdapter()
-        adapter.setEmptyItem(EmptyItem(getString(R.string.empty_list)))
+        val recyclerAdapter = RecyclerAdapter()
+        recyclerAdapter.setEmptyItem(EmptyItem(getString(R.string.empty_list)))
 
         recycler_view.apply {
             layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
-            this.adapter = adapter
-            adapter.enableDragDrop(this)
+            adapter = recyclerAdapter
+            recyclerAdapter.enableDragDrop(this)
         }
 
-        adapter.add(MyLeaveBehindItem("swipe to left to leave behind", "option"))
+        recyclerAdapter.add(MyLeaveBehindItem("swipe to left to leave behind", "option"))
 
         for (i in 0 until random.nextInt(200) + 50) {
             if (i % 2 == 0)
-                adapter.add(ExampleItem(this, "example item $i"))
+                recyclerAdapter.add(ExampleItem(this, "example item $i"))
             else
-                adapter.add(TextWithButtonItem("text with button $i"))
+                recyclerAdapter.add(TextWithButtonItem("text with button $i"))
         }
 
         remove_all_items_of_a_kind.setOnClickListener {
-            adapter.removeAllItemsWithClass(ExampleItem::class.java)
+            recyclerAdapter.removeAllItemsWithClass(ExampleItem::class.java)
         }
 
         remove_last_item_of_a_kind.setOnClickListener {
-            adapter.removeLastItemWithClass(TextWithButtonItem::class.java)
+            recyclerAdapter.removeLastItemWithClass(TextWithButtonItem::class.java)
         }
 
         add_item.setOnClickListener {
-            adapter.add(ExampleItem(this, "added item " + UUID.randomUUID().toString()))
+            recyclerAdapter.add(ExampleItem(this, "added item " + UUID.randomUUID().toString()))
         }
 
         search.addTextChangedListener(object : TextWatcher {
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                adapter.filter(search.text.toString())
+                recyclerAdapter.filter(search.text.toString())
             }
         })
     }

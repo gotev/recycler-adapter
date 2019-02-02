@@ -80,7 +80,7 @@ class SyncActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.sort_ascending -> {
-            recyclerAdapter.sort(true)
+            recyclerAdapter.sort(ascending = true)
             true
         }
 
