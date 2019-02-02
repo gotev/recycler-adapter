@@ -461,9 +461,9 @@ override fun getSelectionGroup() = "MySelectionGroup"
  */
 open fun onSelectionChanged(isNowSelected: Boolean): Boolean = true
 ```
-But bear in mind that `AdapterItem` handles selected state for you already, so in many cases you shoudn't need to override this method. You can always access the selection state with the `selected` boolean field available in all your custom `AdapterItem`. Do not mess with it and use it read-only.
+But bear in mind that `AdapterItem` handles selected state for you already, so in many cases you shoudn't need to override this method. You can always access the current selection state with the `selected` boolean field available in all your custom `AdapterItem`s. Do not mess with `selected` and use it read-only.
 
-3. Setup a click listener as you usually do on the `AdapterItem ViewHolder` and call the `setSelected` method:
+3. Setup a click listener as you usually do in the `AdapterItem ViewHolder` and call the `setSelected` method:
 ```kotlin
 toggleField.setOnClickListener {
     setSelected()
@@ -480,8 +480,10 @@ Check Method's JavaDoc for full reference.
 
 Wait! How can I know which options the user selected? That's easy, too!
 ```kotlin
-val listOfSelectedItems recyclerAdapter.getSelectedItems(selectionGroup = "MySelectionGroup") as List<YourCustomItem>
+val listOfSelectedItems = recyclerAdapter
+    .getSelectedItems(selectionGroup = "MySelectionGroup") as List<YourCustomItem>
 ```
+where `YourCustomItem` is the specific kind of items which you used for that particular custom selection group.
 
 ## <a name="leaveBehind"></a>Leave Behind pattern example implementation
 In the demo app provided with the library, you can also see how to implement the [leave behind material design pattern](https://material.io/guidelines/components/lists-controls.html#lists-controls-types-of-list-controls). All the changes involved into the implementation can be seen in [this commit](https://github.com/gotev/recycler-adapter/commit/fa240519025f98ba609395034f42e89d5bb777fd). This implementation has not been included into the base library deliberately, to avoid depending on external libraries just for a single kind of item implementation. You can easily import the needed code in your project from the demo app sources if you want to have leave behind implementation.
