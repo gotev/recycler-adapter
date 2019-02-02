@@ -21,9 +21,35 @@ class SyncActivity : AppCompatActivity() {
 
     private lateinit var recyclerAdapter: RecyclerAdapter
 
+    private fun listA() =
+            arrayListOf(
+                    SyncItem(this, 1, "listA"),
+                    SyncItem(this, 2, "listA"),
+                    SyncItem(this, 3, "listA")
+            )
+
+    private fun listB() =
+            arrayListOf(
+                    SyncItem(this, 1, "listB"),
+                    SyncItem(this, 4, "listB"),
+                    SyncItem(this, 5, "listB")
+            )
+
+    private fun listC() =
+            arrayListOf(
+                    SyncItem(this, 1, "listC")
+            )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sync)
+
+        title = getString(R.string.sync_with_items)
+
+        supportActionBar?.apply {
+            setHomeButtonEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+        }
 
         recyclerAdapter = RecyclerAdapter()
         recyclerAdapter.setEmptyItem(EmptyItem(getString(R.string.empty_list)))
@@ -34,16 +60,17 @@ class SyncActivity : AppCompatActivity() {
         }
 
         syncA.setOnClickListener {
-            recyclerAdapter.syncWithItems(listA)
+            recyclerAdapter.syncWithItems(listA())
         }
 
         syncB.setOnClickListener {
-            recyclerAdapter.syncWithItems(listB)
+            recyclerAdapter.syncWithItems(listB())
         }
 
         syncC.setOnClickListener {
-            recyclerAdapter.syncWithItems(listC)
+            recyclerAdapter.syncWithItems(listC())
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -63,28 +90,6 @@ class SyncActivity : AppCompatActivity() {
         }
 
         else -> super.onOptionsItemSelected(item)
-    }
-
-    private val listA by lazy {
-        arrayListOf(
-                SyncItem(this, 1, "listA"),
-                SyncItem(this, 2, "listA"),
-                SyncItem(this, 3, "listA")
-        )
-    }
-
-    private val listB by lazy {
-        arrayListOf(
-                SyncItem(this, 1, "listB"),
-                SyncItem(this, 4, "listB"),
-                SyncItem(this, 5, "listB")
-        )
-    }
-
-    private val listC by lazy {
-        arrayListOf(
-                SyncItem(this, 1, "listC")
-        )
     }
 
 }

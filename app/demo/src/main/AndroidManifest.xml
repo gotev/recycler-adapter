@@ -16,7 +16,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SyncActivity" />
+        <activity
+            android:name=".SyncActivity"
+            android:parentActivityName=".MainActivity"/>
 
     </application>
 

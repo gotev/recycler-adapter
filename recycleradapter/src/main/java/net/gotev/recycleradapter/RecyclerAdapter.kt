@@ -11,224 +11,61 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
 /**
- * Helper class to easily work with Android's RecyclerView.Adapter.
+ * Makes the use of RecyclerView easier, modular and less error-prone
  *
  * @author Aleksandar Gotev
  */
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), RecyclerAdapterNotifier {
 
+    companion object {
+        /**
+         * Applies swipe gesture detection on a RecyclerView items.
+         *
+         * @param recyclerView recycler view o which to apply the swipe gesture
+         * @param listener     listener called when a swipe is performed on one of the items
+         */
+        fun applySwipeGesture(recyclerView: RecyclerView, listener: SwipeListener) {
+            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                    0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                                    target: RecyclerView.ViewHolder): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+                    listener.onItemSwiped(viewHolder.adapterPosition, swipeDir)
+                }
+            }).attachToRecyclerView(recyclerView)
+        }
+    }
+
+    private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
+
     private val typeIds = LinkedHashMap<String, Int>()
     private val types = LinkedHashMap<Int, AdapterItem<*>>()
-    private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
+
     private var emptyItem: AdapterItem<in RecyclerAdapterViewHolder>? = null
-    private var emptyItemId: Int = 0
+    private var emptyItemId = 0
 
     private var filtered = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
-    private var showFiltered: Boolean = false
+    private var showFiltered = false
 
-    private val items: ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>
+    private val items
         get() = if (showFiltered) filtered else itemsList
 
-    /**
-     * Sets the item to show when the recycler adapter is empty.
-     *
-     * @param item item to show when the recycler adapter is empty
-     */
-    fun setEmptyItem(item: AdapterItem<out RecyclerAdapterViewHolder>) {
-        emptyItem = item as AdapterItem<in RecyclerAdapterViewHolder>
-        emptyItemId = View.generateViewId()
-
-        if (items.isEmpty())
-            notifyItemInserted(0)
+    @Suppress("UNCHECKED_CAST")
+    private fun <T : RecyclerAdapterViewHolder> AdapterItem<out T>.castAsIn(): AdapterItem<in T> {
+        return this as AdapterItem<in T>
     }
 
-    /**
-     * Adds a new item to this adapter
-     *
-     * @param item item to add
-     * @return [RecyclerAdapter]
-     */
-    fun add(item: AdapterItem<*>): RecyclerAdapter {
-        registerItemType(item)
-        items.add(item as AdapterItem<in RecyclerAdapterViewHolder>)
-        removeEmptyItemIfItHasBeenConfigured()
+    private fun Int.isOutOfItemsRange() = this < 0 || this >= items.size
 
-        notifyItemInserted(items.size - 1)
-        return this
-    }
+    private fun adapterIsEmptyAndEmptyItemIsDefined() = items.isEmpty() && emptyItem != null
 
-    /**
-     * Gets the position of an item in an adapter.
-     *
-     *
-     * For the method to work properly, all the items has to override the
-     * [AdapterItem.equals] and [AdapterItem.hashCode] methods and
-     * implement the required business logic code to detect if two instances are referring to the
-     * same item (plus some other changes). Check the example in [RecyclerAdapter.add]
-     *
-     * @param item item object
-     * @return the item's position or -1 if the item does not exist
-     */
-    fun getItemPosition(item: AdapterItem<*>): Int {
-        return items.indexOf(item)
-    }
-
-    /**
-     * Adds an item into the adapter or updates it if already existing.
-     *
-     *
-     * For the update to work properly, all the items has to override the
-     * [AdapterItem.equals] and [AdapterItem.hashCode] methods and
-     * implement the required business logic code to detect if two instances are referring to the
-     * same item (plus some other changes).
-     *
-     *
-     * As an example consider the following item
-     * (written in pseudocode, to write less code):
-     * <pre>
-     * Person extends AdapterItem {
-     * String id;
-     * String name;
-     * String city;
-     * }
-    </pre> *
-     * in this case every person is uniquely identified by its id, while other data may change, so
-     * the [AdapterItem.equals] method will look like this:
-     *
-     *
-     * <pre>
-     * public boolean equals(Object obj) {
-     * if (this == obj) {
-     * return true;
-     * }
-     *
-     * if (obj == null || getClass() != obj.getClass()) {
-     * return false;
-     * }
-     *
-     * Person other = (Person) obj;
-     * return other.getId().equals(id);
-     * }
-    </pre> *
-     *
-     *
-     * If the item already exists in the list, by impementing
-     * [AdapterItem.hasToBeReplacedBy] in your AdapterItem, you can decide
-     * when the new item should replace the existing one in the list, reducing the workload of
-     * the recycler view.
-     *
-     *
-     * Check hasToBeReplacedBy method JavaDoc for more information.
-     *
-     * @param item item to add or update
-     * @return [RecyclerAdapter]
-     */
-    fun addOrUpdate(item: AdapterItem<in RecyclerAdapterViewHolder>): RecyclerAdapter {
-        val itemIndex = getItemPosition(item)
-
-        if (itemIndex < 0) {
-            return add(item)
-        }
-
-        val internalItem = items[itemIndex]
-        if (internalItem.hasToBeReplacedBy(item)) { // the item needs to be updated
-            updateItemAtPosition(item, itemIndex)
-        }
-
-        return this
-    }
-
-    private fun updateItemAtPosition(item: AdapterItem<in RecyclerAdapterViewHolder>, position: Int) {
+    private fun updateItemAtPosition(item: AdapterItem<in RecyclerAdapterViewHolder>,
+                                     position: Int) {
         items[position] = item
         notifyItemChanged(position)
-    }
-
-    /**
-     * Syncs the internal list of items with a list passed as parameter.
-     * Adds, updates or deletes internal items, with RecyclerView animations.
-     *
-     *
-     * For the sync to work properly, all the items has to override the
-     * [AdapterItem.equals] and [AdapterItem.hashCode] methods and
-     * implement the required business logic code to detect if two instances are referring to the
-     * same item. Check the example in [RecyclerAdapter.add].
-     * If two instances are referring to the same item, you can decide if the item should be
-     * replaced by the new one, by implementing [AdapterItem.hasToBeReplacedBy].
-     * Check hasToBeReplacedBy method JavaDoc for more information.
-     *
-     * @param newItems list of new items. Passing a null or empty list will result in
-     * [RecyclerAdapter.clear] method call.
-     * @return [RecyclerAdapter]
-     */
-    fun syncWithItems(newItems: ArrayList<out AdapterItem<out RecyclerAdapterViewHolder>>?): RecyclerAdapter {
-        if (newItems == null || newItems.isEmpty()) {
-            clear()
-            return this
-        }
-
-        val iterator = items.listIterator()
-
-        while (iterator.hasNext()) {
-            val internalListIndex = iterator.nextIndex()
-            val item = iterator.next()
-
-            val indexInNewItemsList = newItems.indexOf(item)
-            // if the item does not exist in the new list, it means it has been deleted
-            if (indexInNewItemsList < 0) {
-                iterator.remove()
-                notifyItemRemoved(internalListIndex)
-            } else { // the item exists in the new list
-                val newItem = newItems[indexInNewItemsList]
-                if (item.hasToBeReplacedBy(newItem)) { // the item needs to be updated
-                    updateItemAtPosition(newItem as AdapterItem<in RecyclerAdapterViewHolder>, internalListIndex)
-                }
-                newItems.removeAt(indexInNewItemsList)
-            }
-        }
-
-        for (newItem in newItems) {
-            add(newItem)
-        }
-
-        return this
-    }
-
-    /**
-     * Removes an item from the adapter.
-     *
-     *
-     * For the remove to work properly, all the items has to override the
-     * [AdapterItem.equals] and [AdapterItem.hashCode] methods.
-     * Check the example in [RecyclerAdapter.addOrUpdate]
-     *
-     * @param item item to remove
-     * @return true if the item has been correctly removed or false if the item does not exist
-     */
-    fun removeItem(item: AdapterItem<*>): Boolean {
-        val itemIndex = items.indexOf(item)
-
-        return if (itemIndex < 0) {
-            false
-        } else removeItemAtPosition(itemIndex)
-
-    }
-
-    /**
-     * Adds a new item to this adapter
-     *
-     * @param item     item to add
-     * @param position position at which to add the element. The item previously at
-     * (position) will be at (position + 1) and the same for all the subsequent
-     * elements
-     * @return [RecyclerAdapter]
-     */
-    fun addAtPosition(item: AdapterItem<in RecyclerAdapterViewHolder>, position: Int): RecyclerAdapter {
-        registerItemType(item)
-        items.add(position, item)
-        removeEmptyItemIfItHasBeenConfigured()
-
-        notifyItemInserted(position)
-        return this
     }
 
     private fun registerItemType(item: AdapterItem<*>) {
@@ -254,34 +91,38 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             return emptyItemId
         }
 
-        val item = items[position]
-        val className = item.javaClass.name
-        return typeIds[className]!!
+        return typeIds.getValue(items[position].javaClass.name)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapterViewHolder {
         val item = if (adapterIsEmptyAndEmptyItemIsDefined() && viewType == emptyItemId) {
-            emptyItem
+            emptyItem!!
         } else {
-            types[viewType]
-        }!!
+            types.getValue(viewType)
+        }
 
         try {
-            val ctx = parent.context
-            val view = LayoutInflater.from(ctx).inflate(item.getLayoutId(), parent, false)
+            val inflater = LayoutInflater.from(parent.context)
+            val view = inflater.inflate(item.getLayoutId(), parent, false)
             return item.getViewHolder(view, this)
 
-        } catch (exc: NoSuchMethodException) {
-            throw RuntimeException("${javaClass.simpleName} - onCreateViewHolder error: you should declare " +
-                    "a constructor like this in your ViewHolder: " +
-                    "public RecyclerAdapterViewHolder(View itemView, RecyclerAdapterNotifier adapter)", exc)
-
-        } catch (exc: IllegalAccessException) {
-            throw RuntimeException("${javaClass.simpleName} - Your ViewHolder class in " +
-                    item.javaClass.name + " should be public!", exc)
-
         } catch (exc: Throwable) {
-            throw RuntimeException("${javaClass.simpleName} - onCreateViewHolder error", exc)
+            val message = when (exc) {
+                is NoSuchMethodException -> {
+                    "You should declare a constructor like this in your ViewHolder:\n" +
+                            "public RecyclerAdapterViewHolder(View itemView, RecyclerAdapterNotifier adapter)"
+                }
+
+                is IllegalAccessException -> {
+                    "Your ViewHolder class in ${item.javaClass.name} should be public!"
+                }
+
+                else -> {
+                    ""
+                }
+            }
+
+            throw RuntimeException("${javaClass.simpleName} - onCreateViewHolder error. $message", exc)
         }
 
     }
@@ -294,19 +135,153 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
     }
 
-    override fun getItemCount(): Int {
-        return if (adapterIsEmptyAndEmptyItemIsDefined()) 1 else items.size
-
-    }
+    override fun getItemCount() = if (adapterIsEmptyAndEmptyItemIsDefined()) 1 else items.size
 
     override fun sendEvent(holder: RecyclerAdapterViewHolder, data: Bundle?) {
-        val position = holder.adapterPosition
+        val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
 
-        if (position < 0 || position >= items.size)
-            return
-
-        if (items[position].onEvent(position, data))
+        if (items[position].onEvent(position, data)) {
             notifyItemChanged(position)
+        }
+    }
+
+    /**
+     * Sets the item to show when the recycler adapter is empty.
+     *
+     * @param item item to show when the recycler adapter is empty
+     */
+    fun setEmptyItem(item: AdapterItem<*>) {
+        emptyItem = item.castAsIn()
+        emptyItemId = View.generateViewId()
+
+        if (items.isEmpty())
+            notifyItemInserted(0)
+    }
+
+    /**
+     * Adds a new item to this adapter
+     *
+     * @param item item to add
+     * @param position position at which to add the element. If null, the element will be added
+     * at the end of the list, otherwise the item will be inserted at (position) and all the
+     * existing items starting from (position) will be shifted forward.
+     * @return [RecyclerAdapter]
+     */
+    fun add(item: AdapterItem<*>, position: Int? = null): RecyclerAdapter {
+        val insertPosition = if (position != null) {
+            items.add(position, item.castAsIn())
+            position
+        } else {
+            items.add(item.castAsIn())
+            items.lastIndex
+        }
+
+        registerItemType(item)
+        removeEmptyItemIfItHasBeenConfigured()
+        notifyItemInserted(insertPosition)
+        return this
+    }
+
+    /**
+     * Adds an item into the adapter or updates it if already existing.
+     *
+     * For the update to work properly, all the items has to override the [AdapterItem.equals]
+     * and [AdapterItem.hashCode] methods and implement the required business logic code to detect
+     * if two instances are referring to the same item.
+     *
+     * If the item already exists in the list, by implementing [AdapterItem.hasToBeReplacedBy]
+     * in your AdapterItem, you can decide when the new item should replace the existing one in
+     * the list, reducing the workload of the recycler view.
+     *
+     * Check [AdapterItem.hasToBeReplacedBy] method JavaDoc for more information.
+     *
+     * @param item item to add or update
+     * @return [RecyclerAdapter]
+     */
+    fun addOrUpdate(item: AdapterItem<in RecyclerAdapterViewHolder>): RecyclerAdapter {
+        val itemIndex = items.indexOf(item).takeIf { it >= 0 } ?: return add(item)
+
+        if (items[itemIndex].hasToBeReplacedBy(item)) {
+            updateItemAtPosition(item, itemIndex)
+        }
+
+        return this
+    }
+
+    /**
+     * Gets the position of an item in an adapter.
+     *
+     * For this method to work properly, all the items has to override the [AdapterItem.equals]
+     * and [AdapterItem.hashCode] methods and implement the required business logic code to detect
+     * if two instances are referring to the same item.
+     *
+     * @param item item object
+     * @return the item's position or -1 if the item does not exist
+     */
+    fun getItemPosition(item: AdapterItem<*>) = items.indexOf(item)
+
+    /**
+     * Syncs the internal list of items with a list passed as parameter.
+     * Adds, updates or deletes internal items, with RecyclerView animations.
+     *
+     *
+     * For the sync to work properly, all the items has to override the
+     * [AdapterItem.equals] and [AdapterItem.hashCode] methods and
+     * implement the required business logic code to detect if two instances are referring to the
+     * same item. Check the example in [RecyclerAdapter.add].
+     * If two instances are referring to the same item, you can decide if the item should be
+     * replaced by the new one, by implementing [AdapterItem.hasToBeReplacedBy].
+     * Check hasToBeReplacedBy method JavaDoc for more information.
+     *
+     * @param newItems list of new items. Passing a null or empty list will result in
+     * [RecyclerAdapter.clear] method call.
+     * @return [RecyclerAdapter]
+     */
+    fun syncWithItems(newItems: ArrayList<out AdapterItem<*>>): RecyclerAdapter {
+        if (newItems.isEmpty()) {
+            clear()
+            return this
+        }
+
+        val iterator = items.listIterator()
+
+        while (iterator.hasNext()) {
+            val internalListIndex = iterator.nextIndex()
+            val item = iterator.next()
+            val indexInNewItemsList = newItems.indexOf(item)
+
+            // if the item does not exist in the new list, it means it has been deleted
+            if (indexInNewItemsList < 0) {
+                iterator.remove()
+                notifyItemRemoved(internalListIndex)
+            } else { // the item exists in the new list
+                val newItem = newItems[indexInNewItemsList]
+                if (item.hasToBeReplacedBy(newItem)) { // the item needs to be updated
+                    updateItemAtPosition(newItem.castAsIn(), internalListIndex)
+                }
+                newItems.removeAt(indexInNewItemsList)
+            }
+        }
+
+        newItems.forEach { add(it) }
+
+        return this
+    }
+
+    /**
+     * Removes an item from the adapter.
+     *
+     *
+     * For the remove to work properly, all the items has to override the
+     * [AdapterItem.equals] and [AdapterItem.hashCode] methods.
+     * Check the example in [RecyclerAdapter.addOrUpdate]
+     *
+     * @param item item to remove
+     * @return true if the item has been correctly removed or false if the item does not exist
+     */
+    fun removeItem(item: AdapterItem<*>): Boolean {
+        val itemIndex = items.indexOf(item).takeIf { it >= 0 } ?: return false
+        return removeItemAtPosition(itemIndex)
     }
 
     /**
@@ -317,17 +292,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * the item will be removed. If it returns false, the item will not be removed
      */
     @JvmOverloads
-    fun removeAllItemsWithClass(clazz: Class<out AdapterItem<*>>?, listener: RemoveListener? = object : RemoveListener {
-        override fun hasToBeRemoved(item: AdapterItem<*>): Boolean {
-            return true
-        }
-    }) {
-        if (clazz == null)
-            throw IllegalArgumentException("The class of the items can't be null!")
-
-        if (listener == null)
-            throw IllegalArgumentException("RemoveListener can't be null!")
-
+    fun removeAllItemsWithClass(clazz: Class<out AdapterItem<*>>,
+                                listener: RemoveListener = object : RemoveListener {
+                                    override fun hasToBeRemoved(item: AdapterItem<*>) = true
+                                }) {
         if (items.isEmpty())
             return
 
@@ -342,10 +310,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             }
         }
 
-        val id = typeIds[clazz.name]
-        if (id != null) {
+        //TODO: check for type removal in all the other remove methods if the last of a kind has been removed
+        typeIds[clazz.name]?.let {
             typeIds.remove(clazz.name)
-            types.remove(id)
+            types.remove(it)
         }
     }
 
@@ -356,14 +324,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @return Pair with position and AdapterItem or null if the adapter is empty or no items
      * exists with the given class
      */
-    fun getLastItemWithClass(clazz: Class<out AdapterItem<*>>?): Pair<Int, AdapterItem<*>>? {
-        if (clazz == null)
-            throw IllegalArgumentException("The class of the items can't be null!")
-
+    fun getLastItemWithClass(clazz: Class<out AdapterItem<*>>): Pair<Int, AdapterItem<*>>? {
         if (items.isEmpty())
             return null
 
-        for (i in items.size - 1 downTo 0) {
+        for (i in items.lastIndex downTo 0) {
             if (items[i].javaClass.name == clazz.name) {
                 return Pair(i, items[i])
             }
@@ -378,14 +343,13 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param clazz class of the item to remove
      */
     fun removeLastItemWithClass(clazz: Class<out AdapterItem<*>>) {
-        if (items.isEmpty())
-            return
-
-        for (i in items.size - 1 downTo 0) {
-            if (items[i].javaClass.name == clazz.name) {
-                items.removeAt(i)
-                notifyItemRemoved(i)
-                break
+        items.takeIf { !it.isEmpty() }?.let { items ->
+            for (i in items.lastIndex downTo 0) {
+                if (items[i].javaClass.name == clazz.name) {
+                    items.removeAt(i)
+                    notifyItemRemoved(i)
+                    break
+                }
             }
         }
     }
@@ -398,15 +362,12 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @return true if the item has been removed, false if it doesn't exist or the position
      * is out of bounds
      */
-    fun removeItemAtPosition(position: Int): Boolean {
-        if (items.isEmpty() || position < 0 || position >= items.size)
-            return false
-
-        items.removeAt(position)
-        notifyItemRemoved(position)
-
-        return true
-    }
+    fun removeItemAtPosition(position: Int) =
+            items.takeIf { !it.isEmpty() && !position.isOutOfItemsRange() }?.let { items ->
+                items.removeAt(position)
+                notifyItemRemoved(position)
+                true
+            } ?: false
 
     /**
      * Gets an item at a given position.
@@ -414,24 +375,21 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param position item position
      * @return [AdapterItem] or null if the adapter is empty or the position is out of bounds
      */
-    fun getItemAtPosition(position: Int): AdapterItem<*>? {
-        return if (items.isEmpty() || position < 0 || position >= items.size) null else items[position]
-
-    }
+    fun getItemAtPosition(position: Int): AdapterItem<*>? =
+            items.takeIf { !it.isEmpty() && !position.isOutOfItemsRange() }
+                    ?.let { items -> items[position] }
 
     /**
      * Clears all the elements in the adapter.
      */
     fun clear() {
-        val itemsSize = items.size
-        items.clear()
-        if (itemsSize > 0) {
-            notifyItemRangeRemoved(0, itemsSize)
+        items.let {
+            val itemsSize = it.size
+            it.clear()
+            if (itemsSize > 0) {
+                notifyItemRangeRemoved(0, itemsSize)
+            }
         }
-    }
-
-    private fun adapterIsEmptyAndEmptyItemIsDefined(): Boolean {
-        return items.isEmpty() && emptyItem != null
     }
 
     /**
@@ -479,14 +437,16 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             return
         }
 
-        if (searchTerm == null || searchTerm.isEmpty()) {
+        if (searchTerm.isNullOrBlank()) {
             showFiltered = false
             notifyDataSetChanged()
             return
         }
 
-        filtered.clear()
-        filtered.addAll(itemsList.filter { it.onFilter(searchTerm) })
+        filtered.apply {
+            clear()
+            addAll(itemsList.filter { it.onFilter(searchTerm) })
+        }
 
         showFiltered = true
         notifyDataSetChanged()
@@ -496,82 +456,39 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     /**
      * Sort items.
      *
+     * each item must override the [AdapterItem.compareTo] method.
      *
-     * For this method to work properly, each item must override the
-     * [AdapterItem.compareTo] method.
+     * With this method you can override the default [AdapterItem.compareTo] and use a
+     * custom comparator which is responsible of item comparison.
      *
-     * @param ascending true for ascending order (A-Z) or false for descending order (Z-A)
-     */
-    fun sort(ascending: Boolean) {
-        val items = items
-
-        if (items == null || items.isEmpty())
-            return
-
-        if (ascending) {
-            (items as ArrayList<AdapterItem<out RecyclerAdapterViewHolder>>).sort()
-        } else {
-            (items as ArrayList<AdapterItem<out RecyclerAdapterViewHolder>>).sortDescending()
-        }
-
-        notifyDataSetChanged()
-    }
-
-    /**
-     * Sort items.
-     *
-     *
-     * With this method, the items doesn't have to override the
-     * [AdapterItem.compareTo] method, as the comparator is passed as
-     * argument and is responsible of item comparison. You can use this sort method if your items
-     * has to be sorted with many different strategies and not just one
-     * (e.g. order items by name, by date, ...).
+     * This is useful when your items has to be sorted with many different strategies
+     * and not just one (e.g. order items by name, by date, ...).
      *
      * @param ascending  true for ascending order (A-Z) or false for descending order (Z-A).
      * Ascending order follows the passed comparator sorting algorithm order,
      * descending order uses the inverse order
      * @param comparator custom comparator implementation
      */
-    fun sort(ascending: Boolean, comparator: Comparator<AdapterItem<*>>) {
-        val items = items
-
-        if (items == null || items.isEmpty())
-            return
+    @Suppress("UNCHECKED_CAST")
+    fun sort(ascending: Boolean, comparator: Comparator<AdapterItem<*>>? = null) {
+        val items = (items as ArrayList<AdapterItem<*>>)
+                .takeIf { !it.isEmpty() }
+                ?: return
 
         if (ascending) {
-            (items as ArrayList<AdapterItem<out RecyclerAdapterViewHolder>>).sortedWith(comparator)
+            if (comparator == null) {
+                items.sort()
+            } else {
+                items.sortWith(comparator)
+            }
         } else {
-            (items as ArrayList<AdapterItem<out RecyclerAdapterViewHolder>>).sortedWith(comparator).reversed()
+            if (comparator == null) {
+                items.sortDescending()
+            } else {
+                Collections.reverseOrder(comparator)
+            }
         }
 
         notifyDataSetChanged()
     }
-
-    companion object {
-
-        /**
-         * Applies swipe gesture detection on a RecyclerView items.
-         *
-         * @param recyclerView recycler view o which to apply the swipe gesture
-         * @param listener     listener called when a swipe is performed on one of the items
-         */
-        fun applySwipeGesture(recyclerView: RecyclerView, listener: SwipeListener) {
-            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-                    0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                    target: RecyclerView.ViewHolder): Boolean {
-                    return false
-                }
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    listener.onItemSwiped(viewHolder.adapterPosition, swipeDir)
-                }
-            }).attachToRecyclerView(recyclerView)
-        }
-    }
 }
-/**
- * Removes all the items with a certain class from this adapter and automatically notifies changes.
- *
- * @param clazz class of the items to be removed
- */
