@@ -2,9 +2,15 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/sync"
+    <item android:title="@string/sync_with_items"
         app:showAsAction="never|withText"
         android:visible="true"
         android:enabled="true"
         android:id="@+id/sync_demo" />
+
+    <item android:title="@string/selection"
+        app:showAsAction="never|withText"
+        android:visible="true"
+        android:enabled="true"
+        android:id="@+id/selection" />
 </menu>

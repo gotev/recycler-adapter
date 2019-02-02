@@ -1,4 +1,4 @@
-package net.gotev.recycleradapterdemo
+package net.gotev.recycleradapterdemo.adapteritems
 
 import android.view.View
 import android.widget.TextView
@@ -9,13 +9,14 @@ import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterNotifier
 
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
+import net.gotev.recycleradapterdemo.R
 
 
 class EmptyItem(private val text: String) : AdapterItem<EmptyItem.Holder>() {
 
     override fun getLayoutId() = R.layout.item_empty
 
-    override fun bind(holder: EmptyItem.Holder) {
+    override fun bind(holder: Holder) {
         holder.textViewField.text = text
     }
 

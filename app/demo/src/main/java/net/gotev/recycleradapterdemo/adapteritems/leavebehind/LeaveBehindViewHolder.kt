@@ -1,4 +1,4 @@
-package net.gotev.recycleradapterdemo.leavebehind
+package net.gotev.recycleradapterdemo.adapteritems.leavebehind
 
 import android.view.LayoutInflater
 import android.view.View

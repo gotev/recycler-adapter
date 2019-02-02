@@ -11,7 +11,7 @@
     tools:context="net.gotev.recycleradapterdemo.MainActivity">
 
     <Button
-        android:text="@string/sync"
+        android:text="Sync B"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/syncB"
@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="@string/sync"
+        android:text="Sync A"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/syncA"
@@ -38,7 +38,7 @@
         android:layout_above="@+id/syncC" />
 
     <Button
-        android:text="@string/sync"
+        android:text="Sync C"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/syncC"

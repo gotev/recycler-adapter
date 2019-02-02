@@ -1,4 +1,4 @@
-package net.gotev.recycleradapterdemo
+package net.gotev.recycleradapterdemo.adapteritems
 
 import android.content.Context
 
@@ -7,15 +7,17 @@ import net.gotev.recycleradapter.AdapterItem
 class SyncItem(context: Context, private val id: Int, private val suffix: String) : ExampleItem(context, "item $id $suffix") {
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-
         if (other == null || javaClass != other.javaClass) {
             return false
         }
 
         return id == (other as SyncItem).id
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + suffix.hashCode()
+        return result
     }
 
     override fun compareTo(other: AdapterItem<*>): Int {

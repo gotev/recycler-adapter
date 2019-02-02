@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapterdemo.leavebehind.MyLeaveBehindItem
+import net.gotev.recycleradapterdemo.adapteritems.EmptyItem
+import net.gotev.recycleradapterdemo.adapteritems.ExampleItem
+import net.gotev.recycleradapterdemo.adapteritems.TextWithButtonItem
+import net.gotev.recycleradapterdemo.adapteritems.leavebehind.MyLeaveBehindItem
 import java.util.*
 
 
@@ -24,34 +27,34 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val adapter = RecyclerAdapter()
-        adapter.setEmptyItem(EmptyItem(getString(R.string.empty_list)))
+        val recyclerAdapter = RecyclerAdapter()
+        recyclerAdapter.setEmptyItem(EmptyItem(getString(R.string.empty_list)))
 
         recycler_view.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
-            this.adapter = adapter
-            adapter.enableDragDrop(this)
+            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            adapter = recyclerAdapter
+            recyclerAdapter.enableDragDrop(this)
         }
 
-        adapter.add(MyLeaveBehindItem("swipe to left to leave behind", "option"))
+        recyclerAdapter.add(MyLeaveBehindItem("swipe to left to leave behind", "option"))
 
         for (i in 0 until random.nextInt(200) + 50) {
             if (i % 2 == 0)
-                adapter.add(ExampleItem(this, "example item $i"))
+                recyclerAdapter.add(ExampleItem(this, "example item $i"))
             else
-                adapter.add(TextWithButtonItem("text with button $i"))
+                recyclerAdapter.add(TextWithButtonItem("text with button $i"))
         }
 
         remove_all_items_of_a_kind.setOnClickListener {
-            adapter.removeAllItemsWithClass(ExampleItem::class.java)
+            recyclerAdapter.removeAllItemsWithClass(ExampleItem::class.java)
         }
 
         remove_last_item_of_a_kind.setOnClickListener {
-            adapter.removeLastItemWithClass(TextWithButtonItem::class.java)
+            recyclerAdapter.removeLastItemWithClass(TextWithButtonItem::class.java)
         }
 
         add_item.setOnClickListener {
-            adapter.add(ExampleItem(this, "added item " + UUID.randomUUID().toString()))
+            recyclerAdapter.add(ExampleItem(this, "added item " + UUID.randomUUID().toString()))
         }
 
         search.addTextChangedListener(object : TextWatcher {
@@ -62,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                adapter.filter(search.toString())
+                recyclerAdapter.filter(search.text.toString())
             }
         })
     }
@@ -73,10 +76,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+
         R.id.sync_demo -> {
             SyncActivity.show(this)
             true
         }
+
+        R.id.selection -> {
+            SelectionActivity.show(this)
+            true
+        }
+
         else -> super.onOptionsItemSelected(item)
     }
 }
