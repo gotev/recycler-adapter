@@ -1,4 +1,4 @@
-package net.gotev.recycleradapterdemo
+package net.gotev.recycleradapterdemo.adapteritems
 
 import android.content.Context
 import android.os.Bundle
@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.item_example.*
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterNotifier
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
+import net.gotev.recycleradapterdemo.R
 
 
 open class ExampleItem(private val context: Context, private val text: String)
@@ -35,7 +36,7 @@ open class ExampleItem(private val context: Context, private val text: String)
         return false
     }
 
-    override fun bind(holder: ExampleItem.Holder) {
+    override fun bind(holder: Holder) {
         holder.titleField.text = text
         holder.subtitleField.text = "subtitle"
     }

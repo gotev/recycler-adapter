@@ -7,4 +7,10 @@
         android:visible="true"
         android:enabled="true"
         android:id="@+id/sync_demo" />
+
+    <item android:title="@string/selection"
+        app:showAsAction="never|withText"
+        android:visible="true"
+        android:enabled="true"
+        android:id="@+id/selection" />
 </menu>

@@ -1,4 +1,4 @@
-package net.gotev.recycleradapterdemo.leavebehind
+package net.gotev.recycleradapterdemo.adapteritems.leavebehind
 
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapterdemo.R

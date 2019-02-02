@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_sync.*
 import net.gotev.recycleradapter.RecyclerAdapter
+import net.gotev.recycleradapterdemo.adapteritems.EmptyItem
+import net.gotev.recycleradapterdemo.adapteritems.SyncItem
 
 
 class SyncActivity : AppCompatActivity() {

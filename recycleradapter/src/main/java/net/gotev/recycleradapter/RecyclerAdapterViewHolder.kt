@@ -21,6 +21,13 @@ abstract class RecyclerAdapterViewHolder(itemView: View, adapter: RecyclerAdapte
         this.adapter.get()?.sendEvent(this, data)
     }
 
+    /**
+     * Notifies the adapter that this item has been selected.
+     */
+    protected fun setSelected() {
+        this.adapter.get()?.selected(this)
+    }
+
     protected fun findViewById(id: Int): View {
         return itemView.findViewById(id)
     }

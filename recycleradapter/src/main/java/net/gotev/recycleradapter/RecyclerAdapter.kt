@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 /**
  * Makes the use of RecyclerView easier, modular and less error-prone
@@ -50,6 +51,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     private var filtered = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
     private var showFiltered = false
 
+    private val selectionGroups = LinkedHashMap<String, Boolean>()
+
     private val items
         get() = if (showFiltered) filtered else itemsList
 
@@ -59,6 +62,15 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     }
 
     private fun Int.isOutOfItemsRange() = this < 0 || this >= items.size
+
+    private fun AdapterItem<*>.changeSelectionStatus(newStatus: Boolean, position: Int) {
+        this.let {
+            selected = newStatus
+            if (onSelectionChanged(isNowSelected = newStatus)) {
+                notifyItemChanged(position)
+            }
+        }
+    }
 
     private fun adapterIsEmptyAndEmptyItemIsDefined() = items.isEmpty() && emptyItem != null
 
@@ -142,6 +154,27 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
         if (items[position].onEvent(position, data)) {
             notifyItemChanged(position)
+        }
+    }
+
+    override fun selected(holder: RecyclerAdapterViewHolder) {
+        val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
+
+        items.let { items ->
+            val selectionGroup = items[position].getSelectionGroup() ?: return@let
+            val multiSelect = canSelectMultipleItems(selectionGroup)
+            val currentItem = items[position]
+
+            val newStatus = !(multiSelect && currentItem.selected)
+            currentItem.changeSelectionStatus(newStatus = newStatus, position = position)
+
+            if (!multiSelect) {
+                items.forEachIndexed { index, item ->
+                    if (item.getSelectionGroup().equals(selectionGroup) && index != position) {
+                        item.changeSelectionStatus(newStatus = false, position = index)
+                    }
+                }
+            }
         }
     }
 
@@ -490,5 +523,38 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
 
         notifyDataSetChanged()
+    }
+
+    /**
+     * Sets the policy for a selection group.
+     *
+     * @param selectionGroup unique ID String of the selection group
+     * @param multiSelect true if the user can select multiple items in this group, false if only
+     * a single item can be selected at a time.
+     */
+    fun setSelectionGroupPolicy(selectionGroup: String, multiSelect: Boolean) {
+        selectionGroups[selectionGroup] = multiSelect
+    }
+
+    /**
+     * Gets the policy for a selection group.
+     * New groups without a policy defaults to mutually exclusive single selection.
+     *
+     * @param selectionGroup unique ID String of the selection group
+     * @return true if multiple items can be selected, false if mutually exclusive single selection
+     */
+    fun canSelectMultipleItems(selectionGroup: String): Boolean = selectionGroups[selectionGroup] ?: false
+
+    /**
+     * Gets a list of all the selected items in a selection group.
+     *
+     * @param selectionGroup unique ID String of the selection group
+     * @return list of selected items
+     */
+    fun getSelectedItems(selectionGroup: String): List<AdapterItem<*>> {
+        if (items.isEmpty())
+            return emptyList()
+
+        return items.filter { it.getSelectionGroup().equals(selectionGroup) && it.selected }
     }
 }

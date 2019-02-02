@@ -1,4 +1,4 @@
-package net.gotev.recycleradapterdemo
+package net.gotev.recycleradapterdemo.adapteritems
 
 import android.os.Bundle
 import android.view.View
@@ -11,6 +11,7 @@ import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterNotifier
 
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
+import net.gotev.recycleradapterdemo.R
 
 
 class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonItem.Holder>() {
@@ -30,7 +31,7 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
 
     override fun getLayoutId() = R.layout.item_text_with_button
 
-    override fun bind(holder: TextWithButtonItem.Holder) {
+    override fun bind(holder: Holder) {
         holder.textViewField.text = text
         holder.buttonField.isChecked = pressed
     }

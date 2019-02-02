@@ -20,6 +20,10 @@
             android:name=".SyncActivity"
             android:parentActivityName=".MainActivity"/>
 
+        <activity
+            android:name=".SelectionActivity"
+            android:parentActivityName=".MainActivity"/>
+
     </application>
 
 </manifest>

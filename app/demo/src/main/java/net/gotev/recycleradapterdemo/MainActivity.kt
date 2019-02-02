@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapterdemo.leavebehind.MyLeaveBehindItem
+import net.gotev.recycleradapterdemo.adapteritems.EmptyItem
+import net.gotev.recycleradapterdemo.adapteritems.ExampleItem
+import net.gotev.recycleradapterdemo.adapteritems.TextWithButtonItem
+import net.gotev.recycleradapterdemo.adapteritems.leavebehind.MyLeaveBehindItem
 import java.util.*
 
 
@@ -73,10 +76,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+
         R.id.sync_demo -> {
             SyncActivity.show(this)
             true
         }
+
+        R.id.selection -> {
+            SelectionActivity.show(this)
+            true
+        }
+
         else -> super.onOptionsItemSelected(item)
     }
 }
