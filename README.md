@@ -121,7 +121,7 @@ recyclerView.setAdapter(recyclerAdapter)
 ```
 
 ## <a name="filterItems"></a>Filter items
-If you need to search items in your recycler view, you have to override this method in each one of your items implementation:
+If you need to search items in your recycler view, you have to override `onFilter` method in each one of your items implementation. Let's say our `AdapterItem` has a `text` field and we want to check if the search term matches it:
 
 ```kotlin
 /**
@@ -130,16 +130,16 @@ If you need to search items in your recycler view, you have to override this met
  * @return true if the items matches the search term, false otherwise
  */
 open fun onFilter(searchTerm: String): Boolean {
-    return textField.contains(searchTerm)
+    return text.contains(searchTerm)
 }
 ```
 
-then, to filter the recycler view, call:
+To filter the recycler view, call:
 
 ```kotlin
 recyclerAdapter.filter("search item")
 ```
-and the recycler view will show only the items which matches the search term. To reset the search filter, pass `null` or an empty string.
+and only the items which matches the search term will be shown. To reset the search filter, pass `null` or an empty string.
 
 ## <a name="sortItems"></a>Sort items
 To sort items, you have the following possible approaches.
