@@ -476,7 +476,7 @@ recyclerAdapter.setSelectionGroupPolicy("MySelectionGroup", multiSelect = false)
 ```
 Check Method's JavaDoc for full reference.
 
-5. Add your custom selectable items as you usually do and that's it! For more information and a complete example, check the demo app provided and read the code in `SelectionActivity` and `SelectableItem`.
+5. Add your custom selectable items as you usually do and that's it! For more information and a complete example, check the demo app provided and read the code in [SelectionActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/SelectionActivity.kt) and [SelectableItem](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/adapteritems/SelectableItem.kt).
 
 Wait! How can I know which options the user selected? That's easy, too!
 ```kotlin
