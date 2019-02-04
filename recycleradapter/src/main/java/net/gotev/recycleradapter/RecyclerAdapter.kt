@@ -231,11 +231,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param item item to add or update
      * @return [RecyclerAdapter]
      */
-    fun addOrUpdate(item: AdapterItem<in RecyclerAdapterViewHolder>): RecyclerAdapter {
+    fun addOrUpdate(item: AdapterItem<*>): RecyclerAdapter {
         val itemIndex = items.indexOf(item).takeIf { it >= 0 } ?: return add(item)
 
         if (items[itemIndex].hasToBeReplacedBy(item)) {
-            updateItemAtPosition(item, itemIndex)
+            updateItemAtPosition(item.castAsIn(), itemIndex)
         }
 
         return this
