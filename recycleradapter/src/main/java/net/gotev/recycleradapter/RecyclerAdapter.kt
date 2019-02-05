@@ -216,9 +216,12 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     }
 
     /**
-     * Adds many items to this adapter
+     * Adds many items to this adapter.
      *
-     * @param items items to add
+     * This method has better performance when inserting many items if compared to multiple calls
+     * of the single [add] method.
+     *
+     * @param newItems items to add
      * @return [RecyclerAdapter]
      */
     fun add(newItems: List<AdapterItem<*>>): RecyclerAdapter {
