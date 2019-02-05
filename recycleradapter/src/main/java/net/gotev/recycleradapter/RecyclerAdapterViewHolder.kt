@@ -17,7 +17,7 @@ abstract class RecyclerAdapterViewHolder(itemView: View, adapter: RecyclerAdapte
      * Sends an event to the adapter.
      * @param data additional event data
      */
-    protected fun sendEvent(data: Bundle?) {
+    protected fun sendEvent(data: Bundle? = null) {
         this.adapter.get()?.sendEvent(this, data)
     }
 
