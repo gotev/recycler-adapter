@@ -47,18 +47,13 @@ class SelectionActivity : AppCompatActivity() {
 
             add(EmptyItem(getString(R.string.single_selection)))
 
-            add(SelectableItem("Option A", SelectionActivity.selectionGroupA))
-            add(SelectableItem("Option B", SelectionActivity.selectionGroupA))
-            add(SelectableItem("Option C", SelectionActivity.selectionGroupA))
+            add((1..3).map { SelectableItem("Option $it", SelectionActivity.selectionGroupA) })
 
             setSelectionGroupPolicy(SelectionActivity.selectionGroupB, multiSelect = true)
 
             add(EmptyItem(getString(R.string.multiple_selection)))
 
-            add(SelectableItem("Option D", SelectionActivity.selectionGroupB))
-            add(SelectableItem("Option E", SelectionActivity.selectionGroupB))
-            add(SelectableItem("Option F", SelectionActivity.selectionGroupB))
-            add(SelectableItem("Option G", SelectionActivity.selectionGroupB))
+            add((4..7).map { SelectableItem("Option $it", SelectionActivity.selectionGroupB) })
         }
 
         show_selections.setOnClickListener {

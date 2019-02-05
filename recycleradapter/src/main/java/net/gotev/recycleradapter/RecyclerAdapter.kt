@@ -216,6 +216,27 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     }
 
     /**
+     * Adds many items to this adapter
+     *
+     * @param items items to add
+     * @return [RecyclerAdapter]
+     */
+    fun add(newItems: List<AdapterItem<*>>): RecyclerAdapter {
+        if (newItems.isEmpty()) return this
+
+        val firstIndex = items.size
+
+        items.addAll(newItems.map {
+            registerItemType(it)
+            it.castAsIn()
+        })
+
+        removeEmptyItemIfItHasBeenConfigured()
+        notifyItemRangeInserted(firstIndex, newItems.size)
+        return this
+    }
+
+    /**
      * Adds an item into the adapter or updates it if already existing.
      *
      * For the update to work properly, all the items has to override the [AdapterItem.equals]
@@ -238,6 +259,20 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             updateItemAtPosition(item.castAsIn(), itemIndex)
         }
 
+        return this
+    }
+
+    /**
+     * Adds or updates many items to this adapter.
+     * Check [addOrUpdate] for more detailed information
+     *
+     * @param items items to add
+     * @return [RecyclerAdapter]
+     */
+    fun addOrUpdate(items: List<AdapterItem<*>>): RecyclerAdapter {
+        //TODO: this can be improved for performance by getting all the new added positions
+        //and all the updated positions
+        items.forEach { addOrUpdate(it) }
         return this
     }
 
@@ -543,7 +578,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param selectionGroup unique ID String of the selection group
      * @return true if multiple items can be selected, false if mutually exclusive single selection
      */
-    fun canSelectMultipleItems(selectionGroup: String): Boolean = selectionGroups[selectionGroup] ?: false
+    fun canSelectMultipleItems(selectionGroup: String): Boolean = selectionGroups[selectionGroup]
+            ?: false
 
     /**
      * Gets a list of all the selected items in a selection group.

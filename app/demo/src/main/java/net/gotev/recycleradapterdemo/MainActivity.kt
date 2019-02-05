@@ -38,12 +38,14 @@ class MainActivity : AppCompatActivity() {
 
         recyclerAdapter.add(MyLeaveBehindItem("swipe to left to leave behind", "option"))
 
-        for (i in 0 until random.nextInt(200) + 50) {
-            if (i % 2 == 0)
-                recyclerAdapter.add(ExampleItem(this, "example item $i"))
+        val items = (0..random.nextInt(200) + 50).map {
+            if (it % 2 == 0)
+                ExampleItem(this, "example item $it")
             else
-                recyclerAdapter.add(TextWithButtonItem("text with button $i"))
+                TextWithButtonItem("text with button $it")
         }
+
+        recyclerAdapter.add(items)
 
         remove_all_items_of_a_kind.setOnClickListener {
             recyclerAdapter.removeAllItemsWithClass(ExampleItem::class.java)
