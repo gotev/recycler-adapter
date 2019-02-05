@@ -149,6 +149,14 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     override fun getItemCount() = if (adapterIsEmptyAndEmptyItemIsDefined()) 1 else items.size
 
+    /**
+     * Gets the index of the last item in the list.
+     *
+     * @return index
+     */
+    val lastItemIndex
+        get() = items.lastIndex
+
     override fun sendEvent(holder: RecyclerAdapterViewHolder, data: Bundle?) {
         val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
 
