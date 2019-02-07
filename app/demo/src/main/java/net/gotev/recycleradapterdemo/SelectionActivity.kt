@@ -2,12 +2,15 @@ package net.gotev.recycleradapterdemo
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_selection.*
+import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
+import net.gotev.recycleradapter.SelectionGroupListener
 import net.gotev.recycleradapterdemo.adapteritems.EmptyItem
 import net.gotev.recycleradapterdemo.adapteritems.SelectableItem
 
@@ -42,14 +45,24 @@ class SelectionActivity : AppCompatActivity() {
             adapter = recyclerAdapter
         }
 
+        val listener: SelectionGroupListener = { group, selected ->
+            Toast.makeText(
+                    this@SelectionActivity,
+                    "$group: ${selected.asString()}",
+                    Toast.LENGTH_SHORT
+            ).show()
+        }
+
         recyclerAdapter.apply {
             setSelectionGroupPolicy(SelectionActivity.selectionGroupA, multiSelect = false)
+            setSelectionGroupListener(SelectionActivity.selectionGroupA, listener)
 
             add(EmptyItem(getString(R.string.single_selection)))
 
             add((1..3).map { SelectableItem("Option $it", SelectionActivity.selectionGroupA) })
 
             setSelectionGroupPolicy(SelectionActivity.selectionGroupB, multiSelect = true)
+            setSelectionGroupListener(SelectionActivity.selectionGroupB, listener)
 
             add(EmptyItem(getString(R.string.multiple_selection)))
 
@@ -71,8 +84,9 @@ class SelectionActivity : AppCompatActivity() {
     }
 
     private fun RecyclerAdapter.getSelectedAsString(selectionGroup: String) =
-            getSelectedItems(selectionGroup)
-                    .joinToString { (it as SelectableItem).label }
-                    .let { if (it.isBlank()) "None" else it }
+            getSelectedItems(selectionGroup).asString()
+
+    private fun List<AdapterItem<*>>.asString() = joinToString { (it as SelectableItem).label }
+            .let { if (it.isBlank()) "None" else it }
 
 }

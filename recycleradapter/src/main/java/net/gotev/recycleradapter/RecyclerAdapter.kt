@@ -8,6 +8,7 @@ import androidx.core.util.Pair
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.LinkedHashMap
 
@@ -52,6 +53,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     private var showFiltered = false
 
     private val selectionGroups = LinkedHashMap<String, Boolean>()
+    private val selectionGroupsListeners = LinkedHashMap<String, WeakReference<SelectionGroupListener>>()
 
     private val items
         get() = if (showFiltered) filtered else itemsList
@@ -182,6 +184,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
                         item.changeSelectionStatus(newStatus = false, position = index)
                     }
                 }
+            }
+
+            selectionGroupsListeners[selectionGroup]?.get()?.let { listener ->
+                listener(selectionGroup, getSelectedItems(selectionGroup))
             }
         }
     }
@@ -591,6 +597,19 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      */
     fun canSelectMultipleItems(selectionGroup: String): Boolean = selectionGroups[selectionGroup]
             ?: false
+
+    /**
+     * Set selection group listener, which will be called every time a selection is made in
+     * a group.
+     *
+     * @param selectionGroup group to listen for
+     * @param listener object which will be called on every selection change. To prevent memory
+     *                 leak, only a WeakReference is kept, so be sure you have a strong reference
+     *                 to the listener
+     */
+    fun setSelectionGroupListener(selectionGroup: String, listener: SelectionGroupListener) {
+        selectionGroupsListeners[selectionGroup] = WeakReference(listener)
+    }
 
     /**
      * Gets a list of all the selected items in a selection group.
