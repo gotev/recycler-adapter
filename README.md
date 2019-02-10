@@ -24,6 +24,9 @@ In this way every item of the recycler view has its own set of files, resulting 
 * [Handle item status](#handleItemStatus)
 * [Event lifecycle](#eventLifecycle)
 * [Single and Multiple selection of items](#itemsSelection)
+    * [Getting selected items in a selection group](#getting-selected-items-in-a-selection-group)
+    * [Programmatically select items](#programmatically-select-items)
+    * [Replacing selection groups items and Master/Slave selection groups](#replacing-selection-groups-items-and-masterslave-selection-groups)
 * [Leave Behind pattern](#leaveBehind)
 * [Contributors](#contributors)
 
