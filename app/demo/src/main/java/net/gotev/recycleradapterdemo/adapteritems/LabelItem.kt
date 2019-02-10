@@ -12,7 +12,9 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
 
-class EmptyItem(private val text: String) : AdapterItem<EmptyItem.Holder>() {
+class LabelItem(private val text: String, private val selectionGroup: String? = null) : AdapterItem<LabelItem.Holder>() {
+
+    override fun getSelectionGroup() = selectionGroup
 
     override fun getLayoutId() = R.layout.item_empty
 

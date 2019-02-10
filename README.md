@@ -30,7 +30,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-implementation 'net.gotev:recycleradapter:2.0.3'
+implementation 'net.gotev:recycleradapter:2.1.0'
 ```
 
 ## <a name="basicTutorial"></a>Basic usage tutorial
@@ -478,7 +478,8 @@ Check Method's JavaDoc for full reference.
 
 5. Add your custom selectable items as you usually do and that's it! For more information and a complete example, check the demo app provided and read the code in [SelectionActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/SelectionActivity.kt) and [SelectableItem](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/adapteritems/SelectableItem.kt).
 
-Wait! How can I know which options the user selected? That's easy, too!
+### Getting selected items in a selection group
+To know which options the user selected:
 ```kotlin
 val listOfSelectedItems = recyclerAdapter
     .getSelectedItems(selectionGroup = "MySelectionGroup") as List<YourCustomItem>
@@ -492,6 +493,27 @@ recyclerAdapter.setSelectionGroupListener("MySelectionGroup", { group, selected 
     Toast.makeText(this, "$group: $selectedItems", Toast.LENGTH_SHORT).show()
 })
 ```
+
+### Programmatically select items
+To programmatically select an item:
+```kotlin
+recyclerAdapter.selectItem(yourItem)
+```
+
+### Replacing selection groups items and Master/Slave selection groups
+Sometimes you may need replacing the items of a selection group with a new set. For example, imagine having two groups:
+
+* First group where you can select one from:
+    * 🍒 Fruits
+    * 🥬 Vegetables
+    * 🍮 Desserts
+
+* Second group where the selections depends on the selections of the first group, so for example you want to have:
+    * **Fruits ->** 🍏 Apple, 🍓 Strawberry and 🍒 Cherry
+    * **Vegetables ->** 🥕 Carrot and 🥒 Cucumber
+    * **Desserts ->** 🍰 Cake, 🍩 Donut and 🍦 Ice cream
+
+This can be achieved combining `setSelectionGroupListener`, `replaceSelectionGroupItems` and `selectItem`. See [MasterSlaveGroupsActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/MasterSlaveGroupsActivity.kt) for a complete example.
 
 ## <a name="leaveBehind"></a>Leave Behind pattern example implementation
 In the demo app provided with the library, you can also see how to implement the [leave behind material design pattern](https://material.io/guidelines/components/lists-controls.html#lists-controls-types-of-list-controls). All the changes involved into the implementation can be seen in [this commit](https://github.com/gotev/recycler-adapter/commit/fa240519025f98ba609395034f42e89d5bb777fd). This implementation has not been included into the base library deliberately, to avoid depending on external libraries just for a single kind of item implementation. You can easily import the needed code in your project from the demo app sources if you want to have leave behind implementation.

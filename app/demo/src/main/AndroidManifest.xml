@@ -24,6 +24,10 @@
             android:name=".SelectionActivity"
             android:parentActivityName=".MainActivity"/>
 
+        <activity
+            android:name=".MasterSlaveGroupsActivity"
+            android:parentActivityName=".MainActivity"/>
+
     </application>
 
 </manifest>

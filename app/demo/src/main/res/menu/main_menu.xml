@@ -13,4 +13,10 @@
         android:visible="true"
         android:enabled="true"
         android:id="@+id/selection" />
+
+    <item android:title="@string/selection_master_slave"
+        app:showAsAction="never|withText"
+        android:visible="true"
+        android:enabled="true"
+        android:id="@+id/selection_multi_groups" />
 </menu>

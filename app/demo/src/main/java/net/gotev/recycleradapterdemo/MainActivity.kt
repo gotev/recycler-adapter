@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapterdemo.adapteritems.EmptyItem
+import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.ExampleItem
 import net.gotev.recycleradapterdemo.adapteritems.TextWithButtonItem
 import net.gotev.recycleradapterdemo.adapteritems.leavebehind.MyLeaveBehindItem
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val recyclerAdapter = RecyclerAdapter()
-        recyclerAdapter.setEmptyItem(EmptyItem(getString(R.string.empty_list)))
+        recyclerAdapter.setEmptyItem(LabelItem(getString(R.string.empty_list)))
 
         recycler_view.apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -86,6 +86,11 @@ class MainActivity : AppCompatActivity() {
 
         R.id.selection -> {
             SelectionActivity.show(this)
+            true
+        }
+
+        R.id.selection_multi_groups -> {
+            MasterSlaveGroupsActivity.show(this)
             true
         }
 

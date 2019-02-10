@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_selection.*
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapter.SelectionGroupListener
-import net.gotev.recycleradapterdemo.adapteritems.EmptyItem
+import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SelectableItem
 
 
@@ -26,6 +26,8 @@ class SelectionActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var groupListener: SelectionGroupListener
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_selection)
@@ -38,14 +40,14 @@ class SelectionActivity : AppCompatActivity() {
         }
 
         val recyclerAdapter = RecyclerAdapter()
-        recyclerAdapter.setEmptyItem(EmptyItem(getString(R.string.empty_list)))
+        recyclerAdapter.setEmptyItem(LabelItem(getString(R.string.empty_list)))
 
         recycler_view.apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = recyclerAdapter
         }
 
-        val listener: SelectionGroupListener = { group, selected ->
+        groupListener = { group, selected ->
             Toast.makeText(
                     this@SelectionActivity,
                     "$group: ${selected.asString()}",
@@ -54,31 +56,35 @@ class SelectionActivity : AppCompatActivity() {
         }
 
         recyclerAdapter.apply {
-            setSelectionGroupPolicy(SelectionActivity.selectionGroupA, multiSelect = false)
-            setSelectionGroupListener(SelectionActivity.selectionGroupA, listener)
+            setSelectionGroupPolicy(selectionGroupA, multiSelect = false)
+            setSelectionGroupListener(selectionGroupA, groupListener)
 
-            add(EmptyItem(getString(R.string.single_selection)))
+            add(LabelItem(getString(R.string.single_selection)))
 
-            add((1..3).map { SelectableItem("Option $it", SelectionActivity.selectionGroupA) })
+            add((1..3).map { SelectableItem("Option $it", selectionGroupA) })
 
-            setSelectionGroupPolicy(SelectionActivity.selectionGroupB, multiSelect = true)
-            setSelectionGroupListener(SelectionActivity.selectionGroupB, listener)
+            setSelectionGroupPolicy(selectionGroupB, multiSelect = true)
+            setSelectionGroupListener(selectionGroupB, groupListener)
 
-            add(EmptyItem(getString(R.string.multiple_selection)))
+            add(LabelItem(getString(R.string.multiple_selection)))
 
-            add((4..7).map { SelectableItem("Option $it", SelectionActivity.selectionGroupB) })
+            add((4..7).map { SelectableItem("Option $it", selectionGroupB) })
         }
 
-        show_selections.setOnClickListener {
-            val selectedA = recyclerAdapter.getSelectedAsString(SelectionActivity.selectionGroupA)
-            val selectedB = recyclerAdapter.getSelectedAsString(SelectionActivity.selectionGroupB)
+        action_button.apply {
+            text = getString(R.string.show_selections)
 
-            AlertDialog.Builder(this)
-                    .setTitle("Selected items")
-                    .setMessage("${getString(R.string.single_selection)}:\n$selectedA\n\n" +
-                            "${getString(R.string.multiple_selection)}:\n$selectedB")
-                    .setPositiveButton("Ok", null)
-                    .show()
+            setOnClickListener {
+                val selectedA = recyclerAdapter.getSelectedAsString(selectionGroupA)
+                val selectedB = recyclerAdapter.getSelectedAsString(selectionGroupB)
+
+                AlertDialog.Builder(this@SelectionActivity)
+                        .setTitle("Selected items")
+                        .setMessage("${getString(R.string.single_selection)}:\n$selectedA\n\n" +
+                                "${getString(R.string.multiple_selection)}:\n$selectedB")
+                        .setPositiveButton("Ok", null)
+                        .show()
+            }
         }
 
     }

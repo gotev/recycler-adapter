@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_sync.*
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapterdemo.adapteritems.EmptyItem
+import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SyncItem
 
 
@@ -54,7 +54,7 @@ class SyncActivity : AppCompatActivity() {
         }
 
         recyclerAdapter = RecyclerAdapter()
-        recyclerAdapter.setEmptyItem(EmptyItem(getString(R.string.empty_list)))
+        recyclerAdapter.setEmptyItem(LabelItem(getString(R.string.empty_list)))
 
         recycler_view.apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)

@@ -6,6 +6,8 @@
     <string name="add_item">Add item</string>
     <string name="sync_with_items">Sync With Items</string>
     <string name="selection">Selection</string>
+    <string name="selection_master_slave">Master-Slave Groups Selection</string>
+    <string name="finish_loading">Finish loading</string>
     <string name="sort_ascending">Sort ascending (A-Z)</string>
     <string name="sort_descending">Sort descending (Z-A)</string>
     <string name="single_selection">Group with single selection</string>
