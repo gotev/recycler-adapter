@@ -26,13 +26,15 @@ class SyncActivity : AppCompatActivity() {
     private fun listA() =
             arrayListOf(
                     SyncItem(this, 2, "listA"),
-                    SyncItem(this, 3, "listA")
+                    SyncItem(this, 3, "listA"),
+                    SyncItem(this, 6, "listA")
             )
 
     private fun listB() =
             arrayListOf(
                     SyncItem(this, 1, "listB"),
                     SyncItem(this, 2, "listB"),
+                    SyncItem(this, 3, "listB"),
                     SyncItem(this, 4, "listB"),
                     SyncItem(this, 5, "listB")
             )

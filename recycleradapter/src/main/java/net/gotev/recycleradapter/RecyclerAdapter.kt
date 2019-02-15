@@ -364,27 +364,28 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             return this
         }
 
-        val iterator = items.listIterator()
+        newItems.forEachIndexed { newItemsIndex, newItem ->
+            val internalItemIndex = items.indexOf(newItem)
 
-        while (iterator.hasNext()) {
-            val internalListIndex = iterator.nextIndex()
-            val item = iterator.next()
-            val indexInNewItemsList = newItems.indexOf(item)
+            if (internalItemIndex < 0) { // new item does not exist
+                add(newItem, newItemsIndex)
+            } else {
+                val internalItem = items[internalItemIndex]
 
-            // if the item does not exist in the new list, it means it has been deleted
-            if (indexInNewItemsList < 0) {
-                iterator.remove()
-                notifyItemRemoved(internalListIndex)
-            } else { // the item exists in the new list
-                val newItem = newItems[indexInNewItemsList]
-                if (item.hasToBeReplacedBy(newItem)) { // the item needs to be updated
-                    updateItemAtPosition(newItem.castAsIn(), internalListIndex)
+                if (internalItem.hasToBeReplacedBy(newItem)) {
+                    removeItem(internalItem)
+                    add(newItem, newItemsIndex)
+                } else {
+                    if (internalItemIndex != newItemsIndex) {
+                        items.removeAt(internalItemIndex)
+                        items.add(newItemsIndex, internalItem)
+                        notifyItemMoved(internalItemIndex, newItemsIndex)
+                    }
                 }
-                newItems.removeAt(indexInNewItemsList)
             }
         }
 
-        newItems.forEach { add(it) }
+        items.filter { newItems.indexOf(it) < 0 }.forEach { removeItem(it) }
 
         return this
     }
