@@ -25,7 +25,6 @@ class SyncActivity : AppCompatActivity() {
 
     private fun listA() =
             arrayListOf(
-                    SyncItem(this, 1, "listA"),
                     SyncItem(this, 2, "listA"),
                     SyncItem(this, 3, "listA")
             )
@@ -33,13 +32,14 @@ class SyncActivity : AppCompatActivity() {
     private fun listB() =
             arrayListOf(
                     SyncItem(this, 1, "listB"),
+                    SyncItem(this, 2, "listB"),
                     SyncItem(this, 4, "listB"),
                     SyncItem(this, 5, "listB")
             )
 
     private fun listC() =
             arrayListOf(
-                    SyncItem(this, 1, "listC")
+                    SyncItem(this, 3, "listC")
             )
 
     override fun onCreate(savedInstanceState: Bundle?) {
