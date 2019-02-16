@@ -4,7 +4,7 @@ import android.content.Context
 
 import net.gotev.recycleradapter.AdapterItem
 
-class SyncItem(context: Context, private val id: Int, private val suffix: String) : ExampleItem(context, "item $id $suffix") {
+class SyncItem(context: Context, val id: Int, private val suffix: String) : ExampleItem(context, "item $id $suffix") {
 
     override fun equals(other: Any?): Boolean {
         if (other == null || javaClass != other.javaClass) {
@@ -15,9 +15,7 @@ class SyncItem(context: Context, private val id: Int, private val suffix: String
     }
 
     override fun hashCode(): Int {
-        var result = id
-        result = 31 * result + suffix.hashCode()
-        return result
+        return id.hashCode()
     }
 
     override fun compareTo(other: AdapterItem<*>): Int {

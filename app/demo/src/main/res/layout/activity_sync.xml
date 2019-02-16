@@ -35,13 +35,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/syncC" />
+        android:layout_above="@+id/shuffle" />
 
     <Button
-        android:text="Sync C"
+        android:text="Shuffle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/syncC"
+        android:id="@+id/shuffle"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

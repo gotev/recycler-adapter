@@ -241,8 +241,22 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      */
     fun add(item: AdapterItem<*>, position: Int? = null): RecyclerAdapter {
         val insertPosition = if (position != null) {
-            items.add(position, item.castAsIn())
-            position
+            when {
+                position >= items.size -> {
+                    items.add(item.castAsIn())
+                    items.lastIndex
+                }
+
+                position < 0 -> {
+                    items.add(0, item.castAsIn())
+                    0
+                }
+
+                else -> {
+                    items.add(position, item.castAsIn())
+                    position
+                }
+            }
         } else {
             items.add(item.castAsIn())
             items.lastIndex
@@ -364,6 +378,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             return this
         }
 
+        items.ensureCapacity(newItems.size)
+
         newItems.forEachIndexed { newItemsIndex, newItem ->
             val internalItemIndex = items.indexOf(newItem)
 
@@ -373,13 +389,12 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
                 val internalItem = items[internalItemIndex]
 
                 if (internalItem.hasToBeReplacedBy(newItem)) {
-                    removeItem(internalItem)
+                    removeItemAtPosition(internalItemIndex)
                     add(newItem, newItemsIndex)
                 } else {
                     if (internalItemIndex != newItemsIndex) {
-                        items.removeAt(internalItemIndex)
-                        items.add(newItemsIndex, internalItem)
-                        notifyItemMoved(internalItemIndex, newItemsIndex)
+                        removeItemAtPosition(internalItemIndex)
+                        add(internalItem, newItemsIndex)
                     }
                 }
             }

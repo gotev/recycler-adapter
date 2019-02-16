@@ -8,9 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_sync.*
+import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SyncItem
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 
 class SyncActivity : AppCompatActivity() {
@@ -22,26 +27,26 @@ class SyncActivity : AppCompatActivity() {
     }
 
     private lateinit var recyclerAdapter: RecyclerAdapter
+    private var executor = ScheduledThreadPoolExecutor(1)
+    private var scheduledOperation: ScheduledFuture<*>? = null
+
+    private var listB = arrayListOf(
+            SyncItem(this, 1, "listB"),
+            SyncItem(this, 3, "listB"),
+            SyncItem(this, 4, "listB"),
+            SyncItem(this, 5, "listB")
+    )
+
+    private fun listB(): ArrayList<SyncItem> {
+        listB.add(SyncItem(this, listB.last().id + 1, "listB${listB.last().id + 1}"))
+        listB.add(SyncItem(this, listB.last().id + 1, "listB${listB.last().id + 1}"))
+        return listB
+    }
 
     private fun listA() =
             arrayListOf(
-                    SyncItem(this, 2, "listA"),
-                    SyncItem(this, 3, "listA"),
-                    SyncItem(this, 6, "listA")
-            )
-
-    private fun listB() =
-            arrayListOf(
-                    SyncItem(this, 1, "listB"),
-                    SyncItem(this, 2, "listB"),
-                    SyncItem(this, 3, "listB"),
-                    SyncItem(this, 4, "listB"),
-                    SyncItem(this, 5, "listB")
-            )
-
-    private fun listC() =
-            arrayListOf(
-                    SyncItem(this, 3, "listC")
+                    SyncItem(this, 1, "listA"),
+                    SyncItem(this, 2, "listA")
             )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,11 +60,23 @@ class SyncActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
+        val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
         recyclerAdapter = RecyclerAdapter()
         recyclerAdapter.setEmptyItem(LabelItem(getString(R.string.empty_list)))
 
+        // prevent recyclerview from scrolling when adding many items
+        // https://github.com/airbnb/epoxy/issues/224#issuecomment-305991898
+        recyclerAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                if (positionStart == 0) {
+                    linearLayoutManager.scrollToPosition(0)
+                }
+            }
+        })
+
         recycler_view.apply {
-            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            layoutManager = linearLayoutManager
             adapter = recyclerAdapter
         }
 
@@ -71,10 +88,30 @@ class SyncActivity : AppCompatActivity() {
             recyclerAdapter.syncWithItems(listB())
         }
 
-        syncC.setOnClickListener {
-            recyclerAdapter.syncWithItems(listC())
+        shuffle.setOnClickListener {
+            scheduledOperation = if (scheduledOperation == null) {
+                executor.scheduleAtFixedRate({
+                    runOnUiThread {
+                        recyclerAdapter.syncWithItems(ArrayList(createItems()))
+                    }
+                }, 1, 100, TimeUnit.MILLISECONDS)
+            } else {
+                scheduledOperation?.cancel(true)
+                null
+            }
         }
+    }
 
+    override fun onPause() {
+        super.onPause()
+        scheduledOperation?.cancel(true)
+        scheduledOperation = null
+    }
+
+    fun createItems(): List<AdapterItem<*>> {
+        return (0..Random.nextInt(1, 10)).flatMap {
+            listOf(LabelItem("$it"), SyncItem(this, it, "ListC"))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
