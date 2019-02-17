@@ -1,6 +1,5 @@
 package net.gotev.recycleradapter
 
-import android.os.Bundle
 import android.view.View
 import java.lang.reflect.InvocationTargetException
 
@@ -18,16 +17,6 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      * @return layout ID
      */
     abstract fun getLayoutId(): Int
-
-    /**
-     * Gets called by [RecyclerAdapter.sendEvent]
-     * @param position position at which the event happened
-     * @param data additional click data
-     * @return true if the view must be rebinded after this method returns (e.g. you updated some
-     * data in the model and you want to display it), otherwise false (e.g. if you are
-     * simply handling a click which does not involve data changes)
-     */
-    open fun onEvent(position: Int, data: Bundle?): Boolean = false
 
     /**
      * Gets called for every item when the [RecyclerAdapter.filter] method gets called.

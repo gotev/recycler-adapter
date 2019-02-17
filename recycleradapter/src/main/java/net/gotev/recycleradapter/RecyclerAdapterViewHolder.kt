@@ -1,6 +1,5 @@
 package net.gotev.recycleradapter
 
-import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
@@ -13,19 +12,20 @@ abstract class RecyclerAdapterViewHolder(itemView: View, adapter: RecyclerAdapte
 
     private val adapter: WeakReference<RecyclerAdapterNotifier> = WeakReference(adapter)
 
-    /**
-     * Sends an event to the adapter.
-     * @param data additional event data
-     */
-    protected fun sendEvent(data: Bundle? = null) {
-        this.adapter.get()?.sendEvent(this, data)
-    }
+    protected fun getAdapterItem() = adapter.get()?.getAdapterItem(this)
 
     /**
      * Notifies the adapter that this item has been selected.
      */
     protected fun setSelected() {
-        this.adapter.get()?.selected(this)
+        adapter.get()?.selected(this)
+    }
+
+    /**
+     * Notifies that the model associated to this ViewHolder has been changed.
+     */
+    protected fun notifyItemChanged() {
+        adapter.get()?.notifyItemChanged(this)
     }
 
     protected fun findViewById(id: Int): View {

@@ -33,7 +33,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-implementation 'net.gotev:recycleradapter:2.1.5'
+implementation 'net.gotev:recycleradapter:2.2.0'
 ```
 
 ## <a name="basicTutorial"></a>Basic usage tutorial
@@ -263,24 +263,21 @@ open class ExampleItem(private val context: Context, private val text: String)
 
     override fun getLayoutId() = R.layout.item_example
 
-    override fun onEvent(position: Int, data: Bundle?): Boolean {
-        if (data == null)
-            return false
-
-        val clickEvent = data.getString("click") ?: return false
-
-        if ("title" == clickEvent) {
-            Toast.makeText(context, "clicked TITLE at position $position", Toast.LENGTH_SHORT).show()
-        } else if ("subtitle" == clickEvent) {
-            Toast.makeText(context, "clicked SUBTITLE at position $position", Toast.LENGTH_SHORT).show()
-        }
-
-        return false
-    }
-
     override fun bind(holder: Holder) {
         holder.titleField.text = text
         holder.subtitleField.text = "subtitle"
+    }
+
+    private fun onTitleClicked(position: Int) {
+        showToast("clicked TITLE at position $position")
+    }
+
+    private fun onSubTitleClicked(position: Int) {
+        showToast("clicked SUBTITLE at position $position")
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     class Holder(itemView: View, adapter: RecyclerAdapterNotifier)
@@ -294,15 +291,15 @@ open class ExampleItem(private val context: Context, private val text: String)
 
         init {
             titleField.setOnClickListener {
-                val data = Bundle()
-                data.putString("click", "title")
-                sendEvent(data)
+                (getAdapterItem() as? ExampleItem)?.apply {
+                    onTitleClicked(adapterPosition)
+                }
             }
 
             subtitleField.setOnClickListener {
-                val data = Bundle()
-                data.putString("click", "subtitle")
-                sendEvent(data)
+                (getAdapterItem() as? ExampleItem)?.apply {
+                    onSubTitleClicked(adapterPosition)
+                }
             }
         }
     }
@@ -312,34 +309,29 @@ open class ExampleItem(private val context: Context, private val text: String)
 As you can see, to handle click events on a view, you have to create a click listener in the ViewHolder and propagate an event to the `AdapterItem`:
 ```kotlin
 titleField.setOnClickListener {
-    val data = Bundle()
-    data.putString("click", "title")
-    sendEvent(data)
-}
-```
-You can set whatever you want in the bundle to identify your events, together with additional data.
-
-Then, to handle the click event:
-```kotlin
-override fun onEvent(position: Int, data: Bundle?): Boolean {
-    if (data == null)
-        return false
-
-    val clickEvent = data.getString("click") ?: return false
-
-    if ("title" == clickEvent) {
-        Toast.makeText(context, "clicked TITLE at position $position", Toast.LENGTH_SHORT).show()
-    } else if ("subtitle" == clickEvent) {
-        Toast.makeText(context, "clicked SUBTITLE at position $position", Toast.LENGTH_SHORT).show()
+    (getAdapterItem() as? ExampleItem)?.apply {
+        onTitleClicked(adapterPosition)
     }
-
-    return false
 }
 ```
-Look at the [event lifecycle](#eventLifecycle) to have a better comprehension.
+You can call any method defined in your `AdapterItem` and pass whatever parameters you want. It's important that you honor nullability, as each ViewHolder has a weak reference to its `AdapterItem`, so to prevent crashes at runtime always use the form:
+
+```kotlin
+(getAdapterItem() as? YourAdapterItem)?.apply {
+    // method to call on the adapter item
+}
+```
+
+In this case, the following method has been implemented to handle title clicks:
+```kotlin
+private fun onTitleClicked(position: Int) {
+    showToast("clicked TITLE at position $position")
+}
+```
+Look at the [event lifecycle](#eventLifecycle) to have a complete understaning.
 
 ## <a name="handleItemStatus"></a>Handle item status and save changes into the model
-It's possible to also change the model associated to an item directly from the ViewHolder. This is useful for example to notify status changes and to persist them. Imagine we need to persist a toggle button status when the user presses on it. How do we do that? Let's see an example.
+It's possible to also change the status of the model associated to an item directly from the ViewHolder. Imagine we need to persist a toggle button status when the user presses on it. How do we do that? Let's see an example.
 
 `item_text_with_button.xml`:
 ```xml
@@ -365,18 +357,9 @@ It's possible to also change the model associated to an item directly from the V
 ```kotlin
 class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonItem.Holder>() {
 
-    companion object {
-        private const val PARAM_PRESSED = "pressed"
-    }
-
     private var pressed = false
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
-
-    override fun onEvent(position: Int, data: Bundle?): Boolean {
-        pressed = data?.getBoolean(PARAM_PRESSED, false) ?: false
-        return true
-    }
 
     override fun getLayoutId() = R.layout.item_text_with_button
 
@@ -395,28 +378,29 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
 
         init {
             buttonField.setOnClickListener {
-                val data = Bundle()
-                data.putBoolean(PARAM_PRESSED, buttonField.isChecked)
-                sendEvent(data)
+                (getAdapterItem() as? TextWithButtonItem)?.apply {
+                    pressed = buttonField.isChecked
+                    notifyItemChanged()
+                }
             }
         }
     }
 }
 ```
-In the `Holder` we have added a click listener to the `ToggleButton` (in this example with ButterKnife, but you can do that also without it). When the user presses the toggle button, the `RecyclerAdapter` gets notified that an event happened in a particular position:
-```kotlin
-sendEvent(data)
-```
-Then, `RecyclerAdapter` calls the `onEvent` method of the item which invoked `sendEvent`. In this method you can update the item's internal state. If `onEvent` method returns `true`, it means that the Item needs to be updated. `RecyclerAdapter` will call the `RecyclerView.Adapter`'s `notifyItemChanged` method and as a result, the `bind` method will be called, so your item will be updated. In this way you can safely handle the internal state of each item. If `onEvent` returns `false`, the event handling ends there and nothing more happens.
+In the `Holder` we have added a click listener to the `ToggleButton`. When the user presses the toggle button, the `AdapterItem` `pressed` status gets changed and then the `RecyclerAdapter` gets notified that the model has been changed by invoking `notifyItemChanged()`. This triggers the rebinding of the ViewHolder to reflect the new model.
 
 So, to recap, the <a name="eventLifecycle"></a>event lifecycle is:
 ```kotlin
-sendEvent(data) // send event from the ViewHolder
-onEvent(position: Int, data: Bundle?) // receive event in AdapterItem
-//if onEvent returns true, RecyclerAdapter invokes
-//RecyclerView's notifyItemChanged method
-//and the bind(Holder holder) method of the AdapterItem is called
+// gets ViewHolder's AdapterItem
+(getAdapterItem() as? YourAdapterItem)?.apply {
+    // methods to call on the adapter item
+
+    // (optional)
+    // if you want the current ViewHolder to be rebinded, call
+    notifyItemChanged()
+}
 ```
+As a rule of thumb, if an event does not directly change the UI, you should not call `notifyItemChanged()`.
 
 ## <a name="itemsSelection"></a>Single and Multiple selection of items
 Often RecyclerViews are used to implement settings toggles, bottom sheets and other UI to perform selections. What is needed in the vast majority of the cases is:

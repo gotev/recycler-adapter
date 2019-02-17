@@ -1,33 +1,21 @@
 package net.gotev.recycleradapterdemo.adapteritems
 
-import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.ToggleButton
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_text_with_button.*
-
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterNotifier
-
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
 
 class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonItem.Holder>() {
 
-    companion object {
-        private const val PARAM_PRESSED = "pressed"
-    }
-
     private var pressed = false
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
-
-    override fun onEvent(position: Int, data: Bundle?): Boolean {
-        pressed = data?.getBoolean(PARAM_PRESSED, false) ?: false
-        return true
-    }
 
     override fun getLayoutId() = R.layout.item_text_with_button
 
@@ -46,9 +34,10 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
 
         init {
             buttonField.setOnClickListener {
-                val data = Bundle()
-                data.putBoolean(PARAM_PRESSED, buttonField.isChecked)
-                sendEvent(data)
+                (getAdapterItem() as? TextWithButtonItem)?.apply {
+                    pressed = buttonField.isChecked
+                    notifyItemChanged()
+                }
             }
         }
     }

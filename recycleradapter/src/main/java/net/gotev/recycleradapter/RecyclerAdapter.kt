@@ -1,6 +1,5 @@
 package net.gotev.recycleradapter
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -159,18 +158,22 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     val lastItemIndex
         get() = items.lastIndex
 
-    override fun sendEvent(holder: RecyclerAdapterViewHolder, data: Bundle?) {
-        val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
-
-        if (items[position].onEvent(position, data)) {
-            notifyItemChanged(position)
-        }
-    }
-
     override fun selected(holder: RecyclerAdapterViewHolder) {
         val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
 
         selectItemAtPosition(position)
+    }
+
+    override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*>? {
+        val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return null
+
+        return items[position]
+    }
+
+    override fun notifyItemChanged(holder: RecyclerAdapterViewHolder) {
+        val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
+
+        notifyItemChanged(position)
     }
 
     private fun selectItemAtPosition(position: Int) {
