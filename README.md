@@ -502,6 +502,8 @@ Sometimes you may need replacing the items of a selection group with a new set. 
 
 This can be achieved combining `setSelectionGroupListener`, `replaceSelectionGroupItems` and `selectItem`. See [MasterSlaveGroupsActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/MasterSlaveGroupsActivity.kt) for a complete example.
 
+![Master-Slave](images/master-slave.gif)
+
 ## <a name="leaveBehind"></a>Leave Behind pattern example implementation
 In the demo app provided with the library, you can also see how to implement the [leave behind material design pattern](https://material.io/guidelines/components/lists-controls.html#lists-controls-types-of-list-controls). All the changes involved into the implementation can be seen in [this commit](https://github.com/gotev/recycler-adapter/commit/fa240519025f98ba609395034f42e89d5bb777fd). This implementation has not been included into the base library deliberately, to avoid depending on external libraries just for a single kind of item implementation. You can easily import the needed code in your project from the demo app sources if you want to have leave behind implementation.
 
