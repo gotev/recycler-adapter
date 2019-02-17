@@ -318,7 +318,7 @@ You can call any method defined in your `AdapterItem` and pass whatever paramete
 
 ```kotlin
 (getAdapterItem() as? YourAdapterItem)?.apply {
-    // method to call on the adapter item
+    // methods to call on the adapter item
 }
 ```
 
