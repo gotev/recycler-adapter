@@ -225,12 +225,22 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      *
      * @param item item to show when the recycler adapter is empty
      */
-    fun setEmptyItem(item: AdapterItem<*>) {
-        emptyItem = item.castAsIn()
-        emptyItemId = View.generateViewId()
+    fun setEmptyItem(item: AdapterItem<*>?) {
+        val previouslyEmpty = emptyItem == null
+        val afterEmpty = item == null
 
-        if (items.isEmpty())
-            notifyItemInserted(0)
+        emptyItem = item?.castAsIn()
+        emptyItemId = if (item == null) 0 else View.generateViewId()
+
+        if (items.isEmpty()) {
+            if (previouslyEmpty && !afterEmpty) {
+                notifyItemInserted(0)
+            } else if (!previouslyEmpty && afterEmpty) {
+                notifyItemRemoved(0)
+            } else if (!previouslyEmpty && !afterEmpty) {
+                notifyItemChanged(0)
+            }
+        }
     }
 
     /**
