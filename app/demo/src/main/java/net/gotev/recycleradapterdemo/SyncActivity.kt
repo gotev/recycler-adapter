@@ -62,18 +62,10 @@ class SyncActivity : AppCompatActivity() {
 
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
-        recyclerAdapter = RecyclerAdapter()
-        recyclerAdapter.setEmptyItem(LabelItem(getString(R.string.empty_list)))
-
-        // prevent recyclerview from scrolling when adding many items
-        // https://github.com/airbnb/epoxy/issues/224#issuecomment-305991898
-        recyclerAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    linearLayoutManager.scrollToPosition(0)
-                }
-            }
-        })
+        recyclerAdapter = RecyclerAdapter().apply {
+            setEmptyItem(LabelItem(getString(R.string.empty_list)))
+            lockScrollingWhileInserting(linearLayoutManager)
+        }
 
         recycler_view.apply {
             layoutManager = linearLayoutManager

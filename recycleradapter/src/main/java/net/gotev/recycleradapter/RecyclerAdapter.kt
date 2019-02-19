@@ -730,4 +730,20 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
         return this
     }
+
+    /**
+     * Prevent RecyclerView from scrolling when adding many items
+     * Taken from: https://github.com/airbnb/epoxy/issues/224#issuecomment-305991898
+     *
+     * @param layoutManager RecyclerView's Layout Manager
+     */
+    fun lockScrollingWhileInserting(layoutManager: RecyclerView.LayoutManager) {
+        registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                if (positionStart == 0) {
+                    layoutManager.scrollToPosition(0)
+                }
+            }
+        })
+    }
 }

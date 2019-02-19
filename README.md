@@ -28,12 +28,13 @@ In this way every item of the recycler view has its own set of files, resulting 
     * [Programmatically select items](#programmatically-select-items)
     * [Replacing selection groups items and Master/Slave selection groups](#replacing-selection-groups-items-and-masterslave-selection-groups)
 * [Leave Behind pattern](#leaveBehind)
+* [Lock scrolling while inserting](#lockScroll)
 * [Contributors](#contributors)
 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-implementation 'net.gotev:recycleradapter:2.2.1'
+implementation 'net.gotev:recycleradapter:2.2.2'
 ```
 
 ## <a name="basicTutorial"></a>Basic usage tutorial
@@ -506,6 +507,14 @@ This can be achieved combining `setSelectionGroupListener`, `replaceSelectionGro
 
 ## <a name="leaveBehind"></a>Leave Behind pattern example implementation
 In the demo app provided with the library, you can also see how to implement the [leave behind material design pattern](https://material.io/guidelines/components/lists-controls.html#lists-controls-types-of-list-controls). All the changes involved into the implementation can be seen in [this commit](https://github.com/gotev/recycler-adapter/commit/fa240519025f98ba609395034f42e89d5bb777fd). This implementation has not been included into the base library deliberately, to avoid depending on external libraries just for a single kind of item implementation. You can easily import the needed code in your project from the demo app sources if you want to have leave behind implementation.
+
+## <a name="lockScroll"></a>Lock scrolling while inserting
+When dynamically loading many data at once in the RecyclerView, specially when we are inserting new items at the first position, the default behavior of the RecyclerView, which scrolls down automatically may not be what we want. To lock the scrolling while inserting new items, simply call:
+
+```kotlin
+recyclerAdapter.lockScrollingWhileInserting(layoutManager)
+```
+To get a better comprehension of this behavior, try commenting `lockScrollingWhileInserting` in [SyncActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/SyncActivity.kt) and run the demo app again pressing the `shuffle` button to see the difference.
 
 ## <a name="contributors"></a>Contributors
 Thanks to:
