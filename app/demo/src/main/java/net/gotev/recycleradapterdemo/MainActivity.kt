@@ -1,11 +1,10 @@
 package net.gotev.recycleradapterdemo
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,11 +22,13 @@ class MainActivity : AppCompatActivity() {
         Random(System.currentTimeMillis())
     }
 
+    private lateinit var recyclerAdapter: RecyclerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val recyclerAdapter = RecyclerAdapter()
+        recyclerAdapter = RecyclerAdapter()
         recyclerAdapter.setEmptyItem(LabelItem(getString(R.string.empty_list)))
 
         recycler_view.apply {
@@ -59,21 +60,29 @@ class MainActivity : AppCompatActivity() {
             recyclerAdapter.add(TitleSubtitleItem(this, "added item " + UUID.randomUUID().toString()))
         }
 
-        search.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
+    }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                recyclerAdapter.filter(search.text.toString())
-            }
-        })
+    private fun onSearch(query: String?) {
+        recyclerAdapter.filter(query)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+
+        (menu.findItem(R.id.search).actionView as SearchView).apply {
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    onSearch(query)
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    onSearch(newText)
+                    return false
+                }
+            })
+        }
+
         return true
     }
 

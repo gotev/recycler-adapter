@@ -15,7 +15,7 @@ import net.gotev.recycleradapterdemo.R
 open class TitleSubtitleItem(private val context: Context, private val text: String)
     : AdapterItem<TitleSubtitleItem.Holder>() {
 
-    override fun onFilter(searchTerm: String) = text.contains(searchTerm)
+    override fun onFilter(searchTerm: String) = text.contains(searchTerm, ignoreCase = true)
 
     override fun getLayoutId() = R.layout.item_title_subtitle
 

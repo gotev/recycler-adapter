@@ -13,4 +13,5 @@
     <string name="single_selection">Group with single selection</string>
     <string name="multiple_selection">Group with multiple selection</string>
     <string name="show_selections">Show Selections</string>
+    <string name="search_hint">Search…</string>
 </resources>

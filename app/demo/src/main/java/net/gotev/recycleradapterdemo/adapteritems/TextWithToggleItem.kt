@@ -15,7 +15,7 @@ class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleI
 
     private var pressed = false
 
-    override fun onFilter(searchTerm: String) = text.contains(searchTerm)
+    override fun onFilter(searchTerm: String) = text.contains(searchTerm, ignoreCase = true)
 
     override fun getLayoutId() = R.layout.item_text_with_toggle
 
