@@ -2,22 +2,22 @@ package net.gotev.recycleradapterdemo.adapteritems
 
 import android.view.View
 import android.widget.TextView
-import android.widget.ToggleButton
+import androidx.appcompat.widget.SwitchCompat
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_text_with_button.*
+import kotlinx.android.synthetic.main.item_text_with_toggle.*
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterNotifier
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
 
-class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonItem.Holder>() {
+class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleItem.Holder>() {
 
     private var pressed = false
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
 
-    override fun getLayoutId() = R.layout.item_text_with_button
+    override fun getLayoutId() = R.layout.item_text_with_toggle
 
     override fun bind(holder: Holder) {
         holder.textViewField.text = text
@@ -30,12 +30,12 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
             get() = itemView
 
         internal val textViewField: TextView by lazy { textView }
-        internal val buttonField: ToggleButton by lazy { toggleButton }
+        internal val buttonField: SwitchCompat by lazy { toggleButton }
 
         init {
-            buttonField.setOnClickListener {
-                (getAdapterItem() as? TextWithButtonItem)?.apply {
-                    pressed = buttonField.isChecked
+            containerView?.setOnClickListener {
+                (getAdapterItem() as? TextWithToggleItem)?.apply {
+                    pressed = !buttonField.isChecked
                     notifyItemChanged()
                 }
             }

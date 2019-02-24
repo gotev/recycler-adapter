@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
-import net.gotev.recycleradapterdemo.adapteritems.ExampleItem
-import net.gotev.recycleradapterdemo.adapteritems.TextWithButtonItem
+import net.gotev.recycleradapterdemo.adapteritems.TextWithToggleItem
+import net.gotev.recycleradapterdemo.adapteritems.TitleSubtitleItem
 import net.gotev.recycleradapterdemo.adapteritems.leavebehind.MyLeaveBehindItem
 import java.util.*
 
@@ -40,23 +40,23 @@ class MainActivity : AppCompatActivity() {
 
         val items = (0..random.nextInt(200) + 50).map {
             if (it % 2 == 0)
-                ExampleItem(this, "example item $it")
+                TitleSubtitleItem(this, "Item $it")
             else
-                TextWithButtonItem("text with button $it")
+                TextWithToggleItem("Item $it")
         }
 
         recyclerAdapter.add(items)
 
         remove_all_items_of_a_kind.setOnClickListener {
-            recyclerAdapter.removeAllItemsWithClass(ExampleItem::class.java)
+            recyclerAdapter.removeAllItemsWithClass(TitleSubtitleItem::class.java)
         }
 
         remove_last_item_of_a_kind.setOnClickListener {
-            recyclerAdapter.removeLastItemWithClass(TextWithButtonItem::class.java)
+            recyclerAdapter.removeLastItemWithClass(TextWithToggleItem::class.java)
         }
 
         add_item.setOnClickListener {
-            recyclerAdapter.add(ExampleItem(this, "added item " + UUID.randomUUID().toString()))
+            recyclerAdapter.add(TitleSubtitleItem(this, "added item " + UUID.randomUUID().toString()))
         }
 
         search.addTextChangedListener(object : TextWatcher {

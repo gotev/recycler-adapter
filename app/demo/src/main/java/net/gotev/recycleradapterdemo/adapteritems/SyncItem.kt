@@ -4,7 +4,7 @@ import android.content.Context
 
 import net.gotev.recycleradapter.AdapterItem
 
-class SyncItem(context: Context, val id: Int, private val suffix: String) : ExampleItem(context, "item $id $suffix") {
+class SyncItem(context: Context, val id: Int, private val suffix: String) : TitleSubtitleItem(context, "item $id $suffix") {
 
     override fun equals(other: Any?): Boolean {
         if (other == null || javaClass != other.javaClass) {

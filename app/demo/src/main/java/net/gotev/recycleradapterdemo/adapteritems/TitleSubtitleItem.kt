@@ -5,19 +5,19 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_example.*
+import kotlinx.android.synthetic.main.item_title_subtitle.*
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterNotifier
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
 
-open class ExampleItem(private val context: Context, private val text: String)
-    : AdapterItem<ExampleItem.Holder>() {
+open class TitleSubtitleItem(private val context: Context, private val text: String)
+    : AdapterItem<TitleSubtitleItem.Holder>() {
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
 
-    override fun getLayoutId() = R.layout.item_example
+    override fun getLayoutId() = R.layout.item_title_subtitle
 
     override fun bind(holder: Holder) {
         holder.titleField.text = text
@@ -47,13 +47,13 @@ open class ExampleItem(private val context: Context, private val text: String)
 
         init {
             titleField.setOnClickListener {
-                (getAdapterItem() as? ExampleItem)?.apply {
+                (getAdapterItem() as? TitleSubtitleItem)?.apply {
                     onTitleClicked(adapterPosition)
                 }
             }
 
             subtitleField.setOnClickListener {
-                (getAdapterItem() as? ExampleItem)?.apply {
+                (getAdapterItem() as? TitleSubtitleItem)?.apply {
                     onSubTitleClicked(adapterPosition)
                 }
             }
