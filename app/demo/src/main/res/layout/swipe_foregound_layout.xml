@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@android:color/white"
@@ -14,4 +14,4 @@
         android:gravity="center_vertical"
         android:textColor="@android:color/black"/>
 
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

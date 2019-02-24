@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">RecyclerAdapterDemo</string>
-    <string name="remove_all_items_of_a_kind">Remove all example items</string>
+    <string name="app_name">RecyclerAdapter Demo</string>
+    <string name="remove_all_items_of_a_kind">Remove all Title/Subtitle items</string>
     <string name="remove_last_of_a_kind">Remove last text with button item</string>
     <string name="empty_list">No items in the list</string>
     <string name="add_item">Add item</string>
-    <string name="sync_with_items">Sync With Items</string>
+    <string name="sync_with_items">Sync with items</string>
     <string name="selection">Selection</string>
     <string name="selection_master_slave">Master-Slave Groups Selection</string>
     <string name="finish_loading">Finish loading</string>
@@ -14,4 +14,8 @@
     <string name="multiple_selection">Group with multiple selection</string>
     <string name="show_selections">Show Selections</string>
     <string name="search_hint">Search…</string>
+    <string name="button_shuffle_start">Start Shuffle</string>
+    <string name="button_shuffle_stop">Stop Shuffle</string>
+    <string name="button_sync_group_a">Sync A</string>
+    <string name="button_sync_group_b">Sync B</string>
 </resources>

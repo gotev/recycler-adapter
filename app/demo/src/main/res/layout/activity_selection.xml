@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:scrollbars="none" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/action_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

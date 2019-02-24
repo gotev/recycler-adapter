@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             if (it % 2 == 0)
                 TitleSubtitleItem(this, "Item $it")
             else
-                TextWithToggleItem("Item $it")
+                TextWithToggleItem("Toggle $it")
         }
 
         recyclerAdapter.add(items)
@@ -57,7 +57,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         add_item.setOnClickListener {
-            recyclerAdapter.add(TitleSubtitleItem(this, "added item " + UUID.randomUUID().toString()))
+            recyclerAdapter.add(
+                    TitleSubtitleItem(this, "Item ${UUID.randomUUID()}"),
+                    position = 1
+            )
         }
 
     }

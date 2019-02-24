@@ -82,12 +82,14 @@ class SyncActivity : AppCompatActivity() {
 
         shuffle.setOnClickListener {
             scheduledOperation = if (scheduledOperation == null) {
+                shuffle.text = getString(R.string.button_shuffle_stop)
                 executor.scheduleAtFixedRate({
                     runOnUiThread {
                         recyclerAdapter.syncWithItems(ArrayList(createItems()))
                     }
                 }, 1, 100, TimeUnit.MILLISECONDS)
             } else {
+                shuffle.text = getString(R.string.button_shuffle_start)
                 scheduledOperation?.cancel(true)
                 null
             }
