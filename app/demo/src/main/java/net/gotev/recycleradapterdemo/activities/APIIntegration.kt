@@ -2,25 +2,18 @@ package net.gotev.recycleradapterdemo.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_api_integration.*
-import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapterdemo.App
 import net.gotev.recycleradapterdemo.R
-import net.gotev.recycleradapterdemo.adapteritems.TitleSubtitleItem
+import net.gotev.recycleradapterdemo.network.api.StarWarsPeopleDataSource
+import net.gotev.recycleradapterdemo.paging.PagingHelper
 
 
 class APIIntegration : AppCompatActivity() {
-
-    private val disposeBag by lazy {
-        CompositeDisposable()
-    }
 
     companion object {
         fun show(activity: AppCompatActivity) {
@@ -28,7 +21,7 @@ class APIIntegration : AppCompatActivity() {
         }
     }
 
-    private lateinit var recyclerAdapter: RecyclerAdapter
+    private lateinit var pagingHelper: PagingHelper<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,52 +34,28 @@ class APIIntegration : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        pagingHelper = PagingHelper(
+                dataSource = { StarWarsPeopleDataSource(App.starWarsClient) },
+                config = PagedList.Config.Builder()
+                        .setPageSize(20)
+                        .setEnablePlaceholders(false)
+                        .setPrefetchDistance(10)
+                        .setMaxSize(50)
+                        .build()
+        )
 
-        recyclerAdapter = RecyclerAdapter()
+        recycler_view.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        pagingHelper.setupRecyclerView(recycler_view)
 
-        recycler_view.apply {
-            layoutManager = linearLayoutManager
-            adapter = recyclerAdapter
+        swipeRefresh.isRefreshing = true
+        pagingHelper.start(this) {
+            swipeRefresh.isRefreshing = false
         }
 
         swipeRefresh.setOnRefreshListener {
-            loadData(reload = true)
+            pagingHelper.reload()
         }
 
-        loadData()
-    }
-
-    fun loadData(reload: Boolean = false) {
-        swipeRefresh.isRefreshing = true
-
-        App.starWarsClient.getStarships()
-                .map { response ->
-                    response.results.map { starship ->
-                        TitleSubtitleItem(starship.name, starship.manufacturer)
-                    }
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ items ->
-                    swipeRefresh.isRefreshing = false
-                    if (reload) {
-                        recyclerAdapter.syncWithItems(ArrayList(items))
-                    } else {
-                        recyclerAdapter.add(items)
-                    }
-                }, {
-                    swipeRefresh.isRefreshing = false
-                    Log.e("Error", "Error while loading starhips", it)
-                }).autoDisposeOnPause()
-    }
-
-    private fun Disposable.autoDisposeOnPause() {
-        disposeBag.add(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        disposeBag.dispose()
     }
 
 }

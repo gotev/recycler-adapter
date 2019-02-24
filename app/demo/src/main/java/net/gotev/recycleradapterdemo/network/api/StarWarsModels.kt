@@ -7,7 +7,7 @@ data class SWAPIPaginatedResponse<T>(
         val results: List<T>
 )
 
-data class SWAPIStarship(
+data class SWAPIPerson(
         val name: String,
-        val manufacturer: String
+        val height: String
 )
