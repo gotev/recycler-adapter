@@ -12,28 +12,44 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
 
-open class TitleSubtitleItem(private val context: Context, private val text: String)
+open class TitleSubtitleItem(private val title: String, private val subtitle: String = "subtitle")
     : AdapterItem<TitleSubtitleItem.Holder>() {
 
-    override fun onFilter(searchTerm: String) = text.contains(searchTerm, ignoreCase = true)
+    override fun onFilter(searchTerm: String) = title.contains(searchTerm, ignoreCase = true)
 
     override fun getLayoutId() = R.layout.item_title_subtitle
 
     override fun bind(holder: Holder) {
-        holder.titleField.text = text
-        holder.subtitleField.text = "subtitle"
+        holder.titleField.text = title
+        holder.subtitleField.text = subtitle
     }
 
-    private fun onTitleClicked(position: Int) {
-        showToast("clicked TITLE at position $position")
+    private fun onTitleClicked(context: Context, position: Int) {
+        showToast(context, "clicked TITLE at position $position")
     }
 
-    private fun onSubTitleClicked(position: Int) {
-        showToast("clicked SUBTITLE at position $position")
+    private fun onSubTitleClicked(context: Context, position: Int) {
+        showToast(context, "clicked SUBTITLE at position $position")
     }
 
-    private fun showToast(message: String) {
+    private fun showToast(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is TitleSubtitleItem) return false
+
+        if (title != other.title) return false
+        if (subtitle != other.subtitle) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = title.hashCode()
+        result = 31 * result + subtitle.hashCode()
+        return result
     }
 
     class Holder(itemView: View, adapter: RecyclerAdapterNotifier)
@@ -47,14 +63,18 @@ open class TitleSubtitleItem(private val context: Context, private val text: Str
 
         init {
             titleField.setOnClickListener {
-                (getAdapterItem() as? TitleSubtitleItem)?.apply {
-                    onTitleClicked(adapterPosition)
+                containerView?.context?.let { context ->
+                    (getAdapterItem() as? TitleSubtitleItem)?.apply {
+                        onTitleClicked(context, adapterPosition)
+                    }
                 }
             }
 
             subtitleField.setOnClickListener {
-                (getAdapterItem() as? TitleSubtitleItem)?.apply {
-                    onSubTitleClicked(adapterPosition)
+                containerView?.context?.let { context ->
+                    (getAdapterItem() as? TitleSubtitleItem)?.apply {
+                        onSubTitleClicked(context, adapterPosition)
+                    }
                 }
             }
         }

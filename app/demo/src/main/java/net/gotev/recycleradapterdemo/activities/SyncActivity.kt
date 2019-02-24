@@ -1,4 +1,4 @@
-package net.gotev.recycleradapterdemo
+package net.gotev.recycleradapterdemo.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_sync.*
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
+import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SyncItem
 import java.util.concurrent.ScheduledFuture
@@ -31,22 +32,22 @@ class SyncActivity : AppCompatActivity() {
     private var scheduledOperation: ScheduledFuture<*>? = null
 
     private var listB = arrayListOf(
-            SyncItem(this, 1, "listB"),
-            SyncItem(this, 3, "listB"),
-            SyncItem(this, 4, "listB"),
-            SyncItem(this, 5, "listB")
+            SyncItem(1, "listB"),
+            SyncItem(3, "listB"),
+            SyncItem(4, "listB"),
+            SyncItem(5, "listB")
     )
 
     private fun listB(): ArrayList<SyncItem> {
-        listB.add(SyncItem(this, listB.last().id + 1, "listB${listB.last().id + 1}"))
-        listB.add(SyncItem(this, listB.last().id + 1, "listB${listB.last().id + 1}"))
+        listB.add(SyncItem(listB.last().id + 1, "listB${listB.last().id + 1}"))
+        listB.add(SyncItem(listB.last().id + 1, "listB${listB.last().id + 1}"))
         return listB
     }
 
     private fun listA() =
             arrayListOf(
-                    SyncItem(this, 1, "listA"),
-                    SyncItem(this, 2, "listA")
+                    SyncItem(1, "listA"),
+                    SyncItem(2, "listA")
             )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +105,7 @@ class SyncActivity : AppCompatActivity() {
 
     fun createItems(): List<AdapterItem<*>> {
         return (0..Random.nextInt(1, 10)).flatMap {
-            listOf(LabelItem("$it"), SyncItem(this, it, "ListC"))
+            listOf(LabelItem("$it"), SyncItem(it, "ListC"))
         }
     }
 

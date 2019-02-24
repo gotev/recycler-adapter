@@ -34,7 +34,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-implementation 'net.gotev:recycleradapter:2.2.2'
+implementation 'net.gotev:recycleradapter:2.2.3'
 ```
 
 ## <a name="basicTutorial"></a>Basic usage tutorial

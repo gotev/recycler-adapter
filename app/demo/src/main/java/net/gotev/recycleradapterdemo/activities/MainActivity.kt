@@ -1,4 +1,4 @@
-package net.gotev.recycleradapterdemo
+package net.gotev.recycleradapterdemo.activities
 
 import android.os.Bundle
 import android.view.Menu
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.gotev.recycleradapter.RecyclerAdapter
+import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.TextWithToggleItem
 import net.gotev.recycleradapterdemo.adapteritems.TitleSubtitleItem
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         val items = (0..random.nextInt(200) + 50).map {
             if (it % 2 == 0)
-                TitleSubtitleItem(this, "Item $it")
+                TitleSubtitleItem("Item $it")
             else
                 TextWithToggleItem("Toggle $it")
         }
@@ -56,9 +57,17 @@ class MainActivity : AppCompatActivity() {
             recyclerAdapter.removeLastItemWithClass(TextWithToggleItem::class.java)
         }
 
+        remove_last_item_of_a_kind.setOnClickListener {
+            recyclerAdapter.removeLastItemWithClass(TextWithToggleItem::class.java)
+        }
+
+        remove_all.setOnClickListener {
+            recyclerAdapter.clear()
+        }
+
         add_item.setOnClickListener {
             recyclerAdapter.add(
-                    TitleSubtitleItem(this, "Item ${UUID.randomUUID()}"),
+                    TitleSubtitleItem("Item ${UUID.randomUUID()}"),
                     position = 1
             )
         }
@@ -103,6 +112,11 @@ class MainActivity : AppCompatActivity() {
 
         R.id.selection_multi_groups -> {
             MasterSlaveGroupsActivity.show(this)
+            true
+        }
+
+        R.id.api_integration -> {
+            APIIntegration.show(this)
             true
         }
 

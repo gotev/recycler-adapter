@@ -1,4 +1,4 @@
-package net.gotev.recycleradapterdemo
+package net.gotev.recycleradapterdemo.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_selection.*
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapter.SelectionGroupListener
+import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SelectableItem
 

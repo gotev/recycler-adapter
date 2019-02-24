@@ -26,4 +26,10 @@
         android:visible="true"
         android:enabled="true"
         android:id="@+id/selection_multi_groups" />
+
+    <item android:title="@string/api_integration"
+        app:showAsAction="never|withText"
+        android:visible="true"
+        android:enabled="true"
+        android:id="@+id/api_integration" />
 </menu>

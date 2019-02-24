@@ -18,4 +18,7 @@
     <string name="button_shuffle_stop">Stop Shuffle</string>
     <string name="button_sync_group_a">Sync A</string>
     <string name="button_sync_group_b">Sync B</string>
+    <string name="api_integration">API integration</string>
+    <string name="loading">Loading, please wait…</string>
+    <string name="remove_all">Remove all</string>
 </resources>

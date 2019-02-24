@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/spacer_default"
-    tools:context="net.gotev.recycleradapterdemo.MainActivity">
+    tools:context="net.gotev.recycleradapterdemo.activities.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
@@ -20,11 +20,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/remove_all_items_of_a_kind"
+        android:id="@+id/add_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/remove_all_items_of_a_kind"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/add_item"
+        app:layout_constraintBottom_toTopOf="@+id/remove_all"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/remove_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remove_all"
+        app:layout_constraintBottom_toTopOf="@+id/remove_last_item_of_a_kind"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -38,11 +47,11 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/add_item"
+        android:id="@+id/remove_all_items_of_a_kind"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_item"
-        app:layout_constraintBottom_toTopOf="@+id/remove_last_item_of_a_kind"
+        android:text="@string/remove_all_items_of_a_kind"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 

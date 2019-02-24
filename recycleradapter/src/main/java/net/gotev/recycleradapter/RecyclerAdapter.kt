@@ -94,8 +94,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     private fun removeEmptyItemIfItHasBeenConfigured() {
         // this is necessary to prevent IndexOutOfBoundsException on RecyclerView when the
         // first item gets added and an empty item has been configured
-        if (items.size == 1 && emptyItem != null) {
-            notifyItemRemoved(0)
+        if (items.size >= 1 && emptyItem != null) {
+            notifyItemChanged(0)
         }
     }
 
