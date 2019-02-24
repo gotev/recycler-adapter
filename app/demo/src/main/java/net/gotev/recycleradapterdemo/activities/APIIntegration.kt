@@ -9,11 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_sync.*
+import kotlinx.android.synthetic.main.activity_api_integration.*
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapterdemo.App
 import net.gotev.recycleradapterdemo.R
-import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.TitleSubtitleItem
 
 
@@ -44,18 +43,22 @@ class APIIntegration : AppCompatActivity() {
 
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
-        recyclerAdapter = RecyclerAdapter().apply {
-            setEmptyItem(LabelItem(getString(R.string.loading)))
-        }
+        recyclerAdapter = RecyclerAdapter()
 
         recycler_view.apply {
             layoutManager = linearLayoutManager
             adapter = recyclerAdapter
         }
+
+        swipeRefresh.setOnRefreshListener {
+            loadData(reload = true)
+        }
+
+        loadData()
     }
 
-    override fun onResume() {
-        super.onResume()
+    fun loadData(reload: Boolean = false) {
+        swipeRefresh.isRefreshing = true
 
         App.starWarsClient.getStarships()
                 .map { response ->
@@ -65,8 +68,14 @@ class APIIntegration : AppCompatActivity() {
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ items ->
-                    recyclerAdapter.add(items)
+                    swipeRefresh.isRefreshing = false
+                    if (reload) {
+                        recyclerAdapter.syncWithItems(ArrayList(items))
+                    } else {
+                        recyclerAdapter.add(items)
+                    }
                 }, {
+                    swipeRefresh.isRefreshing = false
                     Log.e("Error", "Error while loading starhips", it)
                 }).autoDisposeOnPause()
     }

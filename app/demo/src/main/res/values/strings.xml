@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">RecyclerAdapter Demo</string>
-    <string name="remove_all_items_of_a_kind">Remove all Title/Subtitle items</string>
-    <string name="remove_last_of_a_kind">Remove last text with button item</string>
+    <string name="remove_all_items_of_a_kind">Remove all Title-Subtitle items</string>
+    <string name="remove_last_of_a_kind">Remove last text with toggle item</string>
     <string name="empty_list">No items in the list</string>
     <string name="add_item">Add item</string>
     <string name="sync_with_items">Sync with items</string>
@@ -19,6 +19,5 @@
     <string name="button_sync_group_a">Sync A</string>
     <string name="button_sync_group_b">Sync B</string>
     <string name="api_integration">API integration</string>
-    <string name="loading">Loading, please wait…</string>
     <string name="remove_all">Remove all</string>
 </resources>

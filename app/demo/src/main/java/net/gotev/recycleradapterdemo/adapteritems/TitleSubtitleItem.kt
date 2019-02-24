@@ -36,6 +36,8 @@ open class TitleSubtitleItem(private val title: String, private val subtitle: St
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun hasToBeReplacedBy(newItem: AdapterItem<*>) = false
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is TitleSubtitleItem) return false
