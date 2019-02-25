@@ -76,5 +76,5 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     implementation project(':recycleradapter')
-
+    implementation project(':recycleradapter-extensions')
 }

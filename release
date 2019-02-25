@@ -1,2 +1,4 @@
 #!/bin/bash
 ./gradlew :recycleradapter:clean :recycleradapter:bintrayUpload
+./gradlew :recycleradapter-extensions:clean :recycleradapter-extensions:bintrayUpload
+
