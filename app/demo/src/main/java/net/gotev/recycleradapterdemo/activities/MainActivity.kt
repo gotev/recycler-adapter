@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapter.ext.HorizontalRecyclerAdapterItem
+import net.gotev.recycleradapter.ext.NestedRecyclerAdapterItem
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.TextWithToggleItem
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             adapter.add((0..10).map { LabelItem("Text $it") })
         }
 
-        recyclerAdapter.add(HorizontalRecyclerAdapterItem(horizontalAdapter))
+        recyclerAdapter.add(NestedRecyclerAdapterItem(horizontalAdapter))
 
         val items = (0..random.nextInt(200) + 50).map {
             if (it % 2 == 0)

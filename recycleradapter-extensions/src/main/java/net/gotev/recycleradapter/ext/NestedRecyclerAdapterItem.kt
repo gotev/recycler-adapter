@@ -1,5 +1,6 @@
 package net.gotev.recycleradapter.ext
 
+import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -11,10 +12,13 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 /**
  * @author Aleksandar Gotev
  */
-open class HorizontalRecyclerAdapterItem(val recyclerAdapter: RecyclerAdapter)
-    : AdapterItem<HorizontalRecyclerAdapterItem.Holder>() {
+open class NestedRecyclerAdapterItem(val recyclerAdapter: RecyclerAdapter)
+    : AdapterItem<NestedRecyclerAdapterItem.Holder>() {
 
     override fun getLayoutId() = R.layout.item_horizontal
+
+    open fun getLayoutManager(context: Context): RecyclerView.LayoutManager =
+            LinearLayoutManager(context, HORIZONTAL, false)
 
     override fun bind(holder: Holder) {
         with(holder.recyclerView) {
@@ -22,7 +26,7 @@ open class HorizontalRecyclerAdapterItem(val recyclerAdapter: RecyclerAdapter)
             layoutManager = null
             adapter = null
 
-            layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+            layoutManager = getLayoutManager(context)
             adapter = recyclerAdapter
         }
     }
