@@ -1,7 +1,6 @@
 package net.gotev.recycleradapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.Pair
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -40,9 +39,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
     }
 
+    private fun AdapterItem<*>.viewType() = javaClass.name.hashCode()
+    private fun Class<out AdapterItem<*>>.viewType() = hashCode()
+
     private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
 
-    private val typeIds = LinkedHashMap<String, Int>()
     private val types = LinkedHashMap<Int, AdapterItem<*>>()
 
     private var emptyItem: AdapterItem<in RecyclerAdapterViewHolder>? = null
@@ -82,12 +83,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     }
 
     private fun registerItemType(item: AdapterItem<*>) {
-        val className = item.javaClass.name
+        val classType = item.viewType()
 
-        if (!typeIds.containsKey(className)) {
-            val viewId = View.generateViewId()
-            typeIds[className] = viewId
-            types[viewId] = item
+        if (!types.containsKey(classType)) {
+            types[classType] = item
         }
     }
 
@@ -104,7 +103,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             return emptyItemId
         }
 
-        return typeIds.getValue(items[position].javaClass.name)
+        return items[position].viewType()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapterViewHolder {
@@ -230,7 +229,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         val afterEmpty = item == null
 
         emptyItem = item?.castAsIn()
-        emptyItemId = if (item == null) 0 else View.generateViewId()
+        emptyItemId = item?.viewType() ?: 0
 
         if (items.isEmpty()) {
             if (previouslyEmpty && !afterEmpty) {
@@ -461,9 +460,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
 
         //TODO: check for type removal in all the other remove methods if the last of a kind has been removed
-        typeIds[clazz.name]?.let {
-            typeIds.remove(clazz.name)
-            types.remove(it)
+        if (types.containsKey(clazz.viewType())) {
+            types.remove(clazz.viewType())
         }
     }
 
