@@ -12,7 +12,8 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 /**
  * @author Aleksandar Gotev
  */
-open class NestedRecyclerAdapterItem(val recyclerAdapter: RecyclerAdapter)
+open class NestedRecyclerAdapterItem(val recyclerAdapter: RecyclerAdapter,
+                                     val recycledViewsPool: RecyclerView.RecycledViewPool?)
     : AdapterItem<NestedRecyclerAdapterItem.Holder>() {
 
     override fun getLayoutId() = R.layout.item_horizontal
@@ -28,6 +29,9 @@ open class NestedRecyclerAdapterItem(val recyclerAdapter: RecyclerAdapter)
 
             layoutManager = getLayoutManager(context)
             adapter = recyclerAdapter
+            recycledViewsPool?.let {
+                setRecycledViewPool(it)
+            }
         }
     }
 

@@ -17,6 +17,70 @@ import kotlin.collections.LinkedHashMap
  */
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), RecyclerAdapterNotifier {
 
+    companion object {
+        /**
+         * Create a new recycled view pool. This is useful to improve performance
+         * when you use many nested recycler views inside a single recycler view (e.g. to achieve
+         * an UI like the Play Store, which has many horizontal carousels). You can
+         * share the same recycled view pool across many recycler views, to prevent each one
+         * of them to create its own recycled view pool (which is the default behavior).
+         *
+         * This is designed to work out of the box with NestedRecyclerAdapterItem from
+         * recycleradapter-extensions library.
+         *
+         * @param parent the recycler view in which you are going to put the nested recycler views
+         * @param items list of items for which you want to create recycled views
+         * @param maxViewsPerItem how many recyclable items to create for each of the items in the
+         *                        list. If you specify a value lower than 1, it will be set to 1
+         *                        by default. For example if you have two items and you set
+         *                        maxViewsPerItem = 10, a total of 20 views will be created (10
+         *                        for the first item and 10 for the second)
+         */
+        fun createRecycledViewPool(parent: RecyclerView,
+                                   items: List<AdapterItem<*>>,
+                                   maxViewsPerItem: Int): RecyclerView.RecycledViewPool {
+            val maxViews = if (maxViewsPerItem >= 1) maxViewsPerItem else 1
+            val pool = RecyclerView.RecycledViewPool()
+
+            items.forEach { item ->
+                pool.setMaxRecycledViews(item.viewType(), maxViews)
+
+                (0 until maxViews).forEach {
+                    pool.putRecycledView(createItemViewHolder(parent, item))
+                }
+            }
+
+            return pool
+        }
+
+        internal fun createItemViewHolder(parent: ViewGroup, item: AdapterItem<*>): RecyclerAdapterViewHolder {
+            try {
+                val view = LayoutInflater
+                        .from(parent.context)
+                        .inflate(item.getLayoutId(), parent, false)
+                return item.getViewHolder(view)
+
+            } catch (exc: Throwable) {
+                val message = when (exc) {
+                    is NoSuchMethodException -> {
+                        "You should declare a constructor like this in your ViewHolder:\n" +
+                                "public RecyclerAdapterViewHolder(View itemView, RecyclerAdapterNotifier adapter)"
+                    }
+
+                    is IllegalAccessException -> {
+                        "Your ViewHolder class in ${item.javaClass.name} should be public!"
+                    }
+
+                    else -> {
+                        ""
+                    }
+                }
+
+                throw RuntimeException("${javaClass.simpleName} - onCreateViewHolder error. $message", exc)
+            }
+        }
+    }
+
     private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
     private val types = LinkedHashMap<Int, AdapterItem<*>>()
     private var emptyItem: AdapterItem<in RecyclerAdapterViewHolder>? = null
@@ -85,30 +149,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             types.getValue(viewType)
         }
 
-        try {
-            val inflater = LayoutInflater.from(parent.context)
-            val view = inflater.inflate(item.getLayoutId(), parent, false)
-            return item.getViewHolder(view)
-
-        } catch (exc: Throwable) {
-            val message = when (exc) {
-                is NoSuchMethodException -> {
-                    "You should declare a constructor like this in your ViewHolder:\n" +
-                            "public RecyclerAdapterViewHolder(View itemView, RecyclerAdapterNotifier adapter)"
-                }
-
-                is IllegalAccessException -> {
-                    "Your ViewHolder class in ${item.javaClass.name} should be public!"
-                }
-
-                else -> {
-                    ""
-                }
-            }
-
-            throw RuntimeException("${javaClass.simpleName} - onCreateViewHolder error. $message", exc)
-        }
-
+        return createItemViewHolder(parent, item)
     }
 
     override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int) {

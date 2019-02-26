@@ -40,7 +40,11 @@
             android:parentActivityName=".activities.MainActivity"/>
 
         <activity
-            android:name=".activities.APIIntegration"
+            android:name=".activities.InfiniteScroll"
+            android:parentActivityName=".activities.MainActivity"/>
+
+        <activity
+            android:name=".activities.Carousels"
             android:parentActivityName=".activities.MainActivity"/>
 
     </application>

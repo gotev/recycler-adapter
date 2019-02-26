@@ -6,18 +6,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_api_integration.*
+import kotlinx.android.synthetic.main.activity_recycler_view.*
 import net.gotev.recycleradapterdemo.App
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.network.api.StarWarsPeopleDataSource
 import net.gotev.recycleradapterdemo.paging.PagingHelper
 
 
-class APIIntegration : AppCompatActivity() {
+class InfiniteScroll : AppCompatActivity() {
 
     companion object {
         fun show(activity: AppCompatActivity) {
-            activity.startActivity(Intent(activity, APIIntegration::class.java))
+            activity.startActivity(Intent(activity, InfiniteScroll::class.java))
         }
     }
 
@@ -25,9 +25,9 @@ class APIIntegration : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_api_integration)
+        setContentView(R.layout.activity_recycler_view)
 
-        title = getString(R.string.api_integration)
+        title = getString(R.string.infinite_scrolling)
 
         supportActionBar?.apply {
             setHomeButtonEnabled(true)

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapter.ext.NestedRecyclerAdapterItem
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.TextWithToggleItem
@@ -39,14 +38,10 @@ class MainActivity : AppCompatActivity() {
             recyclerAdapter.enableDragDrop(this)
         }
 
+        // add an item
         recyclerAdapter.add(MyLeaveBehindItem("swipe to left to leave behind", "option"))
 
-        val horizontalAdapter = RecyclerAdapter().also { adapter ->
-            adapter.add((0..10).map { LabelItem("Text $it") })
-        }
-
-        recyclerAdapter.add(NestedRecyclerAdapterItem(horizontalAdapter))
-
+        // add many items of two kinds
         val items = (0..random.nextInt(200) + 50).map {
             if (it % 2 == 0)
                 TitleSubtitleItem("Item $it")
@@ -56,6 +51,10 @@ class MainActivity : AppCompatActivity() {
 
         recyclerAdapter.add(items)
 
+        configureActions()
+    }
+
+    private fun configureActions() {
         remove_all_items_of_a_kind.setOnClickListener {
             recyclerAdapter.removeAllItemsWithClass(TitleSubtitleItem::class.java)
         }
@@ -78,7 +77,6 @@ class MainActivity : AppCompatActivity() {
                     position = 1
             )
         }
-
     }
 
     private fun onSearch(query: String?) {
@@ -123,7 +121,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.api_integration -> {
-            APIIntegration.show(this)
+            InfiniteScroll.show(this)
+            true
+        }
+
+        R.id.carousels_plain -> {
+            Carousels.show(this, withPool = false)
+            true
+        }
+
+        R.id.carousels_pool -> {
+            Carousels.show(this, withPool = true)
             true
         }
 
