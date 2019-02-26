@@ -6,7 +6,6 @@ import androidx.appcompat.widget.SwitchCompat
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_selectable.*
 import net.gotev.recycleradapter.AdapterItem
-import net.gotev.recycleradapter.RecyclerAdapterNotifier
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
@@ -32,8 +31,7 @@ open class SelectableItem(val label: String, private val group: String)
         }
     }
 
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier)
-        : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+    class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView), LayoutContainer {
 
         override val containerView: View?
             get() = itemView

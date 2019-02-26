@@ -45,7 +45,6 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      * Creates a new ViewHolder instance, by inferring the ViewHolder type from the generic passed
      * to this class
      * @param view View to be passed to the ViewHolder
-     * @param adapter [RecyclerAdapter] instance
      * @return ViewHolder
      * @throws NoSuchMethodException if no mathing constructor are found in the ViewHolder subclass
      * @throws InstantiationException if an error happens during instantiation of the ViewHolder subclass
@@ -54,7 +53,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(NoSuchMethodException::class, InstantiationException::class, InvocationTargetException::class, IllegalAccessException::class)
-    internal fun getViewHolder(view: View, adapter: RecyclerAdapterNotifier): T {
+    internal fun getViewHolder(view: View): T {
 
         // analyze all the public classes and interfaces that are members of the class represented
         // by this Class object and search for the first RecyclerAdapterViewHolder
@@ -63,8 +62,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
         for (cl in javaClass.classes) {
             if (RecyclerAdapterViewHolder::class.java.isAssignableFrom(cl)) {
                 val clazz = cl as Class<T>
-                return clazz.getConstructor(View::class.java, RecyclerAdapterNotifier::class.java)
-                        .newInstance(view, adapter)
+                return clazz.getConstructor(View::class.java).newInstance(view)
             }
         }
 

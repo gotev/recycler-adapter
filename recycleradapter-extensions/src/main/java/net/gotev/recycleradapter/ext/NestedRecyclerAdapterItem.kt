@@ -6,13 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapter.RecyclerAdapterNotifier
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 
 /**
  * @author Aleksandar Gotev
  */
-class HorizontalRecyclerAdapterItem(val recyclerAdapter: RecyclerAdapter)
+open class HorizontalRecyclerAdapterItem(val recyclerAdapter: RecyclerAdapter)
     : AdapterItem<HorizontalRecyclerAdapterItem.Holder>() {
 
     override fun getLayoutId() = R.layout.item_horizontal
@@ -28,9 +27,7 @@ class HorizontalRecyclerAdapterItem(val recyclerAdapter: RecyclerAdapter)
         }
     }
 
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier)
-        : RecyclerAdapterViewHolder(itemView, adapter) {
-
+    open class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView) {
         val recyclerView: RecyclerView = itemView.findViewById(R.id.recycler_view)
     }
 }

@@ -88,7 +88,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         try {
             val inflater = LayoutInflater.from(parent.context)
             val view = inflater.inflate(item.getLayoutId(), parent, false)
-            return item.getViewHolder(view, this)
+            return item.getViewHolder(view)
 
         } catch (exc: Throwable) {
             val message = when (exc) {
@@ -112,11 +112,14 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     }
 
     override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int) {
-        if (adapterIsEmptyAndEmptyItemIsDefined()) {
-            emptyItem?.bind(holder)
+        val item = if (adapterIsEmptyAndEmptyItemIsDefined()) {
+            emptyItem!!
         } else {
-            items[position].bind(holder)
+            items[position]
         }
+
+        holder.setAdapter(this)
+        item.bind(holder)
     }
 
     override fun getItemCount() = if (adapterIsEmptyAndEmptyItemIsDefined()) 1 else items.size

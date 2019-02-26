@@ -75,8 +75,8 @@ open class ExampleItem(private val context: Context, private val text: String)
         holder.titleField.text = text
     }
 
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier)
-        : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+    class Holder(itemView: View)
+        : RecyclerAdapterViewHolder(itemView), LayoutContainer {
 
         override val containerView: View?
             get() = itemView
@@ -281,8 +281,8 @@ open class ExampleItem(private val context: Context, private val text: String)
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier)
-        : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+    class Holder(itemView: View)
+        : RecyclerAdapterViewHolder(itemView), LayoutContainer {
 
         override val containerView: View?
             get() = itemView
@@ -369,7 +369,8 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
         holder.buttonField.isChecked = pressed
     }
 
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier) : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+    class Holder(itemView: View)
+        : RecyclerAdapterViewHolder(itemView), LayoutContainer {
 
         override val containerView: View?
             get() = itemView

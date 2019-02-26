@@ -7,7 +7,6 @@ import android.widget.Toast
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_title_subtitle.*
 import net.gotev.recycleradapter.AdapterItem
-import net.gotev.recycleradapter.RecyclerAdapterNotifier
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
@@ -54,8 +53,7 @@ open class TitleSubtitleItem(private val title: String, private val subtitle: St
         return result
     }
 
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier)
-        : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+    class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView), LayoutContainer {
 
         override val containerView: View?
             get() = itemView

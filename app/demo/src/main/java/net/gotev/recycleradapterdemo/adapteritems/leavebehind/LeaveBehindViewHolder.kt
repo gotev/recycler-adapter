@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.FrameLayout
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_leave_behind.*
-import net.gotev.recycleradapter.RecyclerAdapterNotifier
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 
 /**
@@ -13,8 +12,8 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
  * @author Aleksandar Gotev
  */
 
-abstract class LeaveBehindViewHolder(itemView: View, adapter: RecyclerAdapterNotifier)
-    : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+abstract class LeaveBehindViewHolder(itemView: View)
+    : RecyclerAdapterViewHolder(itemView), LayoutContainer {
 
     override val containerView: View?
         get() = itemView

@@ -4,10 +4,7 @@ import android.view.View
 import android.widget.TextView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_empty.*
-
 import net.gotev.recycleradapter.AdapterItem
-import net.gotev.recycleradapter.RecyclerAdapterNotifier
-
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
@@ -22,7 +19,7 @@ class LabelItem(private val text: String, private val selectionGroup: String? = 
         holder.textViewField.text = text
     }
 
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier) : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+    class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView), LayoutContainer {
 
         override val containerView: View?
             get() = itemView
