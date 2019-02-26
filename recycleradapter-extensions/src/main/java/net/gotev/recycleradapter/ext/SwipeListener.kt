@@ -1,4 +1,4 @@
-package net.gotev.recycleradapter
+package net.gotev.recycleradapter.ext
 
 /**
  * Listener methods called when the user performs swipe gesture on one of the adapter items.

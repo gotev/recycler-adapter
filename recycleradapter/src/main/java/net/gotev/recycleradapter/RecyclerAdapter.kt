@@ -17,37 +17,9 @@ import kotlin.collections.LinkedHashMap
  */
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), RecyclerAdapterNotifier {
 
-    companion object {
-        /**
-         * Applies swipe gesture detection on a RecyclerView items.
-         *
-         * @param recyclerView recycler view o which to apply the swipe gesture
-         * @param listener     listener called when a swipe is performed on one of the items
-         */
-        fun applySwipeGesture(recyclerView: RecyclerView, listener: SwipeListener) {
-            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-                    0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                    target: RecyclerView.ViewHolder): Boolean {
-                    return false
-                }
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    listener.onItemSwiped(viewHolder.adapterPosition, swipeDir)
-                }
-            }).attachToRecyclerView(recyclerView)
-        }
-    }
-
-    private fun AdapterItem<*>.viewType() = javaClass.name.hashCode()
-    private fun Class<out AdapterItem<*>>.viewType() = hashCode()
-
     private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
-
     private val types = LinkedHashMap<Int, AdapterItem<*>>()
-
     private var emptyItem: AdapterItem<in RecyclerAdapterViewHolder>? = null
-    private var emptyItemId = 0
 
     private var filtered = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
     private var showFiltered = false
@@ -100,14 +72,14 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     override fun getItemViewType(position: Int): Int {
         if (adapterIsEmptyAndEmptyItemIsDefined()) {
-            return emptyItemId
+            return emptyItem.viewType()
         }
 
         return items[position].viewType()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapterViewHolder {
-        val item = if (adapterIsEmptyAndEmptyItemIsDefined() && viewType == emptyItemId) {
+        val item = if (adapterIsEmptyAndEmptyItemIsDefined() && viewType == emptyItem.viewType()) {
             emptyItem!!
         } else {
             types.getValue(viewType)
@@ -229,7 +201,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         val afterEmpty = item == null
 
         emptyItem = item?.castAsIn()
-        emptyItemId = item?.viewType() ?: 0
 
         if (items.isEmpty()) {
             if (previouslyEmpty && !afterEmpty) {
