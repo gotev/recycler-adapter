@@ -76,7 +76,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
                     }
                 }
 
-                throw RuntimeException("${javaClass.simpleName} - onCreateViewHolder error. $message", exc)
+                throw RuntimeException("${this::class.java.simpleName} - onCreateViewHolder error. $message", exc)
             }
         }
     }

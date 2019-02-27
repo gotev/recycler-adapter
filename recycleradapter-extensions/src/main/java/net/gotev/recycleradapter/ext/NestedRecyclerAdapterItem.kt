@@ -12,16 +12,17 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 /**
  * @author Aleksandar Gotev
  */
-open class NestedRecyclerAdapterItem(val recyclerAdapter: RecyclerAdapter,
-                                     val recycledViewsPool: RecyclerView.RecycledViewPool?)
-    : AdapterItem<NestedRecyclerAdapterItem.Holder>() {
+open class NestedRecyclerAdapterItem<T : NestedRecyclerAdapterItem.Holder>(
+        val recyclerAdapter: RecyclerAdapter,
+        val recycledViewsPool: RecyclerView.RecycledViewPool?
+) : AdapterItem<T>() {
 
-    override fun getLayoutId() = R.layout.item_horizontal
+    override fun getLayoutId() = R.layout.item_nested
 
     open fun getLayoutManager(context: Context): RecyclerView.LayoutManager =
             LinearLayoutManager(context, HORIZONTAL, false)
 
-    override fun bind(holder: Holder) {
+    override fun bind(holder: T) {
         with(holder.recyclerView) {
             // reset layout manager and adapter
             layoutManager = null

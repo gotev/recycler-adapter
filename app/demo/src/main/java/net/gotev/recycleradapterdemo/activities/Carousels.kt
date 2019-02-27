@@ -10,6 +10,7 @@ import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapter.ext.NestedRecyclerAdapterItem
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
+import net.gotev.recycleradapterdemo.adapteritems.TitledCarousel
 
 
 class Carousels : AppCompatActivity() {
@@ -70,11 +71,17 @@ class Carousels : AppCompatActivity() {
     }
 
     private fun createCarousels(recycledViewPool: RecyclerView.RecycledViewPool?)
-            : List<NestedRecyclerAdapterItem> {
+            : List<NestedRecyclerAdapterItem<*>> {
         return (0..60).map {
-            NestedRecyclerAdapterItem(RecyclerAdapter().apply {
+            val adapter = RecyclerAdapter().apply {
                 add(createCarouselItems())
-            }, recycledViewPool)
+            }
+
+            if (it % 2 == 0) {
+                TitledCarousel("Carousel $it", adapter, recycledViewPool)
+            } else {
+                NestedRecyclerAdapterItem<NestedRecyclerAdapterItem.Holder>(adapter, recycledViewPool)
+            }
         }
     }
 
