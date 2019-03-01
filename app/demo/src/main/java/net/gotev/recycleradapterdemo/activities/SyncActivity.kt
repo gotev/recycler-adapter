@@ -32,7 +32,7 @@ class SyncActivity : AppCompatActivity() {
     private var scheduledOperation: ScheduledFuture<*>? = null
 
     private var listB = arrayListOf(
-            SyncItem(1, "listB"),
+            SyncItem(1, "listA"),
             SyncItem(3, "listB"),
             SyncItem(4, "listB"),
             SyncItem(5, "listB")
