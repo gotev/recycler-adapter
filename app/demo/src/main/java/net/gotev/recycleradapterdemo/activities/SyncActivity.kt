@@ -69,6 +69,7 @@ class SyncActivity : AppCompatActivity() {
         }
 
         recycler_view.apply {
+            itemAnimator?.changeDuration = 0
             layoutManager = linearLayoutManager
             adapter = recyclerAdapter
         }
@@ -104,8 +105,8 @@ class SyncActivity : AppCompatActivity() {
     }
 
     fun createItems(): List<AdapterItem<*>> {
-        return (0..Random.nextInt(1, 10)).flatMap {
-            listOf(LabelItem("$it"), SyncItem(it, "ListC"))
+        return (0..Random.nextInt(3, 20)).flatMap {
+            listOf(LabelItem("TITLE $it"), SyncItem(it, "ListC"))
         }
     }
 

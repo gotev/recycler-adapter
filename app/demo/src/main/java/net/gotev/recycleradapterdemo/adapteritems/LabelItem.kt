@@ -19,6 +19,21 @@ class LabelItem(private val text: String, private val selectionGroup: String? = 
         holder.textViewField.text = text
     }
 
+    override fun hasToBeReplacedBy(newItem: AdapterItem<*>): Boolean {
+        if (newItem !is LabelItem)
+            return true
+
+        return false
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return other is LabelItem && text == other.text
+    }
+
+    override fun hashCode(): Int {
+        return text.hashCode()
+    }
+
     class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView), LayoutContainer {
 
         override val containerView: View?
