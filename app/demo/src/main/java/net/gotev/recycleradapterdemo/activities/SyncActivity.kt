@@ -69,7 +69,10 @@ class SyncActivity : AppCompatActivity() {
         }
 
         recycler_view.apply {
+            // fix blinking of first item when shuffling
             itemAnimator?.changeDuration = 0
+
+            // normal setup
             layoutManager = linearLayoutManager
             adapter = recyclerAdapter
         }
