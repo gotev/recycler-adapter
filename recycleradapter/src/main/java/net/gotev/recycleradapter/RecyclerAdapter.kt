@@ -4,7 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.util.Pair
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.*
+import androidx.recyclerview.widget.ItemTouchHelper.DOWN
+import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
 import java.util.*
@@ -416,8 +417,15 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
                 val internalItem = items[internalItemIndex]
 
                 if (internalItem.hasToBeReplacedBy(newItem)) {
-                    removeItemAtPosition(internalItemIndex)
-                    add(newItem, newItemsIndex)
+                    if (internalItemIndex != newItemsIndex) {
+                        removeItemAtPosition(internalItemIndex)
+                        add(newItem, newItemsIndex)
+                    } else {
+                        items[internalItemIndex] = newItem.castAsIn()
+                        registerItemType(newItem)
+                        removeEmptyItemIfItHasBeenConfigured()
+                        notifyItemChanged(internalItemIndex)
+                    }
                 } else {
                     if (internalItemIndex != newItemsIndex) {
                         removeItemAtPosition(internalItemIndex)
@@ -560,11 +568,14 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * long presses on an item.
      *
      * @param recyclerView recycler view on which to apply the drag and drop
+     * @param directions directions on which to enable drag and drop gestures. By default it's
+     *                   DOWN or UP but you can set it to DOWN or UP or START or END in case you
+     *                   have a grid layout and you want also to drag and drop in all directions
      */
-    fun enableDragDrop(recyclerView: RecyclerView) {
+    fun enableDragDrop(recyclerView: RecyclerView, directions: Int = DOWN or UP) {
         val touchHelper = ItemTouchHelper(object : ItemTouchHelper.Callback() {
             override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                return ItemTouchHelper.Callback.makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, DOWN or UP or START or END)
+                return ItemTouchHelper.Callback.makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, directions)
             }
 
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
