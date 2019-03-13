@@ -78,7 +78,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      * Perform initialization stuff on the holder. This is done only once after the holder has
      * been created.
      */
-    fun onHolderCreated(holder: T) { }
+    open fun onHolderCreated(holder: T) { }
 
     /**
      * Bind the current item with the view
