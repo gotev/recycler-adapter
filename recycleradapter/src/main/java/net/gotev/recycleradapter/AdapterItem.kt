@@ -62,7 +62,9 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
         for (cl in javaClass.classes) {
             if (RecyclerAdapterViewHolder::class.java.isAssignableFrom(cl)) {
                 val clazz = cl as Class<T>
-                return clazz.getConstructor(View::class.java).newInstance(view)
+                val holder = clazz.getConstructor(View::class.java).newInstance(view)
+                onHolderCreated(holder)
+                return holder
             }
         }
 
@@ -71,6 +73,12 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
                 "not private or protected, otherwise reflection will not work!")
 
     }
+
+    /**
+     * Perform initialization stuff on the holder. This is done only once after the holder has
+     * been created.
+     */
+    fun onHolderCreated(holder: T) { }
 
     /**
      * Bind the current item with the view
