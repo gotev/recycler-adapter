@@ -7,7 +7,6 @@ import android.widget.Toast
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_title_subtitle.*
 import net.gotev.recycleradapter.AdapterItem
-import net.gotev.recycleradapter.RecyclerAdapterNotifier
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
@@ -15,9 +14,11 @@ import net.gotev.recycleradapterdemo.R
 open class TitleSubtitleItem(private val title: String, private val subtitle: String = "subtitle")
     : AdapterItem<TitleSubtitleItem.Holder>() {
 
-    override fun onFilter(searchTerm: String) = title.contains(searchTerm, ignoreCase = true)
+    override fun diffingId() = javaClass.name + title
 
     override fun getLayoutId() = R.layout.item_title_subtitle
+
+    override fun onFilter(searchTerm: String) = title.contains(searchTerm, ignoreCase = true)
 
     override fun bind(holder: Holder) {
         holder.titleField.text = title
@@ -36,26 +37,7 @@ open class TitleSubtitleItem(private val title: String, private val subtitle: St
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun hasToBeReplacedBy(newItem: AdapterItem<*>) = false
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is TitleSubtitleItem) return false
-
-        if (title != other.title) return false
-        if (subtitle != other.subtitle) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = title.hashCode()
-        result = 31 * result + subtitle.hashCode()
-        return result
-    }
-
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier)
-        : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+    class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView), LayoutContainer {
 
         override val containerView: View?
             get() = itemView

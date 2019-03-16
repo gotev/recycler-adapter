@@ -6,7 +6,6 @@ import androidx.appcompat.widget.SwitchCompat
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_text_with_toggle.*
 import net.gotev.recycleradapter.AdapterItem
-import net.gotev.recycleradapter.RecyclerAdapterNotifier
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
@@ -15,16 +14,26 @@ class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleI
 
     private var pressed = false
 
-    override fun onFilter(searchTerm: String) = text.contains(searchTerm, ignoreCase = true)
+    override fun diffingId() = javaClass.name
+
+    override fun hasToBeReplacedBy(newItem: AdapterItem<*>): Boolean {
+        if (newItem !is TextWithToggleItem) {
+            return true
+        }
+
+        return text != newItem.text
+    }
 
     override fun getLayoutId() = R.layout.item_text_with_toggle
+
+    override fun onFilter(searchTerm: String) = text.contains(searchTerm, ignoreCase = true)
 
     override fun bind(holder: Holder) {
         holder.textViewField.text = text
         holder.buttonField.isChecked = pressed
     }
 
-    class Holder(itemView: View, adapter: RecyclerAdapterNotifier) : RecyclerAdapterViewHolder(itemView, adapter), LayoutContainer {
+    class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView), LayoutContainer {
 
         override val containerView: View?
             get() = itemView

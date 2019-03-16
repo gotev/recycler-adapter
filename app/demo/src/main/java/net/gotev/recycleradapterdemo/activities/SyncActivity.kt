@@ -32,7 +32,7 @@ class SyncActivity : AppCompatActivity() {
     private var scheduledOperation: ScheduledFuture<*>? = null
 
     private var listB = arrayListOf(
-            SyncItem(1, "listB"),
+            SyncItem(1, "listA"),
             SyncItem(3, "listB"),
             SyncItem(4, "listB"),
             SyncItem(5, "listB")
@@ -69,6 +69,10 @@ class SyncActivity : AppCompatActivity() {
         }
 
         recycler_view.apply {
+            // fix blinking of first item when shuffling
+            itemAnimator?.changeDuration = 0
+
+            // normal setup
             layoutManager = linearLayoutManager
             adapter = recyclerAdapter
         }
@@ -104,8 +108,8 @@ class SyncActivity : AppCompatActivity() {
     }
 
     fun createItems(): List<AdapterItem<*>> {
-        return (0..Random.nextInt(1, 10)).flatMap {
-            listOf(LabelItem("$it"), SyncItem(it, "ListC"))
+        return (0..Random.nextInt(2, 20)).flatMap {
+            listOf(LabelItem("TITLE $it"), SyncItem(it, "ListC"))
         }
     }
 

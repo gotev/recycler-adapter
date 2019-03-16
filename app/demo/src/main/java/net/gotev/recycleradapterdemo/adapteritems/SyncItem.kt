@@ -4,17 +4,7 @@ import net.gotev.recycleradapter.AdapterItem
 
 class SyncItem(val id: Int, private val suffix: String) : TitleSubtitleItem("item $id $suffix") {
 
-    override fun equals(other: Any?): Boolean {
-        if (other == null || javaClass != other.javaClass) {
-            return false
-        }
-
-        return id == (other as SyncItem).id
-    }
-
-    override fun hashCode(): Int {
-        return id.hashCode()
-    }
+    override fun diffingId() = javaClass.name + id
 
     override fun compareTo(other: AdapterItem<*>): Int {
         if (other.javaClass != javaClass)
@@ -29,7 +19,9 @@ class SyncItem(val id: Int, private val suffix: String) : TitleSubtitleItem("ite
     }
 
     override fun hasToBeReplacedBy(newItem: AdapterItem<*>): Boolean {
-        val otherItem = newItem as SyncItem
-        return otherItem.id + suffix.hashCode() != id + suffix.hashCode()
+        if (newItem !is SyncItem)
+            return true
+
+        return suffix != newItem.suffix
     }
 }

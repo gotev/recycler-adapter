@@ -5,9 +5,9 @@ import retrofit2.http.GET
 import retrofit2.http.Url
 
 interface StarWarsAPI {
-    @GET("starships")
-    fun getStarships(): Single<SWAPIPaginatedResponse<SWAPIStarship>>
+    @GET("people")
+    fun getPeople(): Single<SWAPIPaginatedResponse<SWAPIPerson>>
 
     @GET
-    fun getStarhipsFromUrl(@Url url: String): Single<SWAPIPaginatedResponse<SWAPIStarship>>
+    fun getPeopleFromUrl(@Url url: String): Single<SWAPIPaginatedResponse<SWAPIPerson>>
 }

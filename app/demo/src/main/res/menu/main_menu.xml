@@ -27,9 +27,21 @@
         android:enabled="true"
         android:id="@+id/selection_multi_groups" />
 
-    <item android:title="@string/api_integration"
+    <item android:title="@string/infinite_scrolling"
         app:showAsAction="never|withText"
         android:visible="true"
         android:enabled="true"
         android:id="@+id/api_integration" />
+
+    <item android:title="@string/carousels_plain"
+        app:showAsAction="never|withText"
+        android:visible="true"
+        android:enabled="true"
+        android:id="@+id/carousels_plain" />
+
+    <item android:title="@string/carousels_pool"
+        app:showAsAction="never|withText"
+        android:visible="true"
+        android:enabled="true"
+        android:id="@+id/carousels_pool" />
 </menu>

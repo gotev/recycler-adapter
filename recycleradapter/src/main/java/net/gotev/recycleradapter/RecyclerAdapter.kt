@@ -1,11 +1,11 @@
 package net.gotev.recycleradapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.Pair
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.*
+import androidx.recyclerview.widget.ItemTouchHelper.DOWN
+import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
 import java.util.*
@@ -20,33 +20,71 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     companion object {
         /**
-         * Applies swipe gesture detection on a RecyclerView items.
+         * Create a new recycled view pool. This is useful to improve performance
+         * when you use many nested recycler views inside a single recycler view (e.g. to achieve
+         * an UI like the Play Store, which has many horizontal carousels). You can
+         * share the same recycled view pool across many recycler views, to prevent each one
+         * of them to create its own recycled view pool (which is the default behavior).
          *
-         * @param recyclerView recycler view o which to apply the swipe gesture
-         * @param listener     listener called when a swipe is performed on one of the items
+         * This is designed to work out of the box with NestedRecyclerAdapterItem from
+         * recycleradapter-extensions library.
+         *
+         * @param parent the recycler view in which you are going to put the nested recycler views
+         * @param items list of items for which you want to create recycled views
+         * @param maxViewsPerItem how many recyclable items to create for each of the items in the
+         *                        list. If you specify a value lower than 1, it will be set to 1
+         *                        by default. For example if you have two items and you set
+         *                        maxViewsPerItem = 10, a total of 20 views will be created (10
+         *                        for the first item and 10 for the second)
          */
-        fun applySwipeGesture(recyclerView: RecyclerView, listener: SwipeListener) {
-            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-                    0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                    target: RecyclerView.ViewHolder): Boolean {
-                    return false
+        fun createRecycledViewPool(parent: RecyclerView,
+                                   items: List<AdapterItem<*>>,
+                                   maxViewsPerItem: Int): RecyclerView.RecycledViewPool {
+            val maxViews = if (maxViewsPerItem >= 1) maxViewsPerItem else 1
+            val pool = RecyclerView.RecycledViewPool()
+
+            items.forEach { item ->
+                pool.setMaxRecycledViews(item.viewType(), maxViews)
+
+                (0 until maxViews).forEach {
+                    pool.putRecycledView(createItemViewHolder(parent, item))
+                }
+            }
+
+            return pool
+        }
+
+        internal fun createItemViewHolder(parent: ViewGroup, item: AdapterItem<*>): RecyclerAdapterViewHolder {
+            try {
+                val view = LayoutInflater
+                        .from(parent.context)
+                        .inflate(item.getLayoutId(), parent, false)
+                return item.getViewHolder(view)
+
+            } catch (exc: Throwable) {
+                val message = when (exc) {
+                    is NoSuchMethodException -> {
+                        "You should declare a constructor like this in your ViewHolder:\n" +
+                                "public RecyclerAdapterViewHolder(View itemView, RecyclerAdapterNotifier adapter)"
+                    }
+
+                    is IllegalAccessException -> {
+                        "Your ViewHolder class in ${item.javaClass.name} should be public!"
+                    }
+
+                    else -> {
+                        ""
+                    }
                 }
 
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    listener.onItemSwiped(viewHolder.adapterPosition, swipeDir)
-                }
-            }).attachToRecyclerView(recyclerView)
+                throw RuntimeException("${this::class.java.simpleName} - onCreateViewHolder error. $message", exc)
+            }
         }
     }
 
     private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
-
-    private val typeIds = LinkedHashMap<String, Int>()
     private val types = LinkedHashMap<Int, AdapterItem<*>>()
-
     private var emptyItem: AdapterItem<in RecyclerAdapterViewHolder>? = null
-    private var emptyItemId = 0
 
     private var filtered = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
     private var showFiltered = false
@@ -82,12 +120,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     }
 
     private fun registerItemType(item: AdapterItem<*>) {
-        val className = item.javaClass.name
+        val classType = item.viewType()
 
-        if (!typeIds.containsKey(className)) {
-            val viewId = View.generateViewId()
-            typeIds[className] = viewId
-            types[viewId] = item
+        if (!types.containsKey(classType)) {
+            types[classType] = item
         }
     }
 
@@ -101,51 +137,31 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     override fun getItemViewType(position: Int): Int {
         if (adapterIsEmptyAndEmptyItemIsDefined()) {
-            return emptyItemId
+            return emptyItem.viewType()
         }
 
-        return typeIds.getValue(items[position].javaClass.name)
+        return items[position].viewType()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapterViewHolder {
-        val item = if (adapterIsEmptyAndEmptyItemIsDefined() && viewType == emptyItemId) {
+        val item = if (adapterIsEmptyAndEmptyItemIsDefined() && viewType == emptyItem.viewType()) {
             emptyItem!!
         } else {
             types.getValue(viewType)
         }
 
-        try {
-            val inflater = LayoutInflater.from(parent.context)
-            val view = inflater.inflate(item.getLayoutId(), parent, false)
-            return item.getViewHolder(view, this)
-
-        } catch (exc: Throwable) {
-            val message = when (exc) {
-                is NoSuchMethodException -> {
-                    "You should declare a constructor like this in your ViewHolder:\n" +
-                            "public RecyclerAdapterViewHolder(View itemView, RecyclerAdapterNotifier adapter)"
-                }
-
-                is IllegalAccessException -> {
-                    "Your ViewHolder class in ${item.javaClass.name} should be public!"
-                }
-
-                else -> {
-                    ""
-                }
-            }
-
-            throw RuntimeException("${javaClass.simpleName} - onCreateViewHolder error. $message", exc)
-        }
-
+        return createItemViewHolder(parent, item)
     }
 
     override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int) {
-        if (adapterIsEmptyAndEmptyItemIsDefined()) {
-            emptyItem?.bind(holder)
+        val item = if (adapterIsEmptyAndEmptyItemIsDefined()) {
+            emptyItem!!
         } else {
-            items[position].bind(holder)
+            items[position]
         }
+
+        holder.setAdapter(this)
+        item.bind(holder)
     }
 
     override fun getItemCount() = if (adapterIsEmptyAndEmptyItemIsDefined()) 1 else items.size
@@ -230,7 +246,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         val afterEmpty = item == null
 
         emptyItem = item?.castAsIn()
-        emptyItemId = if (item == null) 0 else View.generateViewId()
 
         if (items.isEmpty()) {
             if (previouslyEmpty && !afterEmpty) {
@@ -402,8 +417,15 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
                 val internalItem = items[internalItemIndex]
 
                 if (internalItem.hasToBeReplacedBy(newItem)) {
-                    removeItemAtPosition(internalItemIndex)
-                    add(newItem, newItemsIndex)
+                    if (internalItemIndex != newItemsIndex) {
+                        removeItemAtPosition(internalItemIndex)
+                        add(newItem, newItemsIndex)
+                    } else {
+                        items[internalItemIndex] = newItem.castAsIn()
+                        registerItemType(newItem)
+                        removeEmptyItemIfItHasBeenConfigured()
+                        notifyItemChanged(internalItemIndex)
+                    }
                 } else {
                     if (internalItemIndex != newItemsIndex) {
                         removeItemAtPosition(internalItemIndex)
@@ -461,9 +483,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
 
         //TODO: check for type removal in all the other remove methods if the last of a kind has been removed
-        typeIds[clazz.name]?.let {
-            typeIds.remove(clazz.name)
-            types.remove(it)
+        if (types.containsKey(clazz.viewType())) {
+            types.remove(clazz.viewType())
         }
     }
 
@@ -547,11 +568,14 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * long presses on an item.
      *
      * @param recyclerView recycler view on which to apply the drag and drop
+     * @param directions directions on which to enable drag and drop gestures. By default it's
+     *                   DOWN or UP but you can set it to DOWN or UP or START or END in case you
+     *                   have a grid layout and you want also to drag and drop in all directions
      */
-    fun enableDragDrop(recyclerView: RecyclerView) {
+    fun enableDragDrop(recyclerView: RecyclerView, directions: Int = DOWN or UP) {
         val touchHelper = ItemTouchHelper(object : ItemTouchHelper.Callback() {
             override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                return ItemTouchHelper.Callback.makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, DOWN or UP or START or END)
+                return ItemTouchHelper.Callback.makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, directions)
             }
 
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {

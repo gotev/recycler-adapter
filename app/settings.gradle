@@ -1,3 +1,5 @@
 include ':demo'
 include ':recycleradapter'
+include ':recycleradapter-extensions'
 project(':recycleradapter').projectDir = file('../recycleradapter')
+project(':recycleradapter-extensions').projectDir = file('../recycleradapter-extensions')
