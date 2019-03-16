@@ -13,6 +13,27 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
     var selected = false
 
     /**
+     * Returns the identifier for this adapter item. Used in diffing operations.
+     *
+     * By implementing this, you don't need to override equals and hashCode, which are already
+     * implemented for you. You should only override [hasToBeReplacedBy] method if you want to
+     * further control if to replace an item with another one when their IDs matches.
+     *
+     * For example, if your adapter item model represents a person with those fields:
+     * - uniqueId: String
+     * - name: String
+     * - surname: String
+     *
+     * what you have to do is:
+     *
+     * return javaClass.name + uniqueId
+     *
+     * javaClass.name (Kotlin) is needed to avoid collisions with other adapter items representing
+     * the same model.
+     */
+    abstract fun diffingId(): String
+
+    /**
      * Returns the layout ID for this item
      * @return layout ID
      */
@@ -78,7 +99,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      * Perform initialization stuff on the holder. This is done only once after the holder has
      * been created.
      */
-    open fun onHolderCreated(holder: T) { }
+    open fun onHolderCreated(holder: T) {}
 
     /**
      * Bind the current item with the view
@@ -105,7 +126,9 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      */
     open fun onSelectionChanged(isNowSelected: Boolean): Boolean = true
 
-    override fun compareTo(other: AdapterItem<*>): Int {
-        return 0
-    }
+    override fun compareTo(other: AdapterItem<*>) = 0
+
+    override fun hashCode() = diffingId().hashCode()
+
+    override fun equals(other: Any?) = hashCode() == other.hashCode()
 }

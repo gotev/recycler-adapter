@@ -8,6 +8,8 @@ import net.gotev.recycleradapterdemo.R
 
 class MyLeaveBehindItem(private val value: String, private val background: String) : LeaveBehindAdapterItem<MyLeaveBehindItem.Holder>() {
 
+    override fun diffingId() = javaClass.name + value
+
     override fun onFilter(searchTerm: String) = value.contains(searchTerm, ignoreCase = true)
 
     override fun bind(holder: Holder) {

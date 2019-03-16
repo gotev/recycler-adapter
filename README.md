@@ -14,6 +14,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 * [Setup](#setup)
 * [Basic usage tutorial](#basicTutorial)
 * [Adding different kind of items](#differentItems)
+* [Carousels and nested RecyclerViews](#carousels)
 * [Empty item](#emptyItem)
 * [Filter items (to implement searchBar)](#filterItems)
 * [Sort items](#sortItems)
@@ -34,7 +35,8 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-implementation 'net.gotev:recycleradapter:2.3.0'
+def recyclerAdapterVersion = "2.4.0"
+implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
 
 ## <a name="basicTutorial"></a>Basic usage tutorial
@@ -68,6 +70,8 @@ Create your item layout (e.g. `item_example.xml`). For example:
 ```kotlin
 open class ExampleItem(private val context: Context, private val text: String)
     : AdapterItem<ExampleItem.Holder>() {
+
+    override fun diffingId() = javaClass.name + text
 
     override fun getLayoutId() = R.layout.item_example
 
@@ -112,6 +116,24 @@ recyclerAdapter.add(TextWithButtonItem("text with button"))
 ```
 
 Checkout the example app provided to get a real example in action.
+
+## <a name="carousels"></a>Carousels and nested RecyclerViews
+When more complex layouts are needed in a recycler view, you have two choices:
+
+* use a combination of existing layout managers and nest recycler views
+* create a custom layout manager
+
+Since the second strategy is really hard to implement and maintain, also due to lack of documentation and concrete working examples without huge memory leaks or crashes, in my experience resorting to the first strategy has always paid off both in terms of simplicity and maintainability.
+
+One of the most common type of nested RecyclerViews are Carousels, like those you can find in Google Play Store. How to achieve that? First of all, include `recycleradapter-extensions` in your gradle:
+
+```groovy
+implementation "net.gotev:recycleradapter-extensions:$recyclerAdapterVersion"
+```
+
+The concept is really simple. You want to have a whole recycler view inside a single `AdapterItem`. To make things modular and to not reinvent the wheel, you want to be able to use a `RecyclerAdapter` in this nested `RecyclerView`. Please welcome `NestedRecyclerAdapterItem` which eases things for you. Override it to implement your custom nested recycler views. You can find a complete example in [Carousels Activity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/activities/Carousels.kt) together with a custom [TitledCarousel](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/adapteritems/TitledCarousel.kt)
+
+Since having nested recycler views consumes a lot of memory and you may experience lags in your app, it's recommended to share a single `RecycledViewPool` across all your root and nested `RecyclerView`s. In that way all the `RecyclerView`s will use a single recycled pool like there's only one `RecyclerView`. You can see the performance difference by running the demo app on a low end device and trying Carousels both with pool and without pool.
 
 ## <a name="emptyItem"></a>Empty item
 It's often useful to display something on the screen when the RecyclerView is empty. To do so, simply implement a new `Item` just as you would do with a normal item in the list, then:
@@ -260,9 +282,11 @@ One of the things which you may need is to set one or more click listeners to ev
 open class ExampleItem(private val context: Context, private val text: String)
     : AdapterItem<ExampleItem.Holder>() {
 
-    override fun onFilter(searchTerm: String) = text.contains(searchTerm)
+    override fun diffingId() = javaClass.name + text
 
     override fun getLayoutId() = R.layout.item_example
+
+    override fun onFilter(searchTerm: String) = text.contains(searchTerm)
 
     override fun bind(holder: Holder) {
         holder.titleField.text = text
@@ -363,6 +387,16 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
 
     override fun getLayoutId() = R.layout.item_text_with_button
+
+    override fun diffingId() = javaClass.name
+
+    override fun hasToBeReplacedBy(newItem: AdapterItem<*>): Boolean {
+        if (newItem !is TextWithButtonItem) {
+            return true
+        }
+
+        return text != newItem.text
+    }
 
     override fun bind(holder: Holder) {
         holder.textViewField.text = text

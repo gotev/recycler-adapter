@@ -11,27 +11,14 @@ import net.gotev.recycleradapterdemo.R
 
 class LabelItem(private val text: String, private val selectionGroup: String? = null) : AdapterItem<LabelItem.Holder>() {
 
-    override fun getSelectionGroup() = selectionGroup
+    override fun diffingId() = javaClass.name + text
 
     override fun getLayoutId() = R.layout.item_empty
 
+    override fun getSelectionGroup() = selectionGroup
+
     override fun bind(holder: Holder) {
         holder.textViewField.text = text
-    }
-
-    override fun hasToBeReplacedBy(newItem: AdapterItem<*>): Boolean {
-        if (newItem !is LabelItem)
-            return true
-
-        return false
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return other is LabelItem && text == other.text
-    }
-
-    override fun hashCode(): Int {
-        return text.hashCode()
     }
 
     class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView), LayoutContainer {

@@ -16,6 +16,8 @@ class TitledCarousel(
         recycledViewPool: RecyclerView.RecycledViewPool?
 ) : NestedRecyclerAdapterItem<TitledCarousel.Holder>(adapter, recycledViewPool) {
 
+    override fun diffingId() = javaClass.name + title
+
     override fun getLayoutId() = R.layout.item_titled_carousel
 
     override fun bind(holder: Holder) {

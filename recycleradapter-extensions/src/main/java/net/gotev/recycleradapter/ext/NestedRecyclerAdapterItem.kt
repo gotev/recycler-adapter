@@ -12,7 +12,7 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 /**
  * @author Aleksandar Gotev
  */
-open class NestedRecyclerAdapterItem<T : NestedRecyclerAdapterItem.Holder>(
+abstract class NestedRecyclerAdapterItem<T : NestedRecyclerAdapterItem.Holder>(
         val recyclerAdapter: RecyclerAdapter,
         val recycledViewsPool: RecyclerView.RecycledViewPool?
 ) : AdapterItem<T>() {

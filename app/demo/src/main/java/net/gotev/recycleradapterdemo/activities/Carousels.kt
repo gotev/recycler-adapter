@@ -77,11 +77,7 @@ class Carousels : AppCompatActivity() {
                 add(createCarouselItems())
             }
 
-            if (it % 2 == 0) {
-                TitledCarousel("Carousel $it", adapter, recycledViewPool)
-            } else {
-                NestedRecyclerAdapterItem<NestedRecyclerAdapterItem.Holder>(adapter, recycledViewPool)
-            }
+            TitledCarousel("Carousel $it", adapter, recycledViewPool)
         }
     }
 
