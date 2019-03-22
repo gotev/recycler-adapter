@@ -95,6 +95,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     private val items
         get() = if (showFiltered) filtered else itemsList
 
+    init {
+        setHasStableIds(true)
+    }
+
     @Suppress("UNCHECKED_CAST")
     private fun <T : RecyclerAdapterViewHolder> AdapterItem<out T>.castAsIn(): AdapterItem<in T> {
         return this as AdapterItem<in T>
@@ -141,6 +145,12 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
 
         return items[position].viewType()
+    }
+
+    override fun getItemId(position: Int) = if(adapterIsEmptyAndEmptyItemIsDefined()) {
+        emptyItem.hashCode().toLong()
+    } else {
+        items[position].diffingId().hashCode().toLong()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapterViewHolder {

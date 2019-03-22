@@ -13,6 +13,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 
 * [Setup](#setup)
 * [Basic usage tutorial](#basicTutorial)
+* [Stable IDs](#stableIDs)
 * [Adding different kind of items](#differentItems)
 * [Carousels and nested RecyclerViews](#carousels)
 * [Empty item](#emptyItem)
@@ -35,7 +36,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-def recyclerAdapterVersion = "2.4.0"
+def recyclerAdapterVersion = "2.4.2"
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
 
@@ -106,6 +107,11 @@ recycler_view.apply { // recycler_view is the id of your Recycler View in the la
 //add items
 recyclerAdapter.add(ExampleItem("test"))
 ```
+
+## <a name="stableIDs"></a>Stable IDs
+Starting from 2.4.2, `RecyclerAdapter` has stable IDs out of the box. If you want to know more about what they are:
+* https://medium.com/@hanru.yeh/recyclerviews-views-are-blinking-when-notifydatasetchanged-c7b76d5149a2
+* https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter.html#hasStableIds()
 
 ## <a name="differentItems"></a>Adding different kind of items
 You can have more than one kind of item in your `RecyclerView`. Just implement a different `AdapterItem` for every type you want to support, and then just add it into the adapter:
@@ -388,15 +394,7 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
 
     override fun getLayoutId() = R.layout.item_text_with_button
 
-    override fun diffingId() = javaClass.name
-
-    override fun hasToBeReplacedBy(newItem: AdapterItem<*>): Boolean {
-        if (newItem !is TextWithButtonItem) {
-            return true
-        }
-
-        return text != newItem.text
-    }
+    override fun diffingId() = javaClass.name + text
 
     override fun bind(holder: Holder) {
         holder.textViewField.text = text

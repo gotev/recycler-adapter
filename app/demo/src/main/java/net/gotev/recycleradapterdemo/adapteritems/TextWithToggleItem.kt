@@ -14,7 +14,7 @@ class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleI
 
     private var pressed = false
 
-    override fun diffingId() = javaClass.name
+    override fun diffingId() = javaClass.name + text
 
     override fun hasToBeReplacedBy(newItem: AdapterItem<*>): Boolean {
         if (newItem !is TextWithToggleItem) {
