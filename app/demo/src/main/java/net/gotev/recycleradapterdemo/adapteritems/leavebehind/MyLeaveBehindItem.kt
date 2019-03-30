@@ -12,7 +12,7 @@ class MyLeaveBehindItem(private val value: String, private val background: Strin
 
     override fun onFilter(searchTerm: String) = value.contains(searchTerm, ignoreCase = true)
 
-    override fun bind(holder: Holder) {
+    override fun bind(firstTime: Boolean, holder: Holder) {
         holder.nameField.text = value
         holder.deleteField.text = background
     }

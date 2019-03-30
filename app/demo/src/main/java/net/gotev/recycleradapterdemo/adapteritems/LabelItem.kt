@@ -17,7 +17,7 @@ class LabelItem(private val text: String, private val selectionGroup: String? = 
 
     override fun getSelectionGroup() = selectionGroup
 
-    override fun bind(holder: Holder) {
+    override fun bind(firstTime: Boolean, holder: Holder) {
         holder.textViewField.text = text
     }
 

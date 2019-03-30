@@ -26,7 +26,7 @@ open class SelectableItem(val label: String, private val group: String)
         return super.onSelectionChanged(isNowSelected)
     }
 
-    override fun bind(holder: Holder) {
+    override fun bind(firstTime: Boolean, holder: Holder) {
         holder.toggleField.apply {
             isChecked = selected
             text = label

@@ -20,8 +20,8 @@ class TitledCarousel(
 
     override fun getLayoutId() = R.layout.item_titled_carousel
 
-    override fun bind(holder: Holder) {
-        super.bind(holder)
+    override fun bind(firstTime: Boolean, holder: Holder) {
+        super.bind(firstTime, holder)
         holder.title.text = title
     }
 

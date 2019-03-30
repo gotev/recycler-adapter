@@ -82,10 +82,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
         // hierarchy is present, as the first one should be the last of the subclasses
         for (cl in javaClass.classes) {
             if (RecyclerAdapterViewHolder::class.java.isAssignableFrom(cl)) {
-                val clazz = cl as Class<T>
-                val holder = clazz.getConstructor(View::class.java).newInstance(view)
-                onHolderCreated(holder)
-                return holder
+                return (cl as Class<T>).getConstructor(View::class.java).newInstance(view)
             }
         }
 
@@ -96,16 +93,11 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
     }
 
     /**
-     * Perform initialization stuff on the holder. This is done only once after the holder has
-     * been created.
-     */
-    open fun onHolderCreated(holder: T) {}
-
-    /**
      * Bind the current item with the view
+     * @param firstTime true if it's the first time this item is being bound
      * @param holder ViewHolder on which to bind data
      */
-    abstract fun bind(holder: T)
+    abstract fun bind(firstTime: Boolean, holder: T)
 
     /**
      * Returns the ID of this item's selection group. By default it's null.

@@ -44,6 +44,7 @@ class SelectionActivity : AppCompatActivity() {
         recyclerAdapter.setEmptyItem(LabelItem(getString(R.string.empty_list)))
 
         recycler_view.apply {
+            itemAnimator?.changeDuration = 0
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = recyclerAdapter
         }

@@ -36,7 +36,7 @@ private class PagedRecyclerAdapter
             adapter.onCreateViewHolder(parent, viewType)
 
     override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int) =
-            (getItem(position) as AdapterItem<RecyclerAdapterViewHolder>).bind(holder)
+            (getItem(position) as AdapterItem<RecyclerAdapterViewHolder>).bind(true, holder)
 
     override fun submitList(pagedList: PagedList<AdapterItem<*>>?) {
         if (viewType == null) {
