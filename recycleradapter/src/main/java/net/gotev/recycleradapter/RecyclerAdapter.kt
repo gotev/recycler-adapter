@@ -139,7 +139,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         // this is necessary to prevent IndexOutOfBoundsException on RecyclerView when the
         // first item gets added and an empty item has been configured
         if (items.size >= 1 && emptyItem != null) {
-            notifyChangedPosition(0)
+            notifyItemChanged(0)
         }
     }
 
@@ -275,7 +275,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             } else if (!previouslyEmpty && afterEmpty) {
                 notifyItemRemoved(0)
             } else if (!previouslyEmpty && !afterEmpty) {
-                notifyChangedPosition(0)
+                notifyItemChanged(0)
             }
         }
     }
