@@ -179,7 +179,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     }
 
     override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int, payloads: MutableList<Any>) {
-        bindItem(holder, position, !payloads.isEmpty())
+        bindItem(holder, position, payloads.isEmpty())
     }
 
     override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int) {
