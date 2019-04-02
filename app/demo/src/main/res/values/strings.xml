@@ -14,10 +14,12 @@
     <string name="multiple_selection">Group with multiple selection</string>
     <string name="show_selections">Show Selections</string>
     <string name="search_hint">Search…</string>
-    <string name="button_shuffle_start">Start Shuffle</string>
-    <string name="button_shuffle_stop">Stop Shuffle</string>
+    <string name="button_shuffle_start">Shuffle</string>
+    <string name="button_shuffle_stop">Stop</string>
     <string name="button_sync_group_a">Sync A</string>
     <string name="button_sync_group_b">Sync B</string>
+    <string name="button_sync_group_c">Sync C</string>
+    <string name="button_empty">Empty list</string>
     <string name="infinite_scrolling">Infinite Scrolling</string>
     <string name="carousels_plain">Carousels (plain)</string>
     <string name="carousels_pool">Carousels (with pool)</string>

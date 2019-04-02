@@ -36,7 +36,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-def recyclerAdapterVersion = "2.4.2"
+def recyclerAdapterVersion = "2.5.0"
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
 
@@ -76,7 +76,9 @@ open class ExampleItem(private val context: Context, private val text: String)
 
     override fun getLayoutId() = R.layout.item_example
 
-    override fun bind(holder: ExampleItem.Holder) {
+    override fun bind(firstTime: Boolean, holder: ExampleItem.Holder) {
+        // you can use firstTime to discriminate between bindings you
+        // need only the first time the item is binded from the others
         holder.titleField.text = text
     }
 
@@ -294,7 +296,7 @@ open class ExampleItem(private val context: Context, private val text: String)
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
 
-    override fun bind(holder: Holder) {
+    override fun bind(firstTime: Boolean, holder: Holder) {
         holder.titleField.text = text
         holder.subtitleField.text = "subtitle"
     }
@@ -396,7 +398,7 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
 
     override fun diffingId() = javaClass.name + text
 
-    override fun bind(holder: Holder) {
+    override fun bind(firstTime: Boolean, holder: Holder) {
         holder.textViewField.text = text
         holder.buttonField.isChecked = pressed
     }

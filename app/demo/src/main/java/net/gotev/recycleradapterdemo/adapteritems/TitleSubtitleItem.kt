@@ -20,7 +20,7 @@ open class TitleSubtitleItem(private val title: String, private val subtitle: St
 
     override fun onFilter(searchTerm: String) = title.contains(searchTerm, ignoreCase = true)
 
-    override fun bind(holder: Holder) {
+    override fun bind(firstTime: Boolean, holder: Holder) {
         holder.titleField.text = title
         holder.subtitleField.text = subtitle
     }

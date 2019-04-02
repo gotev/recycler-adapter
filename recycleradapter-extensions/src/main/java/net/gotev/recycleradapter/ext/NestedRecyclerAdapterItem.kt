@@ -22,7 +22,7 @@ abstract class NestedRecyclerAdapterItem<T : NestedRecyclerAdapterItem.Holder>(
     open fun getLayoutManager(context: Context): RecyclerView.LayoutManager =
             LinearLayoutManager(context, HORIZONTAL, false)
 
-    override fun bind(holder: T) {
+    override fun bind(firstTime: Boolean, holder: T) {
         with(holder.recyclerView) {
             // reset layout manager and adapter
             layoutManager = null

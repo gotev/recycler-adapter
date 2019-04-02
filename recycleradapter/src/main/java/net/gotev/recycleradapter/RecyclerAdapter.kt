@@ -99,6 +99,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         setHasStableIds(true)
     }
 
+    private fun notifyChangedPosition(position: Int) {
+        notifyItemChanged(position, true)
+    }
+
     @Suppress("UNCHECKED_CAST")
     private fun <T : RecyclerAdapterViewHolder> AdapterItem<out T>.castAsIn(): AdapterItem<in T> {
         return this as AdapterItem<in T>
@@ -110,7 +114,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         this.let {
             selected = newStatus
             if (onSelectionChanged(isNowSelected = newStatus)) {
-                notifyItemChanged(position)
+                notifyChangedPosition(position)
             }
         }
     }
@@ -120,7 +124,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     private fun updateItemAtPosition(item: AdapterItem<in RecyclerAdapterViewHolder>,
                                      position: Int) {
         items[position] = item
-        notifyItemChanged(position)
+        notifyChangedPosition(position)
     }
 
     private fun registerItemType(item: AdapterItem<*>) {
@@ -131,10 +135,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
     }
 
-    private fun removeEmptyItemIfItHasBeenConfigured() {
+    private fun removeEmptyItemIfItHasBeenConfigured(insertPosition: Int) {
         // this is necessary to prevent IndexOutOfBoundsException on RecyclerView when the
         // first item gets added and an empty item has been configured
-        if (items.size >= 1 && emptyItem != null) {
+        if (insertPosition == 0 && items.size >= 1 && emptyItem != null) {
             notifyItemChanged(0)
         }
     }
@@ -163,7 +167,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         return createItemViewHolder(parent, item)
     }
 
-    override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int) {
+    private fun bindItem(holder: RecyclerAdapterViewHolder, position: Int, firstTime: Boolean) {
         val item = if (adapterIsEmptyAndEmptyItemIsDefined()) {
             emptyItem!!
         } else {
@@ -171,7 +175,15 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
 
         holder.setAdapter(this)
-        item.bind(holder)
+        item.bind(firstTime, holder)
+    }
+
+    override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int, payloads: MutableList<Any>) {
+        bindItem(holder, position, payloads.isEmpty())
+    }
+
+    override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int) {
+        bindItem(holder, position, true)
     }
 
     override fun getItemCount() = if (adapterIsEmptyAndEmptyItemIsDefined()) 1 else items.size
@@ -199,7 +211,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     override fun notifyItemChanged(holder: RecyclerAdapterViewHolder) {
         val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
 
-        notifyItemChanged(position)
+        notifyChangedPosition(position)
     }
 
     private fun selectItemAtPosition(position: Int) {
@@ -301,7 +313,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
 
         registerItemType(item)
-        removeEmptyItemIfItHasBeenConfigured()
+        removeEmptyItemIfItHasBeenConfigured(insertPosition)
         notifyItemInserted(insertPosition)
         return this
     }
@@ -336,7 +348,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             }
         }
 
-        removeEmptyItemIfItHasBeenConfigured()
+        removeEmptyItemIfItHasBeenConfigured(firstIndex)
         notifyItemRangeInserted(firstIndex, newItems.size)
         return this
     }
@@ -433,8 +445,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
                     } else {
                         items[internalItemIndex] = newItem.castAsIn()
                         registerItemType(newItem)
-                        removeEmptyItemIfItHasBeenConfigured()
-                        notifyItemChanged(internalItemIndex)
+                        removeEmptyItemIfItHasBeenConfigured(internalItemIndex)
+                        notifyChangedPosition(internalItemIndex)
                     }
                 } else {
                     if (internalItemIndex != newItemsIndex) {
