@@ -50,6 +50,11 @@ class SyncActivity : AppCompatActivity() {
                     SyncItem(2, "listA")
             )
 
+    private fun listC() =
+            arrayListOf(
+                    SyncItem(1, "listC")
+            )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sync)
@@ -83,6 +88,14 @@ class SyncActivity : AppCompatActivity() {
 
         syncB.setOnClickListener {
             recyclerAdapter.syncWithItems(listB())
+        }
+
+        syncC.setOnClickListener {
+            recyclerAdapter.syncWithItems(listC())
+        }
+
+        empty.setOnClickListener {
+            recyclerAdapter.clear()
         }
 
         shuffle.setOnClickListener {

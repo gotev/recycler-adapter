@@ -36,7 +36,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-def recyclerAdapterVersion = "2.4.2"
+def recyclerAdapterVersion = "2.5.0"
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
 

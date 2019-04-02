@@ -135,10 +135,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
     }
 
-    private fun removeEmptyItemIfItHasBeenConfigured() {
+    private fun removeEmptyItemIfItHasBeenConfigured(insertPosition: Int) {
         // this is necessary to prevent IndexOutOfBoundsException on RecyclerView when the
         // first item gets added and an empty item has been configured
-        if (items.size >= 1 && emptyItem != null) {
+        if (insertPosition == 0 && items.size >= 1 && emptyItem != null) {
             notifyItemChanged(0)
         }
     }
@@ -313,7 +313,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
 
         registerItemType(item)
-        removeEmptyItemIfItHasBeenConfigured()
+        removeEmptyItemIfItHasBeenConfigured(insertPosition)
         notifyItemInserted(insertPosition)
         return this
     }
@@ -348,7 +348,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             }
         }
 
-        removeEmptyItemIfItHasBeenConfigured()
+        removeEmptyItemIfItHasBeenConfigured(firstIndex)
         notifyItemRangeInserted(firstIndex, newItems.size)
         return this
     }
@@ -445,7 +445,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
                     } else {
                         items[internalItemIndex] = newItem.castAsIn()
                         registerItemType(newItem)
-                        removeEmptyItemIfItHasBeenConfigured()
+                        removeEmptyItemIfItHasBeenConfigured(internalItemIndex)
                         notifyChangedPosition(internalItemIndex)
                     }
                 } else {

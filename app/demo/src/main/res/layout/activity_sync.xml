@@ -7,6 +7,17 @@
     android:layout_height="match_parent"
     tools:context="net.gotev.recycleradapterdemo.activities.MainActivity">
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacer_default"
+        android:layout_marginBottom="@dimen/spacer_default"
+        android:text="@string/button_empty"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="0dp"
@@ -16,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/empty" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/shuffle"
@@ -49,5 +60,15 @@
         android:text="@string/button_sync_group_b"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/syncA" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/syncC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacer_default"
+        android:layout_marginBottom="@dimen/spacer_default"
+        android:text="@string/button_sync_group_c"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/syncB" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
