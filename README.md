@@ -1,4 +1,4 @@
-# Recycler Adapter [![Build Status](https://travis-ci.org/gotev/recycler-adapter.svg?branch=master)](https://travis-ci.org/gotev/recycler-adapter)
+# Recycler Adapter [![Build Status](https://travis-ci.org/gotev/recycler-adapter.svg?branch=master)](https://travis-ci.org/gotev/recycler-adapter) [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
 
 Makes the use of RecyclerView easier, modular and less error-prone.
 
@@ -36,9 +36,10 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-def recyclerAdapterVersion = "2.5.0"
+def recyclerAdapterVersion = "2.5.0" // change it with the version you want to use
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
+This is the latest version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
 
 ## <a name="basicTutorial"></a>Basic usage tutorial
 ### 1. Declare the RecyclerView
