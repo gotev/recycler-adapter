@@ -65,6 +65,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.recyclerview:recyclerview:$androidx_recyclerview_version"
 
+    implementation "androidx.paging:paging-runtime-ktx:2.1.0"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+
 }
 
 // add the following information to the file: local.properties situated in the parent directory of

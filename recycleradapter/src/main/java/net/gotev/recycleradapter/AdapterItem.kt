@@ -1,6 +1,8 @@
 package net.gotev.recycleradapter
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import java.lang.reflect.InvocationTargetException
 
 /**
@@ -67,14 +69,17 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      * to this class
      * @param view View to be passed to the ViewHolder
      * @return ViewHolder
-     * @throws NoSuchMethodException if no mathing constructor are found in the ViewHolder subclass
+     * @throws NoSuchMethodException if no matching constructor are found in the ViewHolder subclass
      * @throws InstantiationException if an error happens during instantiation of the ViewHolder subclass
      * @throws InvocationTargetException if an error happens during a method invocation of the ViewHolder subclass
      * @throws IllegalAccessException if a method, field or class has been declared with insufficient access control modifiers
      */
     @Suppress("UNCHECKED_CAST")
-    @Throws(NoSuchMethodException::class, InstantiationException::class, InvocationTargetException::class, IllegalAccessException::class)
-    internal fun getViewHolder(view: View): T {
+    @Throws(NoSuchMethodException::class,
+        InstantiationException::class,
+        InvocationTargetException::class,
+        IllegalAccessException::class)
+    private fun getViewHolder(view: View): T {
 
         // analyze all the public classes and interfaces that are members of the class represented
         // by this Class object and search for the first RecyclerAdapterViewHolder
@@ -87,9 +92,30 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
         }
 
         throw RuntimeException("${javaClass.simpleName} - No ViewHolder implementation found! " +
-                "Please check that all your ViewHolder implementations are: 'public static' and " +
-                "not private or protected, otherwise reflection will not work!")
+            "Please check that all your ViewHolder implementations are: 'public static' and " +
+            "not private or protected, otherwise reflection will not work!")
 
+    }
+
+    internal fun createItemViewHolder(parent: ViewGroup): RecyclerAdapterViewHolder {
+        try {
+            return LayoutInflater
+                .from(parent.context)
+                .inflate(getLayoutId(), parent, false)
+                .let(::getViewHolder)
+        } catch (exc: Throwable) {
+            val message = when (exc) {
+                is NoSuchMethodException -> "You should declare a constructor like this in your ViewHolder:\n" +
+                    "public RecyclerAdapterViewHolder(View itemView, RecyclerAdapterNotifier adapter)"
+                is IllegalAccessException -> "Your ViewHolder class in ${javaClass.name} should be public!"
+                else -> ""
+            }
+
+            throw RuntimeException(
+                "${this::class.java.simpleName} - onCreateViewHolder error. $message",
+                exc
+            )
+        }
     }
 
     /**

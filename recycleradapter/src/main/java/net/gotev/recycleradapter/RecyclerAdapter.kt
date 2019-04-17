@@ -1,6 +1,5 @@
 package net.gotev.recycleradapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.util.Pair
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -8,8 +7,9 @@ import androidx.recyclerview.widget.ItemTouchHelper.DOWN
 import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
-import java.util.*
-import kotlin.collections.LinkedHashMap
+import java.util.ArrayList
+import java.util.Collections
+import java.util.Comparator
 
 /**
  * Makes the use of RecyclerView easier, modular and less error-prone
@@ -37,9 +37,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
          *                        maxViewsPerItem = 10, a total of 20 views will be created (10
          *                        for the first item and 10 for the second)
          */
-        fun createRecycledViewPool(parent: RecyclerView,
-                                   items: List<AdapterItem<*>>,
-                                   maxViewsPerItem: Int): RecyclerView.RecycledViewPool {
+        fun createRecycledViewPool(
+            parent: RecyclerView,
+            items: List<AdapterItem<*>>,
+            maxViewsPerItem: Int
+        ): RecyclerView.RecycledViewPool {
             val maxViews = if (maxViewsPerItem >= 1) maxViewsPerItem else 1
             val pool = RecyclerView.RecycledViewPool()
 
@@ -47,38 +49,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
                 pool.setMaxRecycledViews(item.viewType(), maxViews)
 
                 (0 until maxViews).forEach {
-                    pool.putRecycledView(createItemViewHolder(parent, item))
+                    pool.putRecycledView(item.createItemViewHolder(parent))
                 }
             }
 
             return pool
-        }
-
-        internal fun createItemViewHolder(parent: ViewGroup, item: AdapterItem<*>): RecyclerAdapterViewHolder {
-            try {
-                val view = LayoutInflater
-                        .from(parent.context)
-                        .inflate(item.getLayoutId(), parent, false)
-                return item.getViewHolder(view)
-
-            } catch (exc: Throwable) {
-                val message = when (exc) {
-                    is NoSuchMethodException -> {
-                        "You should declare a constructor like this in your ViewHolder:\n" +
-                                "public RecyclerAdapterViewHolder(View itemView, RecyclerAdapterNotifier adapter)"
-                    }
-
-                    is IllegalAccessException -> {
-                        "Your ViewHolder class in ${item.javaClass.name} should be public!"
-                    }
-
-                    else -> {
-                        ""
-                    }
-                }
-
-                throw RuntimeException("${this::class.java.simpleName} - onCreateViewHolder error. $message", exc)
-            }
         }
     }
 
@@ -121,8 +96,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     private fun adapterIsEmptyAndEmptyItemIsDefined() = items.isEmpty() && emptyItem != null
 
-    private fun updateItemAtPosition(item: AdapterItem<in RecyclerAdapterViewHolder>,
-                                     position: Int) {
+    private fun updateItemAtPosition(
+        item: AdapterItem<in RecyclerAdapterViewHolder>,
+        position: Int
+    ) {
         items[position] = item
         notifyChangedPosition(position)
     }
@@ -164,7 +141,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             types.getValue(viewType)
         }
 
-        return createItemViewHolder(parent, item)
+        return item.createItemViewHolder(parent)
     }
 
     private fun bindItem(holder: RecyclerAdapterViewHolder, position: Int, firstTime: Boolean) {
