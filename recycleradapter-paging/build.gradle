@@ -8,7 +8,7 @@ apply plugin: 'com.github.ben-manes.versions'
 def siteUrl = "https://github.com/${github_username}/${github_repository_name}"
 def gitUrl = siteUrl + '.git'
 def bugTrackerUrl = siteUrl + '/issues/'
-def projectName = "recycler-adapter-extensions"
+def projectName = "recycler-adapter-paging"
 // end - do not modify this if your project is on github
 
 // start - module specific overrides of default values written in manifest.gradle
