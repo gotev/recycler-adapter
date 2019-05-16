@@ -2,7 +2,6 @@ package net.gotev.recycleradapter.paging
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
@@ -16,25 +15,22 @@ import net.gotev.recycleradapter.castAsIn
 import net.gotev.recycleradapter.viewType
 
 class PagingAdapter(
-    owner: LifecycleOwner,
     dataSource: () -> DataSource<*, *>,
-    config: PagedList.Config,
-    onLoadingComplete: (() -> Unit)? = null
+    config: PagedList.Config
 ) : PagedListAdapter<AdapterItem<*>, RecyclerAdapterViewHolder>(diffCallback) {
 
-    private var dataSourceFactory: DataSourceFactory<Any> = DataSourceFactory(dataSource)
-
-    private var data: LiveData<PagedList<AdapterItem<*>>>
+    private val dataSourceFactory: DataSourceFactory<Any> = DataSourceFactory(dataSource)
+    private val data = LivePagedListBuilder<Any, AdapterItem<*>>(dataSourceFactory, config).build()
 
     init {
-        data = LivePagedListBuilder<Any, AdapterItem<*>>(dataSourceFactory, config).build()
+        setHasStableIds(true)
+    }
 
+    fun startObserving(owner: LifecycleOwner, onLoadingComplete: (() -> Unit)? = null) {
         data.observe(owner, Observer {
             submitList(it)
             onLoadingComplete?.invoke()
         })
-
-        setHasStableIds(true)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = currentList

@@ -8,8 +8,13 @@ apply plugin: 'com.github.ben-manes.versions'
 def siteUrl = "https://github.com/${github_username}/${github_repository_name}"
 def gitUrl = siteUrl + '.git'
 def bugTrackerUrl = siteUrl + '/issues/'
-def projectName = github_repository_name
+def projectName = "recycler-adapter-extensions"
 // end - do not modify this if your project is on github
+
+// start - module specific overrides of default values written in manifest.gradle
+def library_description = "RecyclerAdapter Paging"
+def library_keywords = ['android', 'recycler', 'recyclerview', 'adapter', 'paging', 'fast', 'easy']
+// end - module specific overrides
 
 group = library_project_group
 version = library_version
@@ -64,6 +69,9 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.recyclerview:recyclerview:$androidx_recyclerview_version"
+    api "androidx.paging:paging-runtime-ktx:$paging_version"
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    api project(':recycleradapter')
 
 }
 

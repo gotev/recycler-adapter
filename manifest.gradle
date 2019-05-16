@@ -42,4 +42,8 @@ ext {
     rxjava2_version = '2.2.7'
     rxkotlin_version = '2.3.0'
     rxandroid_version = '2.1.1'
+
+    // Paging
+    paging_version = '2.1.0'
+    lifecycle_version = '2.0.0'
 }

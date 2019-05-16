@@ -1,5 +1,7 @@
 include ':demo'
 include ':recycleradapter'
 include ':recycleradapter-extensions'
+include ':recycleradapter-paging'
 project(':recycleradapter').projectDir = file('../recycleradapter')
 project(':recycleradapter-extensions').projectDir = file('../recycleradapter-extensions')
+project(':recycleradapter-paging').projectDir = file('../recycleradapter-paging')

@@ -97,7 +97,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
 
     }
 
-    internal fun createItemViewHolder(parent: ViewGroup): RecyclerAdapterViewHolder {
+    fun createItemViewHolder(parent: ViewGroup): RecyclerAdapterViewHolder {
         try {
             return LayoutInflater
                 .from(parent.context)
