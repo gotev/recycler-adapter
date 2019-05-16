@@ -71,10 +71,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
 
-    // Paging
-    def paging_version = "2.1.0"
-    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
-
     implementation project(':recycleradapter')
     implementation project(':recycleradapter-extensions')
+    implementation project(':recycleradapter-paging')
 }

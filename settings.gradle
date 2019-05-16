@@ -1,2 +1,3 @@
 include ':recycleradapter'
 include ':recycleradapter-extensions'
+include ':recycleradapter-paging'

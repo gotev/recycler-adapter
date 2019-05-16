@@ -7,11 +7,10 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_recycler_view.*
+import net.gotev.recycleradapter.paging.PagingAdapter
 import net.gotev.recycleradapterdemo.App
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.network.api.StarWarsPeopleDataSource
-import net.gotev.recycleradapterdemo.paging.PagingHelper
-
 
 class InfiniteScroll : AppCompatActivity() {
 
@@ -21,7 +20,7 @@ class InfiniteScroll : AppCompatActivity() {
         }
     }
 
-    private lateinit var pagingHelper: PagingHelper<*>
+    private lateinit var pagingAdapter: PagingAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,7 @@ class InfiniteScroll : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        pagingHelper = PagingHelper(
+        pagingAdapter = PagingAdapter(
                 dataSource = { StarWarsPeopleDataSource(App.starWarsClient) },
                 config = PagedList.Config.Builder()
                         .setPageSize(20)
@@ -45,15 +44,14 @@ class InfiniteScroll : AppCompatActivity() {
         )
 
         recycler_view.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        pagingHelper.setupRecyclerView(recycler_view)
+        recycler_view.adapter = pagingAdapter
+
+        pagingAdapter.startObserving(this, onLoadingComplete = { swipeRefresh.isRefreshing = false })
 
         swipeRefresh.isRefreshing = true
-        pagingHelper.start(this) {
-            swipeRefresh.isRefreshing = false
-        }
 
         swipeRefresh.setOnRefreshListener {
-            pagingHelper.reload()
+            pagingAdapter.reload()
         }
 
     }
