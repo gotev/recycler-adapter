@@ -16,6 +16,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 * [Stable IDs](#stableIDs)
 * [Adding different kind of items](#differentItems)
 * [Carousels and nested RecyclerViews](#carousels)
+* [Paged Lists](#pagedLists)
 * [Empty item](#emptyItem)
 * [Filter items (to implement searchBar)](#filterItems)
 * [Sort items](#sortItems)
@@ -36,7 +37,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-def recyclerAdapterVersion = "2.5.0" // change it with the version you want to use
+def recyclerAdapterVersion = "2.6.0" // change it with the version you want to use
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
 This is the latest version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
@@ -143,6 +144,18 @@ implementation "net.gotev:recycleradapter-extensions:$recyclerAdapterVersion"
 The concept is really simple. You want to have a whole recycler view inside a single `AdapterItem`. To make things modular and to not reinvent the wheel, you want to be able to use a `RecyclerAdapter` in this nested `RecyclerView`. Please welcome `NestedRecyclerAdapterItem` which eases things for you. Override it to implement your custom nested recycler views. You can find a complete example in [Carousels Activity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/activities/Carousels.kt) together with a custom [TitledCarousel](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/adapteritems/TitledCarousel.kt)
 
 Since having nested recycler views consumes a lot of memory and you may experience lags in your app, it's recommended to share a single `RecycledViewPool` across all your root and nested `RecyclerView`s. In that way all the `RecyclerView`s will use a single recycled pool like there's only one `RecyclerView`. You can see the performance difference by running the demo app on a low end device and trying Carousels both with pool and without pool.
+
+## <a name="pagedLists"></a>Paged Lists
+Starting from `2.6.0` onwards, RecyclerAdapter integrates with Android JetPack's [Paging Library](https://developer.android.com/topic/libraries/architecture/paging) which allows you to have maximum performance when dealing with very long lists loaded from network, database or both.
+
+Add this to your dependencies:
+```groovy
+implementation "net.gotev:recycleradapter-paging:$recyclerAdapterVersion"
+```
+
+It's strongly advised to study Google's Paging Library first so you can better understand how everything works and the motivation behind it. [Check this codelab which is great to learn](https://codelabs.developers.google.com/codelabs/android-paging/#0). When you are ready, check the demo provided in [PagingActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/activities/PagingActivity.kt).
+
+The paging module aims to provide an essential and thin layer on top of Google's `Paging Library`, to allow you to benefit the RecyclerAdapter abstractions and reuse all your existing Adapter items. `PagingAdapter` does not have all the features of the standard `RecyclerAdapter` on purpose, because `PagingAdapter` doesn't have the entire list in memory and it's intended to be used for different use cases.
 
 ## <a name="emptyItem"></a>Empty item
 It's often useful to display something on the screen when the RecyclerView is empty. To do so, simply implement a new `Item` just as you would do with a normal item in the list, then:
@@ -552,7 +565,9 @@ recyclerAdapter.lockScrollingWhileInserting(layoutManager)
 ```
 To get a better comprehension of this behavior, try commenting `lockScrollingWhileInserting` in [SyncActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/SyncActivity.kt) and run the demo app again pressing the `shuffle` button to see the difference.
 
-## <a name="contributors"></a>Contributors
+## <a name="contributors"></a>Contributors and Credits
 Thanks to:
 * [Kristiyan Petrov](https://github.com/kristiyanP) for the beta testing and code review
 * [Nicola Gallazzi](https://github.com/ngallazzi) for helping transitioning the library to AndroidX
+* [Federico Monti](https://github.com/fed933) for helping integrating the paging library
+* [FlatIcon](https://flaticon.com) for the demo app's icon
