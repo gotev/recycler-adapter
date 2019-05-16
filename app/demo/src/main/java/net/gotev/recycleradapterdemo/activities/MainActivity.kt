@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.api_integration -> {
-            InfiniteScroll.show(this)
+            PagingActivity.show(this)
             true
         }
 

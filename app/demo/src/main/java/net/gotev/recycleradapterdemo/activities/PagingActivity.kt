@@ -12,11 +12,11 @@ import net.gotev.recycleradapterdemo.App
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.network.api.StarWarsPeopleDataSource
 
-class InfiniteScroll : AppCompatActivity() {
+class PagingActivity : AppCompatActivity() {
 
     companion object {
         fun show(activity: AppCompatActivity) {
-            activity.startActivity(Intent(activity, InfiniteScroll::class.java))
+            activity.startActivity(Intent(activity, PagingActivity::class.java))
         }
     }
 
@@ -26,7 +26,7 @@ class InfiniteScroll : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler_view)
 
-        title = getString(R.string.infinite_scrolling)
+        title = getString(R.string.paged_scrolling)
 
         supportActionBar?.apply {
             setHomeButtonEnabled(true)

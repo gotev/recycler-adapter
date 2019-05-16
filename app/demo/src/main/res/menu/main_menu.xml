@@ -27,7 +27,7 @@
         android:enabled="true"
         android:id="@+id/selection_multi_groups" />
 
-    <item android:title="@string/infinite_scrolling"
+    <item android:title="@string/paged_scrolling"
         app:showAsAction="never|withText"
         android:visible="true"
         android:enabled="true"

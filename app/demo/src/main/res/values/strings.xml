@@ -20,7 +20,7 @@
     <string name="button_sync_group_b">Sync B</string>
     <string name="button_sync_group_c">Sync C</string>
     <string name="button_empty">Empty list</string>
-    <string name="infinite_scrolling">Infinite Scrolling</string>
+    <string name="paged_scrolling">Paged Scrolling</string>
     <string name="carousels_plain">Carousels (plain)</string>
     <string name="carousels_pool">Carousels (with pool)</string>
     <string name="remove_all">Remove all</string>
