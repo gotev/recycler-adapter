@@ -569,5 +569,5 @@ To get a better comprehension of this behavior, try commenting `lockScrollingWhi
 Thanks to:
 * [Kristiyan Petrov](https://github.com/kristiyanP) for the beta testing and code review
 * [Nicola Gallazzi](https://github.com/ngallazzi) for helping transitioning the library to AndroidX
-* [Federico Monti](https://github.com/fed933) for helping integrating the paging library
+* [Federico Monti](https://github.com/Fed93) for helping integrating the paging library
 * [FlatIcon](https://flaticon.com) for the demo app's icon
