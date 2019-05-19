@@ -12,7 +12,7 @@ abstract class RecyclerAdapterViewHolder(itemView: View) : RecyclerView.ViewHold
 
     private var adapter: WeakReference<RecyclerAdapterNotifier>? = null
 
-    internal fun setAdapter(recyclerAdapter: RecyclerAdapterNotifier) {
+    fun setAdapter(recyclerAdapter: RecyclerAdapterNotifier) {
         adapter = WeakReference(recyclerAdapter)
     }
 
