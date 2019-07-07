@@ -9,14 +9,14 @@ ext {
     library_licenses = ["Apache-2.0"]
     library_licenses_url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     library_project_group = 'net.gotev'
-    library_version = '2.6.2'
+    library_version = '2.7.0'
     version_code = 5
     min_sdk = 18
     target_sdk = 28
     demo_app_id = 'net.gotev.recycleradapterdemo'
 
     // Gradle classpath dependencies versions
-    kotlin_version = '1.3.21'
+    kotlin_version = '1.3.41'
     gradle_version = '3.3.2'
     maven_gradle_version = '2.1'
     gradle_versions_plugin_version = '0.20.0'
@@ -37,9 +37,9 @@ ext {
     androidx_appcompat_version = '1.0.2'
 
     // App dependencies
-    okhttp_version = '3.13.1'
+    okhttp_version = '3.14.2'
     retrofit_version = '2.5.0'
-    rxjava2_version = '2.2.7'
+    rxjava2_version = '2.2.10'
     rxkotlin_version = '2.3.0'
     rxandroid_version = '2.1.1'
 
