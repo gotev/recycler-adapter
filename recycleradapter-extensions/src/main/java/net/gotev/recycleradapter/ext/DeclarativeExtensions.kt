@@ -2,6 +2,7 @@ package net.gotev.recycleradapter.ext
 
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
+import java.util.*
 
 /**
  * @author Aleksandar Gotev
@@ -55,11 +56,23 @@ inline fun <K, V> Map<out K, V>.mapToManyAdapterItems(transform: (Map.Entry<K, V
     return map(transform).flatten().toTypedArray()
 }
 
+inline fun <T> Array<T>.mapToManyAdapterItems(transform: (T) -> List<AdapterItem<*>>): Array<AdapterItem<*>> {
+    return map(transform).flatten().toTypedArray()
+}
+
+inline fun <T> Iterable<T>.mapToManyAdapterItems(transform: (T) -> List<AdapterItem<*>>): Array<AdapterItem<*>> {
+    return map(transform).flatten().toTypedArray()
+}
+
 inline fun <T> Iterable<T>.createRecyclerAdapterByMapping(transform: (T) -> AdapterItem<*>?): RecyclerAdapter {
     return RecyclerAdapter().add(mapToAdapterItems(transform))
 }
 
 inline fun <T> Iterable<T>.mapToAdapterItems(transform: (T) -> AdapterItem<*>?): AdapterItems {
+    return ArrayList(mapNotNull(transform))
+}
+
+inline fun <T> Array<T>.mapToAdapterItems(transform: (T) -> AdapterItem<*>?): AdapterItems {
     return ArrayList(mapNotNull(transform))
 }
 

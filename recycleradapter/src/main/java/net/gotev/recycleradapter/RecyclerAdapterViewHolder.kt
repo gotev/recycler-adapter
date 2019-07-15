@@ -35,4 +35,6 @@ abstract class RecyclerAdapterViewHolder(itemView: View) : RecyclerView.ViewHold
     protected fun findViewById(id: Int): View {
         return itemView.findViewById(id)
     }
+
+    open fun prepareForReuse() { }
 }

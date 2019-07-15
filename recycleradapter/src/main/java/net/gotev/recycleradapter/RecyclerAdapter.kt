@@ -163,6 +163,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         bindItem(holder, position, true)
     }
 
+    override fun onViewRecycled(holder: RecyclerAdapterViewHolder) {
+        super.onViewRecycled(holder)
+        holder.prepareForReuse()
+    }
+
     override fun getItemCount() = if (adapterIsEmptyAndEmptyItemIsDefined()) 1 else items.size
 
     /**

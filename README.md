@@ -37,7 +37,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-def recyclerAdapterVersion = "2.7.0" // change it with the version you want to use
+def recyclerAdapterVersion = "2.8.0" // change it with the version you want to use
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
 This is the latest version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
@@ -91,6 +91,12 @@ open class ExampleItem(private val context: Context, private val text: String)
             get() = itemView
 
         internal val titleField: TextView by lazy { title }
+
+        override fun prepareForReuse() {
+            // Here you can perform operations to clear data from the holder
+            // and free used resources, like bitmaps or other heavy weight
+            // things
+        }
     }
 }
 ```

@@ -4,12 +4,13 @@ ext {
 
     maintainer = 'Aleksandar Gotev'
 
+    bintray_project_name = 'recycler-adapter'
     library_description = 'Easily create a RecyclerView Adapter'
     library_keywords = ['android', 'recycler', 'recyclerview', 'adapter', 'fast', 'easy']
     library_licenses = ["Apache-2.0"]
     library_licenses_url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     library_project_group = 'net.gotev'
-    library_version = '2.7.0'
+    library_version = '2.8.0'
     version_code = 5
     min_sdk = 18
     target_sdk = 28
@@ -17,20 +18,19 @@ ext {
 
     // Gradle classpath dependencies versions
     kotlin_version = '1.3.41'
-    gradle_version = '3.3.2'
-    maven_gradle_version = '2.1'
+    gradle_version = '3.4.1'
     gradle_versions_plugin_version = '0.20.0'
     bintray_plugin_version = '1.7'
 
     // Library and app testing dependencies versions
     junit_version = '4.12'
-    androidx_test_core_version = '1.1.0'
-    androidx_test_runner_version = '1.1.1'
-    androidx_test_rules_version = '1.1.1'
-    androidx_test_ext_junit_version = '1.1.0'
-    androidx_test_ext_truth_version = '1.1.0'
-    truth_version = '0.42'
-    androidx_test_espresso_version = '3.1.1'
+    androidx_test_core_version = '1.2.0'
+    androidx_test_runner_version = '1.2.0'
+    androidx_test_rules_version = '1.2.0'
+    androidx_test_ext_junit_version = '1.1.1'
+    androidx_test_ext_truth_version = '1.2.0'
+    truth_version = '0.45'
+    androidx_test_espresso_version = '3.2.0'
 
     // Library and app dependencies versions
     androidx_recyclerview_version = '1.0.0'
@@ -38,7 +38,7 @@ ext {
 
     // App dependencies
     okhttp_version = '3.14.2'
-    retrofit_version = '2.5.0'
+    retrofit_version = '2.6.0'
     rxjava2_version = '2.2.10'
     rxkotlin_version = '2.3.0'
     rxandroid_version = '2.1.1'
