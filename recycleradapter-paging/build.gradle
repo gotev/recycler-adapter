@@ -89,7 +89,7 @@ dependencies {
 bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
+    publications = ['mavenPublish']
     pkg {
         repo = "maven"
         name = mavProjectName
