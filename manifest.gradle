@@ -1,4 +1,6 @@
 ext {
+    mavRepoInternalUrl = System.getenv('LOCAL_MAVEN_URL')
+
     github_username = 'gotev'
     github_repository_name = 'recycler-adapter'
 
