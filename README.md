@@ -18,6 +18,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 * [Carousels and nested RecyclerViews](#carousels)
 * [Paged Lists](#pagedLists)
 * [Empty item](#emptyItem)
+* [Empty item in Paged Lists](#emptyItemPagedLists)
 * [Filter items (to implement searchBar)](#filterItems)
 * [Sort items](#sortItems)
 * [Using ButterKnife](#butterKnife)
@@ -174,6 +175,14 @@ wherever you need it in your code. It doesn't necessarily have to be invoked bef
 ```kotlin
 recyclerView.setAdapter(recyclerAdapter)
 ```
+
+## <a name="emptyItemPagedLists"></a>Empty item in Paged Lists
+If you want to add an Empty Item when RecyclerView is empty also when you're using the `PagingAdapter` extension, you have to implement a new `Item` (like described before) then, in your `DataSource` `LoadInitial` method, use the `withEmptyItem` enxtension for your callback instead of `onResult`: 
+
+```kotlin
+callback.withEmptyItem(emptyItem,response.results)
+```
+
 
 ## <a name="filterItems"></a>Filter items
 If you need to search items in your recycler view, you have to override `onFilter` method in each one of your items implementation. Let's say our `AdapterItem` has a `text` field and we want to check if the search term matches it:
