@@ -21,12 +21,7 @@ class StarWarsPeopleDataSource(private val api: StarWarsAPI) : PageKeyedDataSour
             )
         } catch (exc: Throwable) {
             Log.e("Error", "Error", exc)
-            callback.withEmptyItem(
-                    emptyItem,
-                    emptyList(),
-                    null,
-                    null
-            )
+            callback.withEmptyItem(emptyItem)
         }
     }
 

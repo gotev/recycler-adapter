@@ -7,27 +7,27 @@ import net.gotev.recycleradapter.AdapterItem
 
 fun <E> PageKeyedDataSource.LoadInitialCallback<E, AdapterItem<*>>.withEmptyItem(
         emptyItem: AdapterItem<*>,
-        data: List<AdapterItem<*>>,
-        previousPageKey: E?,
-        nextPageKey: E?
+        data: List<AdapterItem<*>> = emptyList(),
+        previousPageKey: E? = null,
+        nextPageKey: E? = null
 ) {
     onResult(data.empty(emptyItem), previousPageKey, nextPageKey)
 }
 
 fun <E> PageKeyedDataSource.LoadInitialCallback<E, AdapterItem<*>>.withEmptyItem(
         emptyItem: AdapterItem<*>,
-        data: List<AdapterItem<*>>,
+        data: List<AdapterItem<*>> = emptyList(),
         position: Int,
         totalCount: Int,
-        previousPageKey: E?,
-        nextPageKey: E?
+        previousPageKey: E? = null,
+        nextPageKey: E? = null
 ) {
     onResult(data.empty(emptyItem), position, totalCount, previousPageKey, nextPageKey)
 }
 
 fun ItemKeyedDataSource.LoadInitialCallback<AdapterItem<*>>.withEmptyItem(
         emptyItem: AdapterItem<*>,
-        data: List<AdapterItem<*>>,
+        data: List<AdapterItem<*>> = emptyList(),
         position: Int,
         totalCount: Int
 ) {
@@ -36,7 +36,7 @@ fun ItemKeyedDataSource.LoadInitialCallback<AdapterItem<*>>.withEmptyItem(
 
 fun PositionalDataSource.LoadInitialCallback<AdapterItem<*>>.withEmptyItem(
         emptyItem: AdapterItem<*>,
-        data: List<AdapterItem<*>>,
+        data: List<AdapterItem<*>> = emptyList(),
         position: Int,
         totalCount: Int
 ) {
@@ -45,7 +45,7 @@ fun PositionalDataSource.LoadInitialCallback<AdapterItem<*>>.withEmptyItem(
 
 fun PositionalDataSource.LoadInitialCallback<AdapterItem<*>>.withEmptyItem(
         emptyItem: AdapterItem<*>,
-        data: List<AdapterItem<*>>,
+        data: List<AdapterItem<*>> = emptyList(),
         position: Int
 ) {
     onResult(data.empty(emptyItem), position)
