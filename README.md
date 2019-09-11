@@ -47,7 +47,7 @@ Due to some prolonged Bintray outages, an alternative maven repo has been set. I
 
 ```groovy
 maven {
-    url "https://raw.githubusercontent.com/gotev/recycler-adapter/mvn-repo/releases"
+    url "https://raw.githubusercontent.com/gotev/recycler-adapter/master/releases"
 }
 ```
 
