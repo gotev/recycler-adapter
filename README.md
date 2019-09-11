@@ -41,7 +41,7 @@ In your gradle dependencies add:
 def recyclerAdapterVersion = "2.8.2" // change it with the version you want to use
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
-This is the latest version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
+This is the latest Bintray version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
 
 Due to some prolonged Bintray outages, an alternative maven repo has been set. If the dependencies are not resolved, add this to your maven repos:
 
