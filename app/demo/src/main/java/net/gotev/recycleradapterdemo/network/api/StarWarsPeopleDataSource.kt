@@ -3,17 +3,25 @@ package net.gotev.recycleradapterdemo.network.api
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
 import net.gotev.recycleradapter.AdapterItem
+import net.gotev.recycleradapter.paging.withEmptyItem
+import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.TitleSubtitleItem
 
 
 class StarWarsPeopleDataSource(private val api: StarWarsAPI) : PageKeyedDataSource<String, AdapterItem<*>>() {
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, AdapterItem<*>>) {
+        val emptyItem = LabelItem("No items in the list")
         try {
             val response = api.getPeople().blockingGet()
-            callback.onResult(response.results.map { convert(it) }, response.previous, response.next)
+            callback.withEmptyItem(
+                    emptyItem,
+                    response.results.map { convert(it) },
+                    response.previous,
+                    response.next
+            )
         } catch (exc: Throwable) {
             Log.e("Error", "Error", exc)
-            callback.onResult(emptyList(), null, null)
+            callback.withEmptyItem(emptyItem)
         }
     }
 
