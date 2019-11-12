@@ -39,7 +39,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
          */
         fun createRecycledViewPool(
             parent: RecyclerView,
-            items: List<AdapterItem<*>>,
+            items: List<AdapterItem<*, *>>,
             maxViewsPerItem: Int
         ): RecyclerView.RecycledViewPool {
             val maxViews = if (maxViewsPerItem >= 1) maxViewsPerItem else 1
@@ -57,11 +57,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
     }
 
-    private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
-    private val types = LinkedHashMap<Int, AdapterItem<*>>()
-    private var emptyItem: AdapterItem<in RecyclerAdapterViewHolder>? = null
+    private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder, *>>()
+    private val types = LinkedHashMap<Int, AdapterItem<*, *>>()
+    private var emptyItem: AdapterItem<in RecyclerAdapterViewHolder, *>? = null
 
-    private var filtered = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
+    private var filtered = ArrayList<AdapterItem<in RecyclerAdapterViewHolder, *>>()
     private var showFiltered = false
 
     private val selectionGroups = LinkedHashMap<String, Boolean>()
@@ -79,13 +79,13 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <T : RecyclerAdapterViewHolder> AdapterItem<out T>.castAsIn(): AdapterItem<in T> {
-        return this as AdapterItem<in T>
+    private fun <T : RecyclerAdapterViewHolder, Model> AdapterItem<out T, out Model>.castAsIn(): AdapterItem<in T, in Model> {
+        return this as AdapterItem<in T, in Model>
     }
 
     private fun Int.isOutOfItemsRange() = this < 0 || this >= items.size
 
-    private fun AdapterItem<*>.changeSelectionStatus(newStatus: Boolean, position: Int) {
+    private fun AdapterItem<*, *>.changeSelectionStatus(newStatus: Boolean, position: Int) {
         this.let {
             selected = newStatus
             if (onSelectionChanged(isNowSelected = newStatus)) {
@@ -97,14 +97,14 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     private fun adapterIsEmptyAndEmptyItemIsDefined() = items.isEmpty() && emptyItem != null
 
     private fun updateItemAtPosition(
-        item: AdapterItem<in RecyclerAdapterViewHolder>,
+        item: AdapterItem<in RecyclerAdapterViewHolder, *>,
         position: Int
     ) {
         items[position] = item
         notifyChangedPosition(position)
     }
 
-    private fun registerItemType(item: AdapterItem<*>) {
+    private fun registerItemType(item: AdapterItem<*, *>) {
         val classType = item.viewType()
 
         if (!types.containsKey(classType)) {
@@ -184,7 +184,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         selectItemAtPosition(position)
     }
 
-    override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*>? {
+    override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*, *>? {
         val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return null
 
         return items[position]
@@ -230,7 +230,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      *
      * @return recycler adapter instance
      */
-    fun selectItem(item: AdapterItem<*>?): RecyclerAdapter {
+    fun selectItem(item: AdapterItem<*, *>?): RecyclerAdapter {
         val position = items.indexOf(item)
                 .takeIf { it >= 0 && items[it].getSelectionGroup() != null }
                 ?: return this
@@ -245,7 +245,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      *
      * @param item item to show when the recycler adapter is empty
      */
-    fun setEmptyItem(item: AdapterItem<*>?) {
+    fun setEmptyItem(item: AdapterItem<*, *>?) {
         val previouslyEmpty = emptyItem == null
         val afterEmpty = item == null
 
@@ -271,7 +271,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * existing items starting from (position) will be shifted forward.
      * @return [RecyclerAdapter]
      */
-    fun add(item: AdapterItem<*>, position: Int? = null): RecyclerAdapter {
+    fun add(item: AdapterItem<*, *>, position: Int? = null): RecyclerAdapter {
         val insertPosition = if (position != null) {
             when {
                 position >= items.size -> {
@@ -313,7 +313,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * shifted forward.
      * @return [RecyclerAdapter]
      */
-    fun add(newItems: List<AdapterItem<*>>, startingPosition: Int? = null): RecyclerAdapter {
+    fun add(newItems: List<AdapterItem<*, *>>, startingPosition: Int? = null): RecyclerAdapter {
         if (newItems.isEmpty()) return this
 
         val firstIndex = items.size
@@ -351,7 +351,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param item item to add or update
      * @return [RecyclerAdapter]
      */
-    fun addOrUpdate(item: AdapterItem<*>): RecyclerAdapter {
+    fun addOrUpdate(item: AdapterItem<*, *>): RecyclerAdapter {
         val itemIndex = items.indexOf(item).takeIf { it >= 0 } ?: return add(item)
 
         if (items[itemIndex].hasToBeReplacedBy(item)) {
@@ -368,7 +368,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param items items to add
      * @return [RecyclerAdapter]
      */
-    fun addOrUpdate(items: List<AdapterItem<*>>): RecyclerAdapter {
+    fun addOrUpdate(items: List<AdapterItem<*, *>>): RecyclerAdapter {
         //TODO: this can be improved for performance by getting all the new added positions
         //and all the updated positions
         items.forEach { addOrUpdate(it) }
@@ -385,7 +385,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param item item object
      * @return the item's position or -1 if the item does not exist
      */
-    fun getItemPosition(item: AdapterItem<*>) = items.indexOf(item)
+    fun getItemPosition(item: AdapterItem<*, *>) = items.indexOf(item)
 
     /**
      * Syncs the internal list of items with a list passed as parameter.
@@ -404,7 +404,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * [RecyclerAdapter.clear] method call.
      * @return [RecyclerAdapter]
      */
-    fun syncWithItems(newItems: ArrayList<out AdapterItem<*>>): RecyclerAdapter {
+    fun syncWithItems(newItems: ArrayList<out AdapterItem<*, *>>): RecyclerAdapter {
         if (newItems.isEmpty()) {
             clear()
             return this
@@ -455,7 +455,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param item item to remove
      * @return true if the item has been correctly removed or false if the item does not exist
      */
-    fun removeItem(item: AdapterItem<*>): Boolean {
+    fun removeItem(item: AdapterItem<*, *>): Boolean {
         val itemIndex = items.indexOf(item).takeIf { it >= 0 } ?: return false
         return removeItemAtPosition(itemIndex)
     }
@@ -468,9 +468,9 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * the item will be removed. If it returns false, the item will not be removed
      */
     @JvmOverloads
-    fun removeAllItemsWithClass(clazz: Class<out AdapterItem<*>>,
+    fun removeAllItemsWithClass(clazz: Class<out AdapterItem<*, *>>,
                                 listener: RemoveListener = object : RemoveListener {
-                                    override fun hasToBeRemoved(item: AdapterItem<*>) = true
+                                    override fun hasToBeRemoved(item: AdapterItem<*, *>) = true
                                 }) {
         if (items.isEmpty())
             return
@@ -499,7 +499,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @return Pair with position and AdapterItem or null if the adapter is empty or no items
      * exists with the given class
      */
-    fun getLastItemWithClass(clazz: Class<out AdapterItem<*>>): Pair<Int, AdapterItem<*>>? {
+    fun getLastItemWithClass(clazz: Class<out AdapterItem<*, *>>): Pair<Int, AdapterItem<*, *>>? {
         if (items.isEmpty())
             return null
 
@@ -517,7 +517,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      *
      * @param clazz class of the item to remove
      */
-    fun removeLastItemWithClass(clazz: Class<out AdapterItem<*>>) {
+    fun removeLastItemWithClass(clazz: Class<out AdapterItem<*, *>>) {
         items.takeIf { !it.isEmpty() }?.let { items ->
             for (i in items.lastIndex downTo 0) {
                 if (items[i].javaClass.name == clazz.name) {
@@ -550,7 +550,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param position item position
      * @return [AdapterItem] or null if the adapter is empty or the position is out of bounds
      */
-    fun getItemAtPosition(position: Int): AdapterItem<*>? =
+    fun getItemAtPosition(position: Int): AdapterItem<*, *>? =
             items.takeIf { !it.isEmpty() && !position.isOutOfItemsRange() }
                     ?.let { items -> items[position] }
 
@@ -648,8 +648,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param comparator custom comparator implementation
      */
     @Suppress("UNCHECKED_CAST")
-    fun sort(ascending: Boolean, comparator: Comparator<AdapterItem<*>>? = null) {
-        val items = (items as ArrayList<AdapterItem<*>>)
+    fun sort(ascending: Boolean, comparator: Comparator<AdapterItem<*, *>>? = null) {
+        val items = (items as ArrayList<AdapterItem<*, *>>)
                 .takeIf { !it.isEmpty() }
                 ?: return
 
@@ -710,15 +710,15 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @param selectionGroup unique ID String of the selection group
      * @return list of selected items
      */
-    fun getSelectedItems(selectionGroup: String): List<AdapterItem<*>> {
+    fun getSelectedItems(selectionGroup: String): List<AdapterItem<*, *>> {
         if (items.isEmpty())
             return emptyList()
 
         return items.filter { selectionGroup == it.getSelectionGroup() && it.selected }
     }
 
-    private fun getItems(filter: (item: AdapterItem<*>) -> Boolean): List<Pair<Int, AdapterItem<*>>> {
-        val filtered = arrayListOf<Pair<Int, AdapterItem<*>>>()
+    private fun getItems(filter: (item: AdapterItem<*, *>) -> Boolean): List<Pair<Int, AdapterItem<*, *>>> {
+        val filtered = arrayListOf<Pair<Int, AdapterItem<*, *>>>()
 
         items.forEachIndexed { index, adapterItem ->
             if (filter(adapterItem)) {
@@ -739,7 +739,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * new item will be added.
      * @return recycler adapter instance
      */
-    fun replaceSelectionGroupItems(selectionGroup: String, newItems: List<AdapterItem<*>>): RecyclerAdapter {
+    fun replaceSelectionGroupItems(selectionGroup: String, newItems: List<AdapterItem<*, *>>): RecyclerAdapter {
         val currentItems = getItems { selectionGroup == it.getSelectionGroup() }
 
         if (currentItems.isEmpty()) {

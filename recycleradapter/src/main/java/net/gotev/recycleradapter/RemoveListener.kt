@@ -6,5 +6,5 @@ package net.gotev.recycleradapter
  */
 
 interface RemoveListener {
-    fun hasToBeRemoved(item: AdapterItem<*>): Boolean
+    fun hasToBeRemoved(item: AdapterItem<*, *>): Boolean
 }

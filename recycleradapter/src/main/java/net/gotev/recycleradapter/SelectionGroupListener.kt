@@ -5,4 +5,4 @@ package net.gotev.recycleradapter
  *
  * @author Aleksandar Gotev
  */
-typealias SelectionGroupListener = (selectionGroup: String, selected: List<AdapterItem<*>>) -> Unit
+typealias SelectionGroupListener = (selectionGroup: String, selected: List<AdapterItem<*, *>>) -> Unit

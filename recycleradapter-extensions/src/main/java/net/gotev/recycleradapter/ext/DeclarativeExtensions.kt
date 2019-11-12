@@ -8,9 +8,9 @@ import java.util.*
  * @author Aleksandar Gotev
  */
 
-typealias AdapterItems = ArrayList<AdapterItem<*>>
+typealias AdapterItems = ArrayList<AdapterItem<*,*>>
 
-fun createRecyclerAdapterWith(vararg items: AdapterItem<*>?): RecyclerAdapter {
+fun createRecyclerAdapterWith(vararg items: AdapterItem<*, *>?): RecyclerAdapter {
     return RecyclerAdapter().apply {
         val filtered = items.filterNotNull()
         if (filtered.isNotEmpty()) {
@@ -19,7 +19,7 @@ fun createRecyclerAdapterWith(vararg items: AdapterItem<*>?): RecyclerAdapter {
     }
 }
 
-fun createRecyclerAdapterWith(list: List<AdapterItem<*>?>?): RecyclerAdapter {
+fun createRecyclerAdapterWith(list: List<AdapterItem<*, *>?>?): RecyclerAdapter {
     return RecyclerAdapter().apply {
         val filtered = list?.filterNotNull() ?: emptyList()
         if (filtered.isNotEmpty()) {
@@ -28,7 +28,7 @@ fun createRecyclerAdapterWith(list: List<AdapterItem<*>?>?): RecyclerAdapter {
     }
 }
 
-fun listOfAdapterItems(vararg items: AdapterItem<*>?): AdapterItems {
+fun listOfAdapterItems(vararg items: AdapterItem<*, *>?): AdapterItems {
     return if (items.isEmpty()) {
         ArrayList(1)
     } else {
@@ -36,7 +36,7 @@ fun listOfAdapterItems(vararg items: AdapterItem<*>?): AdapterItems {
     }
 }
 
-fun AdapterItems.adding(item: AdapterItem<*>?): AdapterItems {
+fun AdapterItems.adding(item: AdapterItem<*, *>?): AdapterItems {
     return if (item == null) {
         this
     } else {
@@ -44,35 +44,35 @@ fun AdapterItems.adding(item: AdapterItem<*>?): AdapterItems {
     }
 }
 
-fun adapterItems(vararg items: AdapterItem<*>?): AdapterItems {
+fun adapterItems(vararg items: AdapterItem<*, *>?): AdapterItems {
     return ArrayList(listOfNotNull(*items))
 }
 
-inline fun <T> Iterable<T>.mapItems(transform: (T) -> AdapterItem<*>?): Array<AdapterItem<*>> {
+inline fun <T> Iterable<T>.mapItems(transform: (T) -> AdapterItem<*, *>?): Array<AdapterItem<*, *>> {
     return mapNotNull(transform).toTypedArray()
 }
 
-inline fun <K, V> Map<out K, V>.mapToManyAdapterItems(transform: (Map.Entry<K, V>) -> List<AdapterItem<*>>): Array<AdapterItem<*>> {
+inline fun <K, V> Map<out K, V>.mapToManyAdapterItems(transform: (Map.Entry<K, V>) -> List<AdapterItem<*, *>>): Array<AdapterItem<*, *>> {
     return map(transform).flatten().toTypedArray()
 }
 
-inline fun <T> Array<T>.mapToManyAdapterItems(transform: (T) -> List<AdapterItem<*>>): Array<AdapterItem<*>> {
+inline fun <T> Array<T>.mapToManyAdapterItems(transform: (T) -> List<AdapterItem<*, *>>): Array<AdapterItem<*, *>> {
     return map(transform).flatten().toTypedArray()
 }
 
-inline fun <T> Iterable<T>.mapToManyAdapterItems(transform: (T) -> List<AdapterItem<*>>): Array<AdapterItem<*>> {
+inline fun <T> Iterable<T>.mapToManyAdapterItems(transform: (T) -> List<AdapterItem<*, *>>): Array<AdapterItem<*, *>> {
     return map(transform).flatten().toTypedArray()
 }
 
-inline fun <T> Iterable<T>.createRecyclerAdapterByMapping(transform: (T) -> AdapterItem<*>?): RecyclerAdapter {
+inline fun <T> Iterable<T>.createRecyclerAdapterByMapping(transform: (T) -> AdapterItem<*, *>?): RecyclerAdapter {
     return RecyclerAdapter().add(mapToAdapterItems(transform))
 }
 
-inline fun <T> Iterable<T>.mapToAdapterItems(transform: (T) -> AdapterItem<*>?): AdapterItems {
+inline fun <T> Iterable<T>.mapToAdapterItems(transform: (T) -> AdapterItem<*, *>?): AdapterItems {
     return ArrayList(mapNotNull(transform))
 }
 
-inline fun <T> Array<T>.mapToAdapterItems(transform: (T) -> AdapterItem<*>?): AdapterItems {
+inline fun <T> Array<T>.mapToAdapterItems(transform: (T) -> AdapterItem<*, *>?): AdapterItems {
     return ArrayList(mapNotNull(transform))
 }
 
@@ -83,15 +83,15 @@ interface RecyclerAdapterProvider {
         recyclerAdapter.syncWithItems(this)
     }
 
-    fun render(vararg items: AdapterItem<*>?) {
+    fun render(vararg items: AdapterItem<*, *>?) {
         renderList(items.filterNotNull())
     }
 
-    fun render(list: List<AdapterItem<*>?>?) {
+    fun render(list: List<AdapterItem<*, *>?>?) {
         renderList(list?.filterNotNull() ?: emptyList())
     }
 
-    private fun renderList(list: List<AdapterItem<*>>) {
+    private fun renderList(list: List<AdapterItem<*, *>>) {
         if (list.isEmpty()) {
             recyclerAdapter.clear()
         } else {

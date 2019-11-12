@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException
  * @author Aleksandar Gotev
  * @param <T> ViewHolder subclass
 </T> */
-abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterItem<*>> {
+abstract class AdapterItem<T : RecyclerAdapterViewHolder, Model>(private val model: Model? = null) : Comparable<AdapterItem<*, *>> {
 
     var selected = false
 
@@ -33,7 +33,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      * javaClass.name (Kotlin) is needed to avoid collisions with other adapter items representing
      * the same model.
      */
-    abstract fun diffingId(): String
+    open fun diffingId(): String = model?.hashCode().toString()
 
     /**
      * Returns the layout ID for this item
@@ -62,7 +62,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      * same value as this item
      * @return true to replace this item with the new item, false otherwise
      */
-    open fun hasToBeReplacedBy(newItem: AdapterItem<*>): Boolean = true
+    open fun hasToBeReplacedBy(newItem: AdapterItem<*, *>): Boolean = true
 
     /**
      * Creates a new ViewHolder instance, by inferring the ViewHolder type from the generic passed
@@ -144,7 +144,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder> : Comparable<AdapterIt
      */
     open fun onSelectionChanged(isNowSelected: Boolean): Boolean = true
 
-    override fun compareTo(other: AdapterItem<*>) = 0
+    override fun compareTo(other: AdapterItem<*, *>) = 0
 
     override fun hashCode() = diffingId().hashCode()
 
