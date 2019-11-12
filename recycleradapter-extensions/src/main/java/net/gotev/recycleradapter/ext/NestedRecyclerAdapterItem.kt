@@ -14,8 +14,9 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
  */
 abstract class NestedRecyclerAdapterItem<T : NestedRecyclerAdapterItem.Holder, Model>(
         val recyclerAdapter: RecyclerAdapter,
-        val recycledViewsPool: RecyclerView.RecycledViewPool?
-) : AdapterItem<T, Model>() {
+        val recycledViewsPool: RecyclerView.RecycledViewPool?,
+        model: Model
+) : AdapterItem<T, Model>(model) {
 
     override fun getLayoutId() = R.layout.item_nested
 
