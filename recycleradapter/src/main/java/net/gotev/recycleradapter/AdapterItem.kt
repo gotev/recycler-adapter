@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException
  * @author Aleksandar Gotev
  * @param <T> ViewHolder subclass
 </T> */
-abstract class AdapterItem<T : RecyclerAdapterViewHolder, Model>(private val model: Model? = null) : Comparable<AdapterItem<*, *>> {
+abstract class AdapterItem<T : RecyclerAdapterViewHolder, Model>(private val model: Model) : Comparable<AdapterItem<*, *>> {
 
     var selected = false
 
@@ -33,7 +33,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder, Model>(private val mod
      * javaClass.name (Kotlin) is needed to avoid collisions with other adapter items representing
      * the same model.
      */
-    open fun diffingId(): String = model?.hashCode().toString()
+    open fun diffingId(): String = model.hashCode().toString()
 
     /**
      * Returns the layout ID for this item
