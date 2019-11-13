@@ -71,7 +71,7 @@ class Carousels : AppCompatActivity() {
     }
 
     private fun createCarousels(recycledViewPool: RecyclerView.RecycledViewPool?)
-            : List<NestedRecyclerAdapterItem<*,*>> {
+            : List<NestedRecyclerAdapterItem<*>> {
         return (0..60).map {
             val adapter = RecyclerAdapter().apply {
                 add(createCarouselItems())

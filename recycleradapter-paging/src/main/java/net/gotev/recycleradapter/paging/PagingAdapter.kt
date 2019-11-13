@@ -14,20 +14,20 @@ import net.gotev.recycleradapter.*
 class PagingAdapter(
         dataSource: () -> DataSource<*, *>,
         config: PagedList.Config
-) : PagedListAdapter<AdapterItem<*, *>, RecyclerAdapterViewHolder>(diffCallback), RecyclerAdapterNotifier {
+) : PagedListAdapter<AdapterItem<*>, RecyclerAdapterViewHolder>(diffCallback), RecyclerAdapterNotifier {
 
     companion object {
-        val diffCallback = object : DiffUtil.ItemCallback<AdapterItem<*, *>>() {
-            override fun areItemsTheSame(oldItem: AdapterItem<*, *>, newItem: AdapterItem<*, *>) =
+        val diffCallback = object : DiffUtil.ItemCallback<AdapterItem<*>>() {
+            override fun areItemsTheSame(oldItem: AdapterItem<*>, newItem: AdapterItem<*>) =
                     oldItem == newItem
 
-            override fun areContentsTheSame(oldItem: AdapterItem<*, *>, newItem: AdapterItem<*, *>) =
+            override fun areContentsTheSame(oldItem: AdapterItem<*>, newItem: AdapterItem<*>) =
                     !oldItem.hasToBeReplacedBy(oldItem)
         }
     }
 
     private val dataSourceFactory: DataSourceFactory<Any> = DataSourceFactory(dataSource)
-    private val data = LivePagedListBuilder<Any, AdapterItem<*, *>>(dataSourceFactory, config).build()
+    private val data = LivePagedListBuilder<Any, AdapterItem<*>>(dataSourceFactory, config).build()
 
     init {
         setHasStableIds(true)
@@ -73,7 +73,7 @@ class PagingAdapter(
         } ?: throw IllegalStateException("Item not found")
     }
 
-    override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*, *>? {
+    override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*>? {
         val list = currentList ?: return null
         val position = holder.adapterPosition.takeIf { it >= 0 && it < list.size } ?: return null
 

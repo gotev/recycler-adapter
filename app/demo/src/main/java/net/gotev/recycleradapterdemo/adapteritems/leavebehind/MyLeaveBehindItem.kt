@@ -6,7 +6,7 @@ import kotlinx.android.synthetic.main.swipe_background_layout.*
 import kotlinx.android.synthetic.main.swipe_foregound_layout.*
 import net.gotev.recycleradapterdemo.R
 
-class MyLeaveBehindItem(private val value: String, private val background: String) : LeaveBehindAdapterItem<MyLeaveBehindItem.Holder, String>(value) {
+class MyLeaveBehindItem(private val value: String, private val background: String) : LeaveBehindAdapterItem<MyLeaveBehindItem.Holder>(value) {
 
     override fun onFilter(searchTerm: String) = value.contains(searchTerm, ignoreCase = true)
 

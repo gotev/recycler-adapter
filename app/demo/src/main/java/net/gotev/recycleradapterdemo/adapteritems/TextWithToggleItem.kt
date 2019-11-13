@@ -10,7 +10,7 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
 
-class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleItem.Holder, String>(text) {
+class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleItem.Holder>(text) {
 
     private var pressed = false
 

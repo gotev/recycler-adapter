@@ -8,8 +8,8 @@ import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.TitleSubtitleItem
 
 
-class StarWarsPeopleDataSource(private val api: StarWarsAPI) : PageKeyedDataSource<String, AdapterItem<*,*>>() {
-    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, AdapterItem<*,*>>) {
+class StarWarsPeopleDataSource(private val api: StarWarsAPI) : PageKeyedDataSource<String, AdapterItem<*>>() {
+    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, AdapterItem<*>>) {
         val emptyItem = LabelItem("No items in the list")
         try {
             val response = api.getPeople().blockingGet()
@@ -25,20 +25,20 @@ class StarWarsPeopleDataSource(private val api: StarWarsAPI) : PageKeyedDataSour
         }
     }
 
-    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, AdapterItem<*,*>>) {
+    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, AdapterItem<*>>) {
         load(params, callback)
     }
 
-    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<String, AdapterItem<*,*>>) {
+    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<String, AdapterItem<*>>) {
         load(params, callback, isBefore = true)
     }
 
-    private fun convert(model: SWAPIPerson): AdapterItem<*,*> {
+    private fun convert(model: SWAPIPerson): AdapterItem<*> {
         return TitleSubtitleItem(model.name, "Height (cm): ${model.height}")
     }
 
     private fun load(params: LoadParams<String>,
-                     callback: LoadCallback<String, AdapterItem<*,*>>,
+                     callback: LoadCallback<String, AdapterItem<*>>,
                      isBefore: Boolean = false) {
         try {
             val response = api.getPeopleFromUrl(params.key).blockingGet()

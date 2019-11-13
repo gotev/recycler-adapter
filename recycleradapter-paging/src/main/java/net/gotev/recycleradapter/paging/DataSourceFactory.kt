@@ -5,8 +5,8 @@ import net.gotev.recycleradapter.AdapterItem
 
 internal class DataSourceFactory<T>(
     private val dataSource: () -> DataSource<*, *>
-) : DataSource.Factory<T, AdapterItem<*, *>>() {
+) : DataSource.Factory<T, AdapterItem<*>>() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun create(): DataSource<T, AdapterItem<*, *>> = dataSource() as DataSource<T, AdapterItem<*, *>>
+    override fun create(): DataSource<T, AdapterItem<*>> = dataSource() as DataSource<T, AdapterItem<*>>
 }

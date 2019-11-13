@@ -11,7 +11,7 @@ import net.gotev.recycleradapterdemo.R
 
 
 open class SelectableItem(val label: String, private val group: String)
-    : AdapterItem<SelectableItem.Holder, String>(label) {
+    : AdapterItem<SelectableItem.Holder>(label) {
 
     override fun getLayoutId() = R.layout.item_selectable
 
