@@ -120,7 +120,7 @@ class SyncActivity : AppCompatActivity() {
         scheduledOperation = null
     }
 
-    fun createItems(): List<AdapterItem<*>> {
+    fun createItems(): List<AdapterItem<*, *>> {
         return (0..Random.nextInt(2, 20)).flatMap {
             listOf(LabelItem("TITLE $it"), SyncItem(it, "ListC"))
         }

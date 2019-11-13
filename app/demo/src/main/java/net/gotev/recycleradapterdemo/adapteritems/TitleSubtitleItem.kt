@@ -12,9 +12,7 @@ import net.gotev.recycleradapterdemo.R
 
 
 open class TitleSubtitleItem(private val title: String, private val subtitle: String = "subtitle")
-    : AdapterItem<TitleSubtitleItem.Holder>() {
-
-    override fun diffingId() = javaClass.name + title
+    : AdapterItem<TitleSubtitleItem.Holder, String>(title) {
 
     override fun getLayoutId() = R.layout.item_title_subtitle
 

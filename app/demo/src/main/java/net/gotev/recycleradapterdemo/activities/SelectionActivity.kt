@@ -94,7 +94,7 @@ class SelectionActivity : AppCompatActivity() {
     private fun RecyclerAdapter.getSelectedAsString(selectionGroup: String) =
             getSelectedItems(selectionGroup).asString()
 
-    private fun List<AdapterItem<*>>.asString() = joinToString { (it as SelectableItem).label }
+    private fun List<AdapterItem<*, *>>.asString() = joinToString { (it as SelectableItem).label }
             .let { if (it.isBlank()) "None" else it }
 
 }

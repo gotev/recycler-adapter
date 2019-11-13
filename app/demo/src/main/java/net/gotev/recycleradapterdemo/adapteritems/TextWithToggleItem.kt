@@ -10,19 +10,9 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
 
-class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleItem.Holder>() {
+class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleItem.Holder, String>(text) {
 
     private var pressed = false
-
-    override fun diffingId() = javaClass.name + text
-
-    override fun hasToBeReplacedBy(newItem: AdapterItem<*>): Boolean {
-        if (newItem !is TextWithToggleItem) {
-            return true
-        }
-
-        return text != newItem.text
-    }
 
     override fun getLayoutId() = R.layout.item_text_with_toggle
 

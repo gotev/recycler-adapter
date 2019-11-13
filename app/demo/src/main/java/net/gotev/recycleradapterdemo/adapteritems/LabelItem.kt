@@ -9,9 +9,7 @@ import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
 
-class LabelItem(private val text: String, private val selectionGroup: String? = null) : AdapterItem<LabelItem.Holder>() {
-
-    override fun diffingId() = javaClass.name + text
+class LabelItem(private val text: String, private val selectionGroup: String? = null) : AdapterItem<LabelItem.Holder, String>(text) {
 
     override fun getLayoutId() = R.layout.item_empty
 

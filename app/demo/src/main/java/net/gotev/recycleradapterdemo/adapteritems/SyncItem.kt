@@ -6,7 +6,7 @@ class SyncItem(val id: Int, private val suffix: String) : TitleSubtitleItem("ite
 
     override fun diffingId() = javaClass.name + id
 
-    override fun compareTo(other: AdapterItem<*>): Int {
+    override fun compareTo(other: AdapterItem<*, *>): Int {
         if (other.javaClass != javaClass)
             return -1
 
@@ -18,7 +18,7 @@ class SyncItem(val id: Int, private val suffix: String) : TitleSubtitleItem("ite
         return if (id > item.id) 1 else -1
     }
 
-    override fun hasToBeReplacedBy(newItem: AdapterItem<*>): Boolean {
+    override fun hasToBeReplacedBy(newItem: AdapterItem<*,*>): Boolean {
         if (newItem !is SyncItem)
             return true
 
