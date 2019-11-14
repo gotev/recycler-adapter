@@ -13,6 +13,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 
 * [Setup](#setup)
 * [Basic usage tutorial](#basicTutorial)
+* [How to diffing items properly](#howDiffingWorks)
 * [Stable IDs](#stableIDs)
 * [Adding different kind of items](#differentItems)
 * [Carousels and nested RecyclerViews](#carousels)
@@ -81,9 +82,7 @@ Create your item layout (e.g. `item_example.xml`). For example:
 ### 3. Create the item
 ```kotlin
 open class ExampleItem(private val context: Context, private val text: String)
-    : AdapterItem<ExampleItem.Holder>() {
-
-    override fun diffingId() = javaClass.name + text
+    : AdapterItem<ExampleItem.Holder>(text) {
 
     override fun getLayoutId() = R.layout.item_example
 
@@ -126,6 +125,31 @@ recycler_view.apply { // recycler_view is the id of your Recycler View in the la
 //add items
 recyclerAdapter.add(ExampleItem("test"))
 ```
+## <a name="howDiffingWorks"></a>How to diffing items properly
+Starting from 2.9.0, `RecyclerAdapter` has a new way to look at diffing id of your items.
+
+In this new version the AdapterItem needs a model instance to be passed ot its constructor.
+Usually it coincides with your item's ui model (it can be also of one of primitive types). 
+This model, combined with your item's class name, is used to retrieve a diffingId to identify every single instance of your item uniquely.
+
+```kotlin
+// Example
+data class YourModel(val text1: String, val text2: String)
+
+open class YourItem(private val context: Context, private val yourModel: YourModel)
+    : AdapterItem<ExampleItem.Holder>(yourModel) {
+    
+    // In this case YourItem diffing id will be `YourItem.javaClass.name + text.hashCode()`
+    
+    ...
+}
+```
+This means that in most cases this is what you are looking for and what you need in your project.
+
+N.B: If you are migrating from previous version of the library, you have to do a little refactor by following this simple steps:
+1. Provide a model instance to your items constructors
+2. Remove diffingId() overrides if it's a combination of solely javaClass.name and model properties values (even if its a subset of model properties)
+3. Remove hasToBeReplacedBy() implementations if it consist of elementary diffing of old model properties values with the new ones.
 
 ## <a name="stableIDs"></a>Stable IDs
 Starting from 2.4.2, `RecyclerAdapter` has stable IDs out of the box. If you want to know more about what they are:
@@ -325,9 +349,7 @@ One of the things which you may need is to set one or more click listeners to ev
 `ExampleItem.kt`:
 ```kotlin
 open class ExampleItem(private val context: Context, private val text: String)
-    : AdapterItem<ExampleItem.Holder>() {
-
-    override fun diffingId() = javaClass.name + text
+    : AdapterItem<ExampleItem.Holder>(text) {
 
     override fun getLayoutId() = R.layout.item_example
 
@@ -425,15 +447,13 @@ It's possible to also change the status of the model associated to an item direc
 
 `TextWithButtonItem.kt`:
 ```kotlin
-class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonItem.Holder>() {
+class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonItem.Holder>(text) {
 
     private var pressed = false
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
 
     override fun getLayoutId() = R.layout.item_text_with_button
-
-    override fun diffingId() = javaClass.name + text
 
     override fun bind(firstTime: Boolean, holder: Holder) {
         holder.textViewField.text = text
