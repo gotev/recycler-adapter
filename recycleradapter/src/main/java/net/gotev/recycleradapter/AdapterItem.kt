@@ -17,7 +17,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
     /**
      * Returns the identifier for this adapter item. Used in diffing operations.
      *
-     * By implementing this, you don't need to override equals and hashCode, which are already
+     * By overriding this, you don't need to override equals and hashCode, which are already
      * implemented for you. You should only override [hasToBeReplacedBy] method if you want to
      * further control if to replace an item with another one when their IDs matches.
      *
@@ -30,8 +30,11 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
      *
      * return javaClass.name + uniqueId
      *
+     * If not overrided, by default it will return a combination of javaClass.name with hashcode
+     * of the model instance passed in AdapterItem class constructor.
+     *
      * javaClass.name (Kotlin) is needed to avoid collisions with other adapter items representing
-     * the same model.
+     * the same model. 
      */
     open fun diffingId(): String = model.javaClass.name + model.hashCode().toString()
 
