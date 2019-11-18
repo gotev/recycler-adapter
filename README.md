@@ -38,7 +38,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-def recyclerAdapterVersion = "2.8.2" // change it with the version you want to use
+def recyclerAdapterVersion = "2.9.0" // change it with the version you want to use
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
 This is the latest Bintray version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
