@@ -13,7 +13,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 
 * [Setup](#setup)
 * [Basic usage tutorial](#basicTutorial)
-* [How to diffing items properly](#howDiffingWorks)
+* [Diffing strategy](#diffingStrategy)
 * [Stable IDs](#stableIDs)
 * [Adding different kind of items](#differentItems)
 * [Carousels and nested RecyclerViews](#carousels)
@@ -125,12 +125,10 @@ recycler_view.apply { // recycler_view is the id of your Recycler View in the la
 //add items
 recyclerAdapter.add(ExampleItem("test"))
 ```
-## <a name="howDiffingWorks"></a>How to diffing items properly
-Starting from 2.9.0, `RecyclerAdapter` has a new way to look at diffing id of your items.
+## <a name="diffingStrategy"></a>Diffing Strategy
+Prior to 2.9.0, you had to implement `diffingId` method yourself. Starting from 2.9.0, all you need to do is to pass your model, which can be a primitive type or a complex data class.
 
-In this new version the AdapterItem needs a model instance to be passed ot its constructor.
-Usually it coincides with your item's ui model (it can be also of one of primitive types). 
-This model, combined with your item's class name, is used to retrieve a diffingId to identify every single instance of your item uniquely.
+This model, combined with your item's class name, is used to retrieve a diffingId to identify every single instance of your items uniquely.
 
 ```kotlin
 // Example
@@ -139,7 +137,7 @@ data class YourModel(val text1: String, val text2: String)
 open class YourItem(private val context: Context, private val yourModel: YourModel)
     : AdapterItem<ExampleItem.Holder>(yourModel) {
     
-    // In this case YourItem diffing id will be `YourItem.javaClass.name + text.hashCode()`
+    // In this case YourItem diffing id will be `YourItem.javaClass.name + yourModel.hashCode()`
     
     ...
 }
