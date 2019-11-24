@@ -12,10 +12,10 @@ ext {
     library_licenses = ["Apache-2.0"]
     library_licenses_url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     library_project_group = 'net.gotev'
-    library_version = '2.9.0'
+    library_version = '2.10.0'
     version_code = 5
     min_sdk = 18
-    target_sdk = 28
+    target_sdk = 29
     demo_app_id = 'net.gotev.recycleradapterdemo'
 
     // Gradle classpath dependencies versions
@@ -35,7 +35,7 @@ ext {
     androidx_test_espresso_version = '3.2.0'
 
     // Library and app dependencies versions
-    androidx_recyclerview_version = '1.0.0'
+    androidx_recyclerview_version = '1.1.0'
     androidx_appcompat_version = '1.0.2'
 
     // App dependencies
@@ -47,5 +47,5 @@ ext {
 
     // Paging
     paging_version = '2.1.0'
-    lifecycle_version = '2.0.0'
+    lifecycle_version = '2.1.0'
 }
