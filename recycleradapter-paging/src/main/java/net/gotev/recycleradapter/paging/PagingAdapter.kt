@@ -8,21 +8,25 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView.NO_ID
-import net.gotev.recycleradapter.*
+import net.gotev.recycleradapter.AdapterItem
+import net.gotev.recycleradapter.RecyclerAdapterNotifier
+import net.gotev.recycleradapter.RecyclerAdapterViewHolder
+import net.gotev.recycleradapter.castAsIn
+import net.gotev.recycleradapter.viewType
 
 class PagingAdapter(
-        dataSource: () -> DataSource<*, *>,
-        config: PagedList.Config
-) : PagedListAdapter<AdapterItem<*>, RecyclerAdapterViewHolder>(diffCallback), RecyclerAdapterNotifier {
+    dataSource: () -> DataSource<*, *>,
+    config: PagedList.Config
+) : PagedListAdapter<AdapterItem<*>, RecyclerAdapterViewHolder>(diffCallback),
+    RecyclerAdapterNotifier {
 
     companion object {
         val diffCallback = object : DiffUtil.ItemCallback<AdapterItem<*>>() {
             override fun areItemsTheSame(oldItem: AdapterItem<*>, newItem: AdapterItem<*>) =
-                    oldItem == newItem
+                oldItem == newItem
 
             override fun areContentsTheSame(oldItem: AdapterItem<*>, newItem: AdapterItem<*>) =
-                    !oldItem.hasToBeReplacedBy(oldItem)
+                !oldItem.hasToBeReplacedBy(oldItem)
         }
     }
 
@@ -40,51 +44,58 @@ class PagingAdapter(
         })
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = currentList
-            ?.find { it.viewType() == viewType }
-            ?.createItemViewHolder(parent)
-            ?: throw IllegalStateException("Item not found")
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapterViewHolder {
+        val item = currentList?.find { it.viewType() == viewType }
+        require(item != null) { "onCreateViewHolder: cannot find a view with viewType $viewType Check the DataSource implementation!" }
+
+        return item.createItemViewHolder(parent)
+    }
 
     override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int) {
         bindItem(holder, position, true)
     }
 
     override fun onBindViewHolder(
-            holder: RecyclerAdapterViewHolder,
-            position: Int,
-            payloads: MutableList<Any>
+        holder: RecyclerAdapterViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
     ) {
         bindItem(holder, position, payloads.isEmpty())
     }
 
-    override fun getItemViewType(position: Int) = getItem(position).viewType()
+    override fun getItemViewType(position: Int) =
+        adapterItem(position, caller = "getItemViewType").viewType()
 
     override fun getItemId(position: Int) =
-            getItem(position)?.diffingId()?.hashCode()?.toLong() ?: NO_ID
+        adapterItem(position, caller = "getItemId").diffingId().hashCode().toLong()
 
     fun reload() {
         data.value?.dataSource?.invalidate()
     }
 
+    private fun adapterItem(position: Int, caller: String): AdapterItem<*> {
+        val item = getItem(position)
+        require(item != null) { "$caller: no item found at position $position. Check the DataSource implementation!" }
+
+        return item
+    }
+
     private fun bindItem(holder: RecyclerAdapterViewHolder, position: Int, firstTime: Boolean) {
-        getItem(position)?.let {
-            holder.setAdapter(this)
-            it.castAsIn().bind(firstTime, holder)
-        } ?: throw IllegalStateException("Item not found")
+        val item = adapterItem(position, caller = "bindItem")
+
+        holder.setAdapter(this)
+        item.castAsIn().bind(firstTime, holder)
     }
 
     override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*>? {
-        val list = currentList ?: return null
-        val position = holder.adapterPosition.takeIf { it >= 0 && it < list.size } ?: return null
-
-        return list[position]
+        return getItem(holder.adapterPosition)
     }
 
     override fun selected(holder: RecyclerAdapterViewHolder) {
-        //TODO: not implemented yet
+        // not supported
     }
 
     override fun notifyItemChanged(holder: RecyclerAdapterViewHolder) {
-        //TODO: not implemented yet
+        // not supported
     }
 }
