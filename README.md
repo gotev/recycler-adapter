@@ -1,4 +1,4 @@
-# Recycler Adapter [![Build Status](https://travis-ci.org/gotev/recycler-adapter.svg?branch=master)](https://travis-ci.org/gotev/recycler-adapter) [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
+# Recycler Adapter [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
 
 Makes the use of RecyclerView easier, modular and less error-prone.
 
