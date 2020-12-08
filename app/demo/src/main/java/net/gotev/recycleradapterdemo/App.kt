@@ -19,7 +19,7 @@ class App : Application() {
                 service = StarWarsAPI::class.java,
                 httpClient = network.newClientBuilder().build(),
                 converterFactory = GsonConverterFactory.create(),
-                baseUrl = "https://swapi.co/api/"
+                baseUrl = "https://gotev.github.io/swapi-android/"
         )
     }
 }

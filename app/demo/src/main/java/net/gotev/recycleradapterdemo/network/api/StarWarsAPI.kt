@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Url
 
 interface StarWarsAPI {
-    @GET("people")
+    @GET("people/page1.json")
     fun getPeople(): Single<SWAPIPaginatedResponse<SWAPIPerson>>
 
     @GET
