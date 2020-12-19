@@ -4,15 +4,12 @@ import android.content.Context
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_title_subtitle.*
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
-
-open class TitleSubtitleItem(private val title: String, private val subtitle: String = "subtitle")
-    : AdapterItem<TitleSubtitleItem.Holder>(title) {
+open class TitleSubtitleItem(private val title: String, private val subtitle: String = "subtitle") :
+    AdapterItem<TitleSubtitleItem.Holder>(title) {
 
     override fun getLayoutId() = R.layout.item_title_subtitle
 
@@ -35,28 +32,20 @@ open class TitleSubtitleItem(private val title: String, private val subtitle: St
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView), LayoutContainer {
-
-        override val containerView: View?
-            get() = itemView
-
-        internal val titleField: TextView by lazy { title }
-        internal val subtitleField: TextView by lazy { subtitle }
+    class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView) {
+        internal val titleField: TextView = itemView.findViewById(R.id.title)
+        internal val subtitleField: TextView = itemView.findViewById(R.id.subtitle)
 
         init {
             titleField.setOnClickListener {
-                containerView?.context?.let { context ->
-                    (getAdapterItem() as? TitleSubtitleItem)?.apply {
-                        onTitleClicked(context, adapterPosition)
-                    }
+                (getAdapterItem() as? TitleSubtitleItem)?.apply {
+                    onTitleClicked(itemView.context, adapterPosition)
                 }
             }
 
             subtitleField.setOnClickListener {
-                containerView?.context?.let { context ->
-                    (getAdapterItem() as? TitleSubtitleItem)?.apply {
-                        onSubTitleClicked(context, adapterPosition)
-                    }
+                (getAdapterItem() as? TitleSubtitleItem)?.apply {
+                    onSubTitleClicked(itemView.context, adapterPosition)
                 }
             }
         }

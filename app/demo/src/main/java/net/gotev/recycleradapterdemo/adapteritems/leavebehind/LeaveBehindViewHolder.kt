@@ -3,23 +3,18 @@ package net.gotev.recycleradapterdemo.adapteritems.leavebehind
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_leave_behind.*
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
+import net.gotev.recycleradapterdemo.R
 
 /**
  * Base RecyclerAdapterViewHolder to extend when implementing leave-behind material pattern.
  * @author Aleksandar Gotev
  */
 
-abstract class LeaveBehindViewHolder(itemView: View)
-    : RecyclerAdapterViewHolder(itemView), LayoutContainer {
+abstract class LeaveBehindViewHolder(itemView: View) : RecyclerAdapterViewHolder(itemView) {
 
-    override val containerView: View?
-        get() = itemView
-
-    private val contentView: FrameLayout by lazy { swipe_content_view }
-    private val leaveBehindView: FrameLayout by lazy { swipe_background_layout }
+    private val contentView: FrameLayout = itemView.findViewById(R.id.swipe_content_view)
+    private val leaveBehindView: FrameLayout = itemView.findViewById(R.id.swipe_background_layout)
 
     abstract val contentViewId: Int
     abstract val leaveBehindId: Int
@@ -30,5 +25,4 @@ abstract class LeaveBehindViewHolder(itemView: View)
             inflate(leaveBehindId, leaveBehindView)
         }
     }
-
 }
