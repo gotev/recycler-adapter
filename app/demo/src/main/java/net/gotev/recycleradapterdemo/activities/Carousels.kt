@@ -47,11 +47,7 @@ class Carousels : AppCompatActivity() {
         recycler_view.adapter = recyclerAdapter
 
         val recycledViewPool = if (withPool) {
-            RecyclerAdapter.createRecycledViewPool(
-                    parent = recycler_view,
-                    items = listOf(LabelItem("")),
-                    maxViewsPerItem = 50
-            )
+            RecyclerView.RecycledViewPool()
         } else {
             null
         }
