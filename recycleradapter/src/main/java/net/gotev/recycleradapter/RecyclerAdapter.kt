@@ -361,6 +361,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         return removeItemAtPosition(itemIndex)
     }
 
+    private fun Class<out AdapterItem<*>>.viewType() = hashCode()
+
     /**
      * Removes all the items with a certain class from this adapter and automatically notifies changes.
      *

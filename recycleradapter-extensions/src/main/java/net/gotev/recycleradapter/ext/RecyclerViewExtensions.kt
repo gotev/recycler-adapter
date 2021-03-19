@@ -38,15 +38,16 @@ fun Context.prefetchingLinearLayoutManager(
     initialPrefetchItemCount = initialPrefetch
 }
 
-fun RecyclerView.withSharedViewPool() = apply {
-    setRecycledViewPool(sharedViewPool)
+fun RecyclerView.withSharedViewPool(pool: RecyclerView.RecycledViewPool = sharedViewPool) = apply {
+    setRecycledViewPool(pool)
 }
 
 fun RecyclerView.setupWithPrefetchingLinearLayoutAndSharedViewPool(
     recyclerAdapter: RecyclerAdapter,
-    initialPrefetch: Int = 5
+    initialPrefetch: Int = 5,
+    pool: RecyclerView.RecycledViewPool = sharedViewPool
 ) {
-    withSharedViewPool()
+    withSharedViewPool(pool)
     layoutManager = context.prefetchingLinearLayoutManager(initialPrefetch)
     adapter = recyclerAdapter
 }
