@@ -319,10 +319,18 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         val firstIndex = items.size
 
         if (startingPosition == null) {
-            items.addAll(newItems.map {
+            /*
+             This does not work in Kotlin 1.4.x
+             items.addAll(newItems.map {
+                 registerItemType(it)
+                 it.castAsIn()
+             })
+             */
+            items.ensureCapacity(items.size + newItems.size)
+            newItems.forEach {
                 registerItemType(it)
-                it.castAsIn()
-            })
+                items.add(it.castAsIn())
+            }
         } else {
             newItems.reversed().forEach {
                 registerItemType(it)
