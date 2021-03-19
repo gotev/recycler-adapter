@@ -111,12 +111,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.selection -> {
-            SelectionActivity.show(this)
+            GroupsSelectionActivity.show(this)
             true
         }
 
         R.id.selection_multi_groups -> {
-            MasterSlaveGroupsActivity.show(this)
+            SubordinateGroupsSelectionActivity.show(this)
             true
         }
 

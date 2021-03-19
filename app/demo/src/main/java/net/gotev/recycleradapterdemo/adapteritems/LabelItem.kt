@@ -6,12 +6,10 @@ import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
-class LabelItem(private val text: String, private val selectionGroup: String? = null) :
+class LabelItem(private val text: String) :
     AdapterItem<LabelItem.Holder>(text) {
 
     override fun getLayoutId() = R.layout.item_empty
-
-    override fun getSelectionGroup() = selectionGroup
 
     override fun bind(firstTime: Boolean, holder: Holder) {
         holder.textViewField.text = text

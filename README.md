@@ -28,10 +28,7 @@ In this way every item of the recycler view has its own set of files, resulting 
 * [Handle clicks](#handleClicks)
 * [Handle item status](#handleItemStatus)
 * [Event lifecycle](#eventLifecycle)
-* [Single and Multiple selection of items](#itemsSelection)
-    * [Getting selected items in a selection group](#getting-selected-items-in-a-selection-group)
-    * [Programmatically select items](#programmatically-select-items)
-    * [Replacing selection groups items and Master/Slave selection groups](#replacing-selection-groups-items-and-masterslave-selection-groups)
+* [Single and Multiple selection of items in groups](#itemsSelection)
 * [Leave Behind pattern](#leaveBehind)
 * [Lock scrolling while inserting](#lockScroll)
 * [Contributors](#contributors)
@@ -136,9 +133,9 @@ data class YourModel(val text1: String, val text2: String)
 
 open class YourItem(private val context: Context, private val yourModel: YourModel)
     : AdapterItem<ExampleItem.Holder>(yourModel) {
-    
+
     // In this case YourItem diffing id will be `YourItem.javaClass.name + yourModel.hashCode()`
-    
+
     ...
 }
 ```
@@ -207,7 +204,7 @@ recyclerView.setAdapter(recyclerAdapter)
 ```
 
 ## <a name="emptyItemPagedLists"></a>Empty item in Paged Lists
-If you want to add an Empty Item when RecyclerView is empty also when you're using the `PagingAdapter` extension, you have to implement a new `Item` (like described before) then, in your `DataSource` `LoadInitial` method, use the `withEmptyItem` enxtension for your callback instead of `onResult`: 
+If you want to add an Empty Item when RecyclerView is empty also when you're using the `PagingAdapter` extension, you have to implement a new `Item` (like described before) then, in your `DataSource` `LoadInitial` method, use the `withEmptyItem` enxtension for your callback instead of `onResult`:
 
 ```kotlin
 callback.withEmptyItem(emptyItem,response.results)
@@ -508,92 +505,9 @@ To complicate things, many times a single RecyclerView has to contain various gr
 
 So it gets pretty complicated, huh 😨? Don't worry, `RecyclerAdapter` to the rescue! 🙌🏼
 
-### Selectable AdapterItem implementation
-From release `2.0.0` onwards, support for `selection groups` has been added.
+Check the example app implementations in GroupsSelectionActivity and SubordinateGroupsSelectionActivity to see what you can achieve!
 
-1. First of all, override `getSelectionGroup` in your `AdapterItem`:
-```kotlin
-/**
- * Returns the ID of this item's selection group. By default it's null.
- * This is used when you want to perform single or multiple selections in the RecyclerView and
- * you need to know all the items belonging to that group.
- * For an item to be selectable, it's necessary that it belongs to a selection group.
- *
- * By returning null, the item does not belong to any selection group.
- */
-open fun getSelectionGroup(): String? = null
-```
-For example:
-```kotlin
-override fun getSelectionGroup() = "MySelectionGroup"
-```
-
-2. Then if you need to do some stuff when selection changes, override `onSelectionChanged`:
-```kotlin
-/**
- * Method called only when using single or multiple selection and the selection status of this
- * item has changed.
- *
- * Returning true causes the rebinding of the item, useful when you need to display state
- * changes (e.g. checkbox changing status from checked to unchecked)
- */
-open fun onSelectionChanged(isNowSelected: Boolean): Boolean = true
-```
-But bear in mind that `AdapterItem` handles selected state for you already, so in many cases you shoudn't need to override this method. You can always access the current selection state with the `selected` boolean field available in all your custom `AdapterItem`s. Do not mess with `selected` and use it read-only.
-
-3. Setup a click listener as you usually do in the `AdapterItem ViewHolder` and call the `setSelected` method:
-```kotlin
-toggleField.setOnClickListener {
-    setSelected()
-}
-```
-
-4. Setup the selection policy for your selection group:
-```kotlin
-recyclerAdapter.setSelectionGroupPolicy("MySelectionGroup", multiSelect = false)
-```
-Check Method's JavaDoc for full reference.
-
-5. Add your custom selectable items as you usually do and that's it! For more information and a complete example, check the demo app provided and read the code in [SelectionActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/SelectionActivity.kt) and [SelectableItem](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/adapteritems/SelectableItem.kt).
-
-### Getting selected items in a selection group
-To know which options the user selected:
-```kotlin
-val listOfSelectedItems = recyclerAdapter
-    .getSelectedItems(selectionGroup = "MySelectionGroup") as List<YourCustomItem>
-```
-where `YourCustomItem` is the specific kind of items which you used for that particular custom selection group.
-
-You can also dynamically observe selection changes by registering a listener:
-```kotlin
-recyclerAdapter.setSelectionGroupListener("MySelectionGroup", { group, selected ->
-    val selectedItems = selected as List<YourCustomItem>
-    Toast.makeText(this, "$group: $selectedItems", Toast.LENGTH_SHORT).show()
-})
-```
-
-### Programmatically select items
-To programmatically select an item:
-```kotlin
-recyclerAdapter.selectItem(yourItem)
-```
-
-### Replacing selection groups items and Master/Slave selection groups
-Sometimes you may need replacing the items of a selection group with a new set. For example, imagine having two groups:
-
-* First group where you can select one from:
-    * 🍒 Fruits
-    * 🥬 Vegetables
-    * 🍮 Desserts
-
-* Second group where the selections depends on the selections of the first group, so for example you want to have:
-    * **Fruits ->** 🍏 Apple, 🍓 Strawberry and 🍒 Cherry
-    * **Vegetables ->** 🥕 Carrot and 🥒 Cucumber
-    * **Desserts ->** 🍰 Cake, 🍩 Donut and 🍦 Ice cream
-
-This can be achieved combining `setSelectionGroupListener`, `replaceSelectionGroupItems` and `selectItem`. See [MasterSlaveGroupsActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/MasterSlaveGroupsActivity.kt) for a complete example.
-
-![Master-Slave](images/master-slave.gif)
+![Subordinate Groups Selections](images/subordinate-groups.gif)
 
 ## <a name="leaveBehind"></a>Leave Behind pattern example implementation
 In the demo app provided with the library, you can also see how to implement the [leave behind material design pattern](https://material.io/guidelines/components/lists-controls.html#lists-controls-types-of-list-controls). All the changes involved into the implementation can be seen in [this commit](https://github.com/gotev/recycler-adapter/commit/fa240519025f98ba609395034f42e89d5bb777fd). This implementation has not been included into the base library deliberately, to avoid depending on external libraries just for a single kind of item implementation. You can easily import the needed code in your project from the demo app sources if you want to have leave behind implementation.

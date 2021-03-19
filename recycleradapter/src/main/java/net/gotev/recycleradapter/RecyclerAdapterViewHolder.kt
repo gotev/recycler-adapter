@@ -19,13 +19,6 @@ abstract class RecyclerAdapterViewHolder(itemView: View) : RecyclerView.ViewHold
     protected fun getAdapterItem() = adapter?.get()?.getAdapterItem(this)
 
     /**
-     * Notifies the adapter that this item has been selected.
-     */
-    protected fun setSelected() {
-        adapter?.get()?.selected(this)
-    }
-
-    /**
      * Notifies that the model associated to this ViewHolder has been changed.
      */
     protected fun notifyItemChanged() {
@@ -36,5 +29,5 @@ abstract class RecyclerAdapterViewHolder(itemView: View) : RecyclerView.ViewHold
         return itemView.findViewById(id)
     }
 
-    open fun prepareForReuse() { }
+    open fun prepareForReuse() {}
 }

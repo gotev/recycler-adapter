@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.DOWN
 import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
-import java.lang.ref.WeakReference
 import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
@@ -25,9 +24,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     private var filtered = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
     private var showFiltered = false
 
-    private val selectionGroups = LinkedHashMap<String, Boolean>()
-    private val selectionGroupsListeners = LinkedHashMap<String, WeakReference<SelectionGroupListener>>()
-
     private val items
         get() = if (showFiltered) filtered else itemsList
 
@@ -39,21 +35,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         notifyItemChanged(position, true)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun <T : RecyclerAdapterViewHolder> AdapterItem<out T>.castAsIn(): AdapterItem<in T> {
-        return this as AdapterItem<in T>
-    }
-
     private fun Int.isOutOfItemsRange() = this < 0 || this >= items.size
-
-    private fun AdapterItem<*>.changeSelectionStatus(newStatus: Boolean, position: Int) {
-        this.let {
-            selected = newStatus
-            if (onSelectionChanged(isNowSelected = newStatus)) {
-                notifyChangedPosition(position)
-            }
-        }
-    }
 
     private fun adapterIsEmptyAndEmptyItemIsDefined() = items.isEmpty() && emptyItem != null
 
@@ -139,12 +121,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     val lastItemIndex
         get() = items.lastIndex
 
-    override fun selected(holder: RecyclerAdapterViewHolder) {
-        val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
-
-        selectItemAtPosition(position)
-    }
-
     override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*>? {
         val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return null
 
@@ -155,50 +131,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
 
         notifyChangedPosition(position)
-    }
-
-    private fun selectItemAtPosition(position: Int) {
-        items.let { items ->
-            val selectionGroup = items[position].getSelectionGroup() ?: return@let
-            val multiSelect = canSelectMultipleItems(selectionGroup)
-            val currentItem = items[position]
-            val currentItemSelected = currentItem.selected
-
-            if (multiSelect) {
-                currentItem.changeSelectionStatus(newStatus = !currentItemSelected, position = position)
-
-            } else {
-                currentItem.changeSelectionStatus(newStatus = true, position = position)
-
-                items.forEachIndexed { index, item ->
-                    if (item.getSelectionGroup().equals(selectionGroup) && index != position) {
-                        item.changeSelectionStatus(newStatus = false, position = index)
-                    }
-                }
-            }
-
-            if (multiSelect || (!multiSelect && !currentItemSelected)) {
-                selectionGroupsListeners[selectionGroup]?.get()?.let { listener ->
-                    listener(selectionGroup, getSelectedItems(selectionGroup))
-                }
-            }
-        }
-    }
-
-    /**
-     * Selects the given item. If the item is not present in the adapter or if its selection group
-     * is null, this does nothing.
-     *
-     * @return recycler adapter instance
-     */
-    fun selectItem(item: AdapterItem<*>?): RecyclerAdapter {
-        val position = items.indexOf(item)
-                .takeIf { it >= 0 && items[it].getSelectionGroup() != null }
-                ?: return this
-
-        selectItemAtPosition(position)
-
-        return this
     }
 
     /**
@@ -637,95 +569,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
 
         notifyDataSetChanged()
-    }
-
-    /**
-     * Sets the policy for a selection group.
-     *
-     * @param selectionGroup unique ID String of the selection group
-     * @param multiSelect true if the user can select multiple items in this group, false if only
-     * a single item can be selected at a time.
-     */
-    fun setSelectionGroupPolicy(selectionGroup: String, multiSelect: Boolean) {
-        selectionGroups[selectionGroup] = multiSelect
-    }
-
-    /**
-     * Gets the policy for a selection group.
-     * New groups without a policy defaults to mutually exclusive single selection.
-     *
-     * @param selectionGroup unique ID String of the selection group
-     * @return true if multiple items can be selected, false if mutually exclusive single selection
-     */
-    fun canSelectMultipleItems(selectionGroup: String): Boolean = selectionGroups[selectionGroup]
-            ?: false
-
-    /**
-     * Set selection group listener, which will be called every time a selection is made in
-     * a group.
-     *
-     * @param selectionGroup group to listen for
-     * @param listener object which will be called on every selection change. To prevent memory
-     *                 leak, only a WeakReference is kept, so be sure you have a strong reference
-     *                 to the listener
-     */
-    fun setSelectionGroupListener(selectionGroup: String, listener: SelectionGroupListener) {
-        selectionGroupsListeners[selectionGroup] = WeakReference(listener)
-    }
-
-    /**
-     * Gets a list of all the selected items in a selection group.
-     *
-     * @param selectionGroup unique ID String of the selection group
-     * @return list of selected items
-     */
-    fun getSelectedItems(selectionGroup: String): List<AdapterItem<*>> {
-        if (items.isEmpty())
-            return emptyList()
-
-        return items.filter { selectionGroup == it.getSelectionGroup() && it.selected }
-    }
-
-    private fun getItems(filter: (item: AdapterItem<*>) -> Boolean): List<Pair<Int, AdapterItem<*>>> {
-        val filtered = arrayListOf<Pair<Int, AdapterItem<*>>>()
-
-        items.forEachIndexed { index, adapterItem ->
-            if (filter(adapterItem)) {
-                filtered.add(Pair(index, adapterItem))
-            }
-        }
-
-        return filtered
-    }
-
-    /**
-     * Replaces all the items in a selection group with a new set of items. If no item is already
-     * present for a given selection group, this does nothing.
-     *
-     * @param selectionGroup unique ID String of the selection group
-     * @param newItems set of new items to be set for the given selection group. If the list is
-     * empty, all the items already present in the given selection group will be removed and no
-     * new item will be added.
-     * @return recycler adapter instance
-     */
-    fun replaceSelectionGroupItems(selectionGroup: String, newItems: List<AdapterItem<*>>): RecyclerAdapter {
-        val currentItems = getItems { selectionGroup == it.getSelectionGroup() }
-
-        if (currentItems.isEmpty()) {
-            return this
-        }
-
-        val firstPosition = currentItems.first().first!!
-
-        for (i in currentItems.lastIndex downTo 0) {
-            items.removeAt(firstPosition)
-        }
-
-        notifyItemRangeRemoved(firstPosition, currentItems.size)
-
-        add(newItems, startingPosition = firstPosition)
-
-        return this
     }
 
     /**

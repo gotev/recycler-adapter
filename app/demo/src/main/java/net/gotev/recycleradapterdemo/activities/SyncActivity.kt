@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_sync.*
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
+import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
+import net.gotev.recycleradapter.ext.adapterItems
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SyncItem
@@ -18,8 +20,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
-
-class SyncActivity : AppCompatActivity() {
+class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
 
     companion object {
         fun show(activity: AppCompatActivity) {
@@ -27,15 +28,15 @@ class SyncActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var recyclerAdapter: RecyclerAdapter
+    override val recyclerAdapter = RecyclerAdapter()
     private var executor = ScheduledThreadPoolExecutor(1)
     private var scheduledOperation: ScheduledFuture<*>? = null
 
     private var listB = arrayListOf(
-            SyncItem(1, "listA"),
-            SyncItem(3, "listB"),
-            SyncItem(4, "listB"),
-            SyncItem(5, "listB")
+        SyncItem(1, "listA"),
+        SyncItem(3, "listB"),
+        SyncItem(4, "listB"),
+        SyncItem(5, "listB")
     )
 
     private fun listB(): ArrayList<SyncItem> {
@@ -44,16 +45,14 @@ class SyncActivity : AppCompatActivity() {
         return listB
     }
 
-    private fun listA() =
-            arrayListOf(
-                    SyncItem(1, "listA"),
-                    SyncItem(2, "listA")
-            )
+    private fun listA() = adapterItems(
+        SyncItem(1, "listA"),
+        SyncItem(2, "listA")
+    )
 
-    private fun listC() =
-            arrayListOf(
-                    SyncItem(1, "listC")
-            )
+    private fun listC() = adapterItems(
+        SyncItem(1, "listC")
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +67,7 @@ class SyncActivity : AppCompatActivity() {
 
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
-        recyclerAdapter = RecyclerAdapter().apply {
+        recyclerAdapter.apply {
             setEmptyItem(LabelItem(getString(R.string.empty_list)))
             lockScrollingWhileInserting(linearLayoutManager)
         }
@@ -83,15 +82,15 @@ class SyncActivity : AppCompatActivity() {
         }
 
         syncA.setOnClickListener {
-            recyclerAdapter.syncWithItems(listA())
+            render(listA())
         }
 
         syncB.setOnClickListener {
-            recyclerAdapter.syncWithItems(listB())
+            render(listB())
         }
 
         syncC.setOnClickListener {
-            recyclerAdapter.syncWithItems(listC())
+            render(listC())
         }
 
         empty.setOnClickListener {
@@ -103,7 +102,7 @@ class SyncActivity : AppCompatActivity() {
                 shuffle.text = getString(R.string.button_shuffle_stop)
                 executor.scheduleAtFixedRate({
                     runOnUiThread {
-                        recyclerAdapter.syncWithItems(ArrayList(createItems()))
+                        render(ArrayList(createItems()))
                     }
                 }, 1, 100, TimeUnit.MILLISECONDS)
             } else {
@@ -121,7 +120,7 @@ class SyncActivity : AppCompatActivity() {
     }
 
     fun createItems(): List<AdapterItem<*>> {
-        return (0..Random.nextInt(2, 20)).flatMap {
+        return (0..Random.nextInt(from = 2, until = 20)).flatMap {
             listOf(LabelItem("TITLE $it"), SyncItem(it, "ListC"))
         }
     }
@@ -138,11 +137,10 @@ class SyncActivity : AppCompatActivity() {
         }
 
         R.id.sort_descending -> {
-            recyclerAdapter.sort(false)
+            recyclerAdapter.sort(ascending = false)
             true
         }
 
         else -> super.onOptionsItemSelected(item)
     }
-
 }

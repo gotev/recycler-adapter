@@ -15,13 +15,13 @@
         android:enabled="true"
         android:id="@+id/sync_demo" />
 
-    <item android:title="@string/selection"
+    <item android:title="@string/groups_selection"
         app:showAsAction="never|withText"
         android:visible="true"
         android:enabled="true"
         android:id="@+id/selection" />
 
-    <item android:title="@string/selection_master_slave"
+    <item android:title="@string/subordinate_groups_selection"
         app:showAsAction="never|withText"
         android:visible="true"
         android:enabled="true"

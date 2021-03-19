@@ -1,26 +1,19 @@
 package net.gotev.recycleradapterdemo.adapteritems
 
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SwitchCompat
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
-
-open class SelectableItem(val label: String, private val group: String)
+open class SelectableItem(val label: String, val onClick: ((item: SelectableItem) -> Unit)? = null)
     : AdapterItem<SelectableItem.Holder>(label) {
+
+    var selected = false
 
     override fun getLayoutId() = R.layout.item_selectable
 
-    override fun getSelectionGroup() = group
-
     override fun onFilter(searchTerm: String) = label.contains(searchTerm)
-
-    override fun onSelectionChanged(isNowSelected: Boolean): Boolean {
-        Log.i("Item", "Group: $group, Label: $label is now selected = $isNowSelected")
-        return super.onSelectionChanged(isNowSelected)
-    }
 
     override fun bind(firstTime: Boolean, holder: Holder) {
         holder.toggleField.apply {
@@ -34,7 +27,10 @@ open class SelectableItem(val label: String, private val group: String)
 
         init {
             toggleField.setOnClickListener {
-                setSelected()
+                (getAdapterItem() as? SelectableItem)?.apply {
+                    selected = !selected
+                    onClick?.invoke(this)
+                }
             }
         }
     }

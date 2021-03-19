@@ -91,10 +91,6 @@ class PagingAdapter(
         return getItem(holder.adapterPosition)
     }
 
-    override fun selected(holder: RecyclerAdapterViewHolder) {
-        // not supported
-    }
-
     override fun notifyItemChanged(holder: RecyclerAdapterViewHolder) {
         // not supported
     }

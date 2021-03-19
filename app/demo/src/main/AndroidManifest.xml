@@ -33,11 +33,11 @@
             android:parentActivityName=".activities.MainActivity"/>
 
         <activity
-            android:name=".activities.SelectionActivity"
+            android:name=".activities.GroupsSelectionActivity"
             android:parentActivityName=".activities.MainActivity"/>
 
         <activity
-            android:name=".activities.MasterSlaveGroupsActivity"
+            android:name=".activities.SubordinateGroupsSelectionActivity"
             android:parentActivityName=".activities.MainActivity"/>
 
         <activity

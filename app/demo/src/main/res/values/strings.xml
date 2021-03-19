@@ -5,8 +5,8 @@
     <string name="empty_list">No items in the list</string>
     <string name="add_item">Add item</string>
     <string name="sync_with_items">Sync with items</string>
-    <string name="selection">Selection</string>
-    <string name="selection_master_slave">Master-Slave Groups Selection</string>
+    <string name="groups_selection">Groups Selection</string>
+    <string name="subordinate_groups_selection">Subordinate Groups Selection</string>
     <string name="finish_loading">Finish loading</string>
     <string name="sort_ascending">Sort ascending (A-Z)</string>
     <string name="sort_descending">Sort descending (Z-A)</string>
