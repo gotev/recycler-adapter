@@ -1,6 +1,8 @@
 # Recycler Adapter [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
 
-Makes the use of RecyclerView easier, modular and less error-prone.
+RecyclerView-driven declarative UIs.
+
+Using stock Android View system and Recycler Adapter, you can already write UIs similar to [JetPack Compose](https://developer.android.com/jetpack/compose) and use it in production.
 
 Standard `RecyclerView.Adapter` is tedious to work with, because you have to write repetitive boilerplate and spaghetti code and to concentrate all your items view logic and binding into the adapter itself, which is really bad. This library was born to be able to have the following for each element in a recycler view:
 
@@ -9,8 +11,6 @@ Standard `RecyclerView.Adapter` is tedious to work with, because you have to wri
 * a `view model` file (called `AdapterItem`), in which to specify the binding between the model and the view and in which to handle user interactions with the item.
 
 In this way every item of the recycler view has its own set of files, resulting in a cleaner and easier to maintain code base.
-
-This allows also to write completely declarative UIs, using stock Android View system and be able to already write something similar to [JetPack Compose](https://developer.android.com/jetpack/compose) and use it in production.
 
 # Index
 
