@@ -233,7 +233,7 @@ recyclerAdapter.filter("search item")
 and only the items which matches the search term will be shown. To reset the search filter, pass `null` or an empty string.
 
 ## <a name="sortItems"></a>Sort items
-To sort items, you have the following possible approaches.
+To sort items, you have the following possible approaches. Be sure to have included `recycleradapter-extensions` in your project.
 
 ### 1. Implement `compareTo` and call `sort` on the `RecyclerAdapter`
 This is the recommended approach if you have to sort all your items by a single criteria and you have a list with only one type of `Item`. Check [compareTo JavaDoc reference](https://developer.android.com/reference/java/lang/Comparable.html#compareTo(T)) for further information. In your `AdapterItem` implement:
@@ -255,31 +255,30 @@ override fun compareTo(other: AdapterItem<*>): Int {
 Then call:
 
 ```kotlin
-recyclerAdapter.sort(ascending = true)
+// ascending order
+recyclerAdapter.modifyItemsAndRender { it.sorted() }
+
+// descending order
+recyclerAdapter.modifyItemsAndRender { it.sortedDescending() }
 ```
 You can see an example in action by looking at the code in the `SyncActivity` and `SyncItem` of the demo app.
 
 ### 2. Provide a custom comparator implementation
 Your items doesn't necessarily have to implement `compareTo` for sorting purposes, as you can provide also the sorting implementation outside of them, like this:
 ```kotlin
-recyclerAdapter.sort(ascending = true, comparator = object : Comparator<AdapterItem<*>> {
-    override fun compare(itemA: AdapterItem<*>, itemB: AdapterItem<*>): Int {
-        if (itemA.javaClass == RobotItem::class.java && itemB.javaClass == RobotItem::class.java) {
-            val first = itemA as RobotItem
-            val second = itemB as RobotItem
-            // compare two RobotItems and return a value
-        }
-        return 0
+recyclerAdapter.modifyItemsAndRender { items ->
+    items.sortedWith { itemA, itemB ->
+        // compare itemA and itemB and return -1, 0 or 1 (standard Java and Kotlin Comparator)
     }
-})
+}
 ```
-The first parameter indicates if you want to sort ascending (true) or descending (false). The second parameter is a custom `Comparator` implementation. This is the recommended approach if you want to be able to sort your items by different criteria, as you can simply pass the `Comparator` implementation of the sort type you want.
+This is the recommended approach if you want to be able to sort your items by many different criteria, as you can simply pass the `Comparator` implementation of the sort type you want.
 
 ### 3. Combining the two techniques
 You can also combine the two techniques described above. This is the recommended approach if you have a list with different kind of items, and you want to perform different kind of grouping between items of different kind, maintaining the same sorting strategy for elements of the same type. You can implement `compareTo` in everyone of your items, to sort the items of the same kind, and a custom `Comparable` which will handle comparison between diffent kinds of items, like this:
 ```kotlin
-recyclerAdapter.sort(ascending = true, comparator = object : Comparator<AdapterItem<*>> {
-    override fun compare(itemA: AdapterItem<*>, itemB: AdapterItem<*>): Int {
+recyclerAdapter.modifyItemsAndRender { items ->
+    items.sortedWith { itemA, itemB ->
         // handle ordering of items of the same type with their
         // internal compareTo implementation
         if (itemA.javaClass == RobotItem::class.java && itemB.javaClass == RobotItem::class.java) {
@@ -300,7 +299,7 @@ recyclerAdapter.sort(ascending = true, comparator = object : Comparator<AdapterI
             -1
         } else 0
     }
-})
+}
 ```
 
 ## <a name="butterKnife"></a>Using ButterKnife
@@ -310,11 +309,13 @@ You can safely use [ButterKnife](https://github.com/JakeWharton/butterknife) in 
 If you use Kotlin in your project, you can also use Kotlin Android Extensions to bind your views in ViewHolder, but be careful to not fall in a common pitfall, explained very well here: https://proandroiddev.com/kotlin-android-extensions-using-view-binding-the-right-way-707cd0c9e648
 
 ## <a name="dragDrop"></a>Reorder items with drag & drop
-To be able to change the items order with drag & drop, just add this line:
+To be able to change the items order with drag & drop, be sure to have imported `recycleradapter-extensions` in your project
+and just add this line:
 
 ```kotlin
 recyclerAdapter.enableDragDrop(recyclerView)
 ```
+Java users have to write: `RecyclerViewExtensionsKt.enableDragDrop(recyclerAdapter, recyclerView);`
 
 ## <a name="handleClicks"></a>Handle clicks
 One of the things which you may need is to set one or more click listeners to every item. How do you do that? Let's see an example.
@@ -513,7 +514,7 @@ Check the example app implementations in GroupsSelectionActivity and Subordinate
 In the demo app provided with the library, you can also see how to implement the [leave behind material design pattern](https://material.io/guidelines/components/lists-controls.html#lists-controls-types-of-list-controls). All the changes involved into the implementation can be seen in [this commit](https://github.com/gotev/recycler-adapter/commit/fa240519025f98ba609395034f42e89d5bb777fd). This implementation has not been included into the base library deliberately, to avoid depending on external libraries just for a single kind of item implementation. You can easily import the needed code in your project from the demo app sources if you want to have leave behind implementation.
 
 ## <a name="lockScroll"></a>Lock scrolling while inserting
-When dynamically loading many data at once in the RecyclerView, specially when we are inserting new items at the first position, the default behavior of the RecyclerView, which scrolls down automatically may not be what we want. To lock the scrolling while inserting new items, simply call:
+When dynamically loading many data at once in the RecyclerView, specially when we are inserting new items at the first position, the default behavior of the RecyclerView, which scrolls down automatically may not be what we want. To lock the scrolling while inserting new items, be sure to have included `recycleradapter-extensions` in your project, then simply call:
 
 ```kotlin
 recyclerAdapter.lockScrollingWhileInserting(layoutManager)

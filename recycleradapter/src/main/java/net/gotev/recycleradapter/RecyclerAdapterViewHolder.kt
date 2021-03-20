@@ -25,9 +25,7 @@ abstract class RecyclerAdapterViewHolder(itemView: View) : RecyclerView.ViewHold
         adapter?.get()?.notifyItemChanged(this)
     }
 
-    protected fun findViewById(id: Int): View {
-        return itemView.findViewById(id)
-    }
+    protected fun findViewById(id: Int): View = itemView.findViewById(id)
 
     open fun prepareForReuse() {}
 }

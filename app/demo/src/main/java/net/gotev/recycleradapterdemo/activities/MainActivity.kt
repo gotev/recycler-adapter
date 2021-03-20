@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.gotev.recycleradapter.RecyclerAdapter
+import net.gotev.recycleradapter.ext.enableDragDrop
+import net.gotev.recycleradapter.ext.modifyItemsAndRender
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.TextWithToggleItem
@@ -55,27 +57,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureActions() {
-        remove_all_items_of_a_kind.setOnClickListener {
-            recyclerAdapter.removeAllItemsWithClass(TitleSubtitleItem::class.java)
-        }
-
-        remove_last_item_of_a_kind.setOnClickListener {
-            recyclerAdapter.removeLastItemWithClass(TextWithToggleItem::class.java)
-        }
-
-        remove_last_item_of_a_kind.setOnClickListener {
-            recyclerAdapter.removeLastItemWithClass(TextWithToggleItem::class.java)
+        add_item.setOnClickListener {
+            recyclerAdapter.add(
+                TitleSubtitleItem("Item ${UUID.randomUUID()}"),
+                position = 1
+            )
         }
 
         remove_all.setOnClickListener {
             recyclerAdapter.clear()
         }
 
-        add_item.setOnClickListener {
-            recyclerAdapter.add(
-                    TitleSubtitleItem("Item ${UUID.randomUUID()}"),
-                    position = 1
-            )
+        remove_last_item_of_a_kind.setOnClickListener {
+            // remove last item with class TextWithToggleItem
+            recyclerAdapter.modifyItemsAndRender { items ->
+                items.apply {
+                    remove(lastOrNull { it::class.java == TextWithToggleItem::class.java })
+                }
+            }
+        }
+
+        remove_all_items_of_a_kind.setOnClickListener {
+            // remove all items with class TitleSubtitleItem
+            recyclerAdapter.modifyItemsAndRender { items ->
+                items.filter { it::class.java != TitleSubtitleItem::class.java }
+            }
         }
     }
 

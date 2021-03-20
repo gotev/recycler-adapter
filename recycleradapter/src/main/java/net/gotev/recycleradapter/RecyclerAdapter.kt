@@ -1,14 +1,9 @@
 package net.gotev.recycleradapter
 
 import android.view.ViewGroup
-import androidx.core.util.Pair
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.DOWN
-import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
 import java.util.ArrayList
 import java.util.Collections
-import java.util.Comparator
 
 /**
  * Makes the use of RecyclerView easier, modular and less error-prone
@@ -34,6 +29,12 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     private fun notifyChangedPosition(position: Int) {
         notifyItemChanged(position, true)
     }
+
+    /**
+     * Returns a copy of the internal adapter item's list.
+     */
+    val adapterItems: ArrayList<AdapterItem<*>>
+        get() = ArrayList(itemsList)
 
     private fun Int.isOutOfItemsRange() = this < 0 || this >= items.size
 
@@ -71,7 +72,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         return items[position].viewType()
     }
 
-    override fun getItemId(position: Int) = if(adapterIsEmptyAndEmptyItemIsDefined()) {
+    override fun getItemId(position: Int) = if (adapterIsEmptyAndEmptyItemIsDefined()) {
         emptyItem.hashCode().toLong()
     } else {
         items[position].diffingId().hashCode().toLong()
@@ -98,7 +99,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         item.bind(firstTime, holder)
     }
 
-    override fun onBindViewHolder(holder: RecyclerAdapterViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(
+        holder: RecyclerAdapterViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
         bindItem(holder, position, payloads.isEmpty())
     }
 
@@ -212,13 +217,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         val firstIndex = items.size
 
         if (startingPosition == null) {
-            /*
-             This does not work in Kotlin 1.4.x
-             items.addAll(newItems.map {
-                 registerItemType(it)
-                 it.castAsIn()
-             })
-             */
             items.ensureCapacity(items.size + newItems.size)
             newItems.forEach {
                 registerItemType(it)
@@ -275,18 +273,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         items.forEach { addOrUpdate(it) }
         return this
     }
-
-    /**
-     * Gets the position of an item in an adapter.
-     *
-     * For this method to work properly, all the items has to override the [AdapterItem.equals]
-     * and [AdapterItem.hashCode] methods and implement the required business logic code to detect
-     * if two instances are referring to the same item.
-     *
-     * @param item item object
-     * @return the item's position or -1 if the item does not exist
-     */
-    fun getItemPosition(item: AdapterItem<*>) = items.indexOf(item)
 
     /**
      * Syncs the internal list of items with a list passed as parameter.
@@ -361,77 +347,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         return removeItemAtPosition(itemIndex)
     }
 
-    private fun Class<out AdapterItem<*>>.viewType() = hashCode()
-
-    /**
-     * Removes all the items with a certain class from this adapter and automatically notifies changes.
-     *
-     * @param clazz    class of the items to be removed
-     * @param listener listener invoked for every item that is found. If the callback returns true,
-     * the item will be removed. If it returns false, the item will not be removed
-     */
-    @JvmOverloads
-    fun removeAllItemsWithClass(clazz: Class<out AdapterItem<*>>,
-                                listener: RemoveListener = object : RemoveListener {
-                                    override fun hasToBeRemoved(item: AdapterItem<*>) = true
-                                }) {
-        if (items.isEmpty())
-            return
-
-        val iterator = items.listIterator()
-        var index: Int
-        while (iterator.hasNext()) {
-            index = iterator.nextIndex()
-            val item = iterator.next()
-            if (item.javaClass.name == clazz.name && listener.hasToBeRemoved(item)) {
-                iterator.remove()
-                notifyItemRemoved(index)
-            }
-        }
-
-        //TODO: check for type removal in all the other remove methods if the last of a kind has been removed
-        if (types.containsKey(clazz.viewType())) {
-            types.remove(clazz.viewType())
-        }
-    }
-
-    /**
-     * Gets the last item with a given class, together with its position.
-     *
-     * @param clazz class of the item to search
-     * @return Pair with position and AdapterItem or null if the adapter is empty or no items
-     * exists with the given class
-     */
-    fun getLastItemWithClass(clazz: Class<out AdapterItem<*>>): Pair<Int, AdapterItem<*>>? {
-        if (items.isEmpty())
-            return null
-
-        for (i in items.lastIndex downTo 0) {
-            if (items[i].javaClass.name == clazz.name) {
-                return Pair(i, items[i])
-            }
-        }
-
-        return null
-    }
-
-    /**
-     * Removes only the last item with a certain class from the adapter.
-     *
-     * @param clazz class of the item to remove
-     */
-    fun removeLastItemWithClass(clazz: Class<out AdapterItem<*>>) {
-        items.takeIf { !it.isEmpty() }?.let { items ->
-            for (i in items.lastIndex downTo 0) {
-                if (items[i].javaClass.name == clazz.name) {
-                    items.removeAt(i)
-                    notifyItemRemoved(i)
-                    break
-                }
-            }
-        }
-    }
-
     /**
      * Removes an item in a certain position. Does nothing if the adapter is empty or if the
      * position specified is out of adapter bounds.
@@ -441,21 +356,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * is out of bounds
      */
     fun removeItemAtPosition(position: Int) =
-            items.takeIf { !it.isEmpty() && !position.isOutOfItemsRange() }?.let { items ->
-                items.removeAt(position)
-                notifyItemRemoved(position)
-                true
-            } ?: false
-
-    /**
-     * Gets an item at a given position.
-     *
-     * @param position item position
-     * @return [AdapterItem] or null if the adapter is empty or the position is out of bounds
-     */
-    fun getItemAtPosition(position: Int): AdapterItem<*>? =
-            items.takeIf { !it.isEmpty() && !position.isOutOfItemsRange() }
-                    ?.let { items -> items[position] }
+        items.takeIf { !it.isEmpty() && !position.isOutOfItemsRange() }?.let { items ->
+            items.removeAt(position)
+            notifyItemRemoved(position)
+            true
+        } ?: false
 
     /**
      * Clears all the elements in the adapter.
@@ -471,36 +376,14 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
     }
 
     /**
-     * Enables reordering of the list through drag and drop, which is activated when the user
-     * long presses on an item.
+     * Swaps the position of two Adapter Items in the list and updates the rendering.
      *
-     * @param recyclerView recycler view on which to apply the drag and drop
-     * @param directions directions on which to enable drag and drop gestures. By default it's
-     *                   DOWN or UP but you can set it to DOWN or UP or START or END in case you
-     *                   have a grid layout and you want also to drag and drop in all directions
+     * @throws IndexOutOfBoundsException if either [sourcePosition] or [targetPosition] are
+     * out of bounds
      */
-    fun enableDragDrop(recyclerView: RecyclerView, directions: Int = DOWN or UP) {
-        val touchHelper = ItemTouchHelper(object : ItemTouchHelper.Callback() {
-            override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                return ItemTouchHelper.Callback.makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, directions)
-            }
-
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                val sourcePosition = viewHolder.adapterPosition
-                val targetPosition = target.adapterPosition
-
-                Collections.swap(items, sourcePosition, targetPosition)
-                notifyItemMoved(sourcePosition, targetPosition)
-
-                return true
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                //Do nothing here
-            }
-        })
-
-        touchHelper.attachToRecyclerView(recyclerView)
+    fun swap(sourcePosition: Int, targetPosition: Int) {
+        Collections.swap(items, sourcePosition, targetPosition)
+        notifyItemMoved(sourcePosition, targetPosition)
     }
 
     /**
@@ -531,61 +414,5 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
         showFiltered = true
         notifyDataSetChanged()
-
-    }
-
-    /**
-     * Sort items.
-     *
-     * each item must override the [AdapterItem.compareTo] method.
-     *
-     * With this method you can override the default [AdapterItem.compareTo] and use a
-     * custom comparator which is responsible of item comparison.
-     *
-     * This is useful when your items has to be sorted with many different strategies
-     * and not just one (e.g. order items by name, by date, ...).
-     *
-     * @param ascending  true for ascending order (A-Z) or false for descending order (Z-A).
-     * Ascending order follows the passed comparator sorting algorithm order,
-     * descending order uses the inverse order
-     * @param comparator custom comparator implementation
-     */
-    @Suppress("UNCHECKED_CAST")
-    fun sort(ascending: Boolean, comparator: Comparator<AdapterItem<*>>? = null) {
-        val items = (items as ArrayList<AdapterItem<*>>)
-                .takeIf { !it.isEmpty() }
-                ?: return
-
-        if (ascending) {
-            if (comparator == null) {
-                items.sort()
-            } else {
-                items.sortWith(comparator)
-            }
-        } else {
-            if (comparator == null) {
-                items.sortDescending()
-            } else {
-                Collections.reverseOrder(comparator)
-            }
-        }
-
-        notifyDataSetChanged()
-    }
-
-    /**
-     * Prevent RecyclerView from scrolling when adding many items
-     * Taken from: https://github.com/airbnb/epoxy/issues/224#issuecomment-305991898
-     *
-     * @param layoutManager RecyclerView's Layout Manager
-     */
-    fun lockScrollingWhileInserting(layoutManager: RecyclerView.LayoutManager) {
-        registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    layoutManager.scrollToPosition(0)
-                }
-            }
-        })
     }
 }

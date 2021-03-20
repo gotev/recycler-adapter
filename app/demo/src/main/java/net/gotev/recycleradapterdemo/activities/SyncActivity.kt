@@ -12,6 +12,8 @@ import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
 import net.gotev.recycleradapter.ext.adapterItems
+import net.gotev.recycleradapter.ext.lockScrollingWhileInserting
+import net.gotev.recycleradapter.ext.modifyItemsAndRender
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SyncItem
@@ -132,12 +134,12 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.sort_ascending -> {
-            recyclerAdapter.sort(ascending = true)
+            recyclerAdapter.modifyItemsAndRender { it.sorted() }
             true
         }
 
         R.id.sort_descending -> {
-            recyclerAdapter.sort(ascending = false)
+            recyclerAdapter.modifyItemsAndRender { it.sortedDescending() }
             true
         }
 
