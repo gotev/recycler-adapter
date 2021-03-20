@@ -4,10 +4,13 @@ Makes the use of RecyclerView easier, modular and less error-prone.
 
 Standard `RecyclerView.Adapter` is tedious to work with, because you have to write repetitive boilerplate and spaghetti code and to concentrate all your items view logic and binding into the adapter itself, which is really bad. This library was born to be able to have the following for each element in a recycler view:
 
-* an XML layout file, in which to define the item's view hierarchy
-* a view model file (called `Item`), in which to specify the binding between the model and the view and in which to handle user interactions with the item.
+* a `model`, which is a simple `data class`
+* a programmatic `View` or an XML layout file, in which to define the item's view hierarchy
+* a `view model` file (called `AdapterItem`), in which to specify the binding between the model and the view and in which to handle user interactions with the item.
 
 In this way every item of the recycler view has its own set of files, resulting in a cleaner and easier to maintain code base.
+
+This allows also to write completely declarative UIs, using stock Android View system and be able to already write something similar to [JetPack Compose](https://developer.android.com/jetpack/compose) and use it in production.
 
 # Index
 
@@ -36,10 +39,10 @@ In this way every item of the recycler view has its own set of files, resulting 
 ## <a name="setup"></a>Setup
 In your gradle dependencies add:
 ```groovy
-def recyclerAdapterVersion = "2.9.0" // change it with the version you want to use
+def recyclerAdapterVersion = "x.y.z" // change it with the version you want to use
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
-This is the latest Bintray version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
+This is the latest version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
 
 Due to some prolonged Bintray outages, an alternative maven repo has been set. If the dependencies are not resolved, add this to your maven repos:
 
