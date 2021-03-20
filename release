@@ -1,3 +1,17 @@
-#!/bin/bash
+#!/bin/bash -e
 ./gradlew clean publish bintrayUpload
 
+version=$(cat manifest.gradle | grep "library_version" | tr "'" '\n' | head -n 2 | tail -n 1)
+
+function generate-debug-apk {
+    cd app
+    ./gradlew clean assembleDebug
+    cp demo/build/outputs/apk/debug/demo-debug.apk ../"recycler-adapter-demo-debug-$version.apk"
+    cd ..
+}
+
+generate-debug-apk
+
+APK=$(ls *.apk | head -n 1)
+
+hub release create -a "$APK" -m "$version" "$version"
