@@ -75,6 +75,7 @@ Create your item layout (e.g. `item_example.xml`). For example:
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center_vertical"
     android:layout_width="wrap_content"
+    android:layout_margin="8dp"
     android:layout_height="48dp"
     android:textSize="18sp" />
 ```
