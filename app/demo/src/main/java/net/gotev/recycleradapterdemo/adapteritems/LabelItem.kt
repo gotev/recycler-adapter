@@ -17,6 +17,7 @@ class LabelItem(private val text: String) :
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:gravity="center_vertical"
         android:layout_width="wrap_content"
+        android:layout_margin="8dp"
         android:layout_height="48dp"
         android:textSize="18sp" />
      */
