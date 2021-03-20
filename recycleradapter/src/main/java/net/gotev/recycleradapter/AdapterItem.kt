@@ -42,7 +42,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
      * @return layout ID
      */
     @Deprecated(
-        message = "getLayoutId is deprecated",
+        message = "getLayoutId is deprecated. Use getView(parent: ViewGroup)",
         replaceWith = ReplaceWith("override fun getView(parent: ViewGroup): View = parent.inflating(yourLayoutId)"),
         level = DeprecationLevel.WARNING
     )

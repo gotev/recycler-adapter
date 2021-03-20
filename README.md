@@ -64,16 +64,11 @@ In your layout resource file or where you want the `RecyclerView` (e.g. `activit
 Create your item layout (e.g. `item_example.xml`). For example:
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView" />
-</LinearLayout>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center_vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="48dp"
+    android:textSize="18sp" />
 ```
 
 ### 3. Create the item
@@ -81,7 +76,27 @@ Create your item layout (e.g. `item_example.xml`). For example:
 open class ExampleItem(private val context: Context, private val text: String)
     : AdapterItem<ExampleItem.Holder>(text) {
 
-    override fun getLayoutId() = R.layout.item_example
+    // Variant using XML inflation
+    override fun getView(parent: ViewGroup): View = parent.inflating(R.layout.item_example)
+
+    // Variant using code only
+    /*
+    override fun getView(parent: ViewGroup): View = TextView(parent.context).apply {
+        layoutParams = ViewGroup.MarginLayoutParams(parent.layoutParams).apply {
+            width = WRAP_CONTENT
+            height = 48.dp(context)
+            gravity = CENTER_VERTICAL
+
+            val margin = 8.dp(context)
+            leftMargin = margin
+            rightMargin = margin
+            topMargin = margin
+            bottomMargin = margin
+        }
+
+        setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+    }
+    */
 
     override fun bind(firstTime: Boolean, holder: ExampleItem.Holder) {
         // you can use firstTime to discriminate between bindings you
@@ -347,7 +362,7 @@ One of the things which you may need is to set one or more click listeners to ev
 open class ExampleItem(private val context: Context, private val text: String)
     : AdapterItem<ExampleItem.Holder>(text) {
 
-    override fun getLayoutId() = R.layout.item_example
+    override fun getView(parent: ViewGroup): View = parent.inflating(R.layout.item_example)
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
 
@@ -449,7 +464,7 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm)
 
-    override fun getLayoutId() = R.layout.item_text_with_button
+    override fun getView(parent: ViewGroup): View = parent.inflating(R.layout.item_text_with_button)
 
     override fun bind(firstTime: Boolean, holder: Holder) {
         holder.textViewField.text = text
