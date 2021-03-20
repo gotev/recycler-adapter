@@ -38,7 +38,15 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     private fun Int.isOutOfItemsRange() = this < 0 || this >= items.size
 
-    private fun adapterIsEmptyAndEmptyItemIsDefined() = items.isEmpty() && emptyItem != null
+    private fun <R> emptyListWithEmptyItem(action: (emptyItem: AdapterItem<in RecyclerAdapterViewHolder>) -> R): R? {
+        val safeEmptyItem = emptyItem
+
+        return if (items.isEmpty() && safeEmptyItem != null) {
+            action(safeEmptyItem)
+        } else {
+            null
+        }
+    }
 
     private fun updateItemAtPosition(
         item: AdapterItem<in RecyclerAdapterViewHolder>,
@@ -64,36 +72,23 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (adapterIsEmptyAndEmptyItemIsDefined()) {
-            return emptyItem.viewType()
-        }
+    override fun getItemViewType(position: Int): Int =
+        emptyListWithEmptyItem { it.viewType() } ?: items[position].viewType()
 
-        return items[position].viewType()
-    }
-
-    override fun getItemId(position: Int) = if (adapterIsEmptyAndEmptyItemIsDefined()) {
-        emptyItem.hashCode().toLong()
-    } else {
-        items[position].diffingId().hashCode().toLong()
-    }
+    override fun getItemId(position: Int) =
+        emptyListWithEmptyItem { it.hashCode().toLong() }
+            ?: items[position].diffingId().hashCode().toLong()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapterViewHolder {
-        val item = if (adapterIsEmptyAndEmptyItemIsDefined() && viewType == emptyItem.viewType()) {
-            emptyItem!!
-        } else {
-            types.getValue(viewType)
-        }
+        val item = emptyListWithEmptyItem {
+            if (viewType == it.viewType()) it else null
+        } ?: types.getValue(viewType)
 
         return item.createItemViewHolder(parent)
     }
 
     private fun bindItem(holder: RecyclerAdapterViewHolder, position: Int, firstTime: Boolean) {
-        val item = if (adapterIsEmptyAndEmptyItemIsDefined()) {
-            emptyItem!!
-        } else {
-            items[position]
-        }
+        val item = emptyListWithEmptyItem { it } ?: items[position]
 
         holder.setAdapter(this)
         item.bind(firstTime, holder)
@@ -116,7 +111,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         holder.prepareForReuse()
     }
 
-    override fun getItemCount() = if (adapterIsEmptyAndEmptyItemIsDefined()) 1 else items.size
+    override fun getItemCount() = emptyListWithEmptyItem { 1 } ?: items.size
 
     /**
      * Gets the index of the last item in the list.
