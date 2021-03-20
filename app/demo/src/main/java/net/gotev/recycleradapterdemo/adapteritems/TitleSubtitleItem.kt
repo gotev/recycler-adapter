@@ -2,6 +2,7 @@ package net.gotev.recycleradapterdemo.adapteritems
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import net.gotev.recycleradapter.AdapterItem
@@ -11,7 +12,7 @@ import net.gotev.recycleradapterdemo.R
 open class TitleSubtitleItem(private val title: String, private val subtitle: String = "subtitle") :
     AdapterItem<TitleSubtitleItem.Holder>(title) {
 
-    override fun getLayoutId() = R.layout.item_title_subtitle
+    override fun getView(parent: ViewGroup): View = parent.inflating(R.layout.item_title_subtitle)
 
     override fun onFilter(searchTerm: String) = title.contains(searchTerm, ignoreCase = true)
 

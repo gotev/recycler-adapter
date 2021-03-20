@@ -1,5 +1,7 @@
 package net.gotev.recycleradapterdemo.adapteritems.leavebehind
 
+import android.view.View
+import android.view.ViewGroup
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapterdemo.R
 
@@ -9,6 +11,6 @@ import net.gotev.recycleradapterdemo.R
  */
 abstract class LeaveBehindAdapterItem<T : LeaveBehindViewHolder>(model: Any) : AdapterItem<T>(model) {
 
-    override fun getLayoutId() = R.layout.item_leave_behind
+    override fun getView(parent: ViewGroup): View = parent.inflating(R.layout.item_leave_behind)
 
 }

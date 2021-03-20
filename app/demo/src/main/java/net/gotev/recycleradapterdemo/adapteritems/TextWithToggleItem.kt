@@ -1,6 +1,7 @@
 package net.gotev.recycleradapterdemo.adapteritems
 
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import net.gotev.recycleradapter.AdapterItem
@@ -11,7 +12,7 @@ class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleI
 
     private var pressed = false
 
-    override fun getLayoutId() = R.layout.item_text_with_toggle
+    override fun getView(parent: ViewGroup): View = parent.inflating(R.layout.item_text_with_toggle)
 
     override fun onFilter(searchTerm: String) = text.contains(searchTerm, ignoreCase = true)
 

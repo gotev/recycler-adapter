@@ -1,6 +1,7 @@
 package net.gotev.recycleradapterdemo.adapteritems
 
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import net.gotev.recycleradapter.RecyclerAdapter
@@ -16,7 +17,7 @@ class TitledCarousel(
         recycledViewPool: RecyclerView.RecycledViewPool?
 ) : NestedRecyclerAdapterItem<TitledCarousel.Holder>(adapter, recycledViewPool, title) {
 
-    override fun getLayoutId() = R.layout.item_titled_carousel
+    override fun getView(parent: ViewGroup): View = parent.inflating(R.layout.item_titled_carousel)
 
     override fun bind(firstTime: Boolean, holder: Holder) {
         super.bind(firstTime, holder)

@@ -3,6 +3,7 @@ package net.gotev.recycleradapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import java.lang.reflect.InvocationTargetException
 
 /**
@@ -32,7 +33,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
      * of the model instance passed in AdapterItem class constructor.
      *
      * javaClass.name (Kotlin) is needed to avoid collisions with other adapter items representing
-     * the same model. 
+     * the same model.
      */
     open fun diffingId(): String = model.javaClass.name + model.hashCode().toString()
 
@@ -40,7 +41,21 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
      * Returns the layout ID for this item
      * @return layout ID
      */
-    abstract fun getLayoutId(): Int
+    @Deprecated(
+        message = "getLayoutId is deprecated",
+        replaceWith = ReplaceWith("override fun getView(parent: ViewGroup): View = parent.inflating(yourLayoutId)"),
+        level = DeprecationLevel.WARNING
+    )
+    open fun getLayoutId(): Int = 0
+
+    fun ViewGroup.inflating(@LayoutRes layoutId: Int): View =
+        LayoutInflater.from(context).inflate(layoutId, this, false)
+
+    /**
+     * Returns the view for this item
+     * @param parent the parent ViewGroup, which is the current root, from which you can infer context
+     */
+    open fun getView(parent: ViewGroup): View = parent.inflating(getLayoutId())
 
     /**
      * Gets called for every item when the [RecyclerAdapter.filter] method gets called.
@@ -100,10 +115,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
 
     fun createItemViewHolder(parent: ViewGroup): RecyclerAdapterViewHolder {
         try {
-            return LayoutInflater
-                .from(parent.context)
-                .inflate(getLayoutId(), parent, false)
-                .let(::getViewHolder)
+            return getView(parent).let(::getViewHolder)
         } catch (exc: Throwable) {
             val message = when (exc) {
                 is NoSuchMethodException -> "You should declare a constructor like this in your ViewHolder:\n" +
