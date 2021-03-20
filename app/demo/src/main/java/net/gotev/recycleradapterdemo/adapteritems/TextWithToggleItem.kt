@@ -27,7 +27,7 @@ class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleI
 
         init {
             itemView.setOnClickListener {
-                (getAdapterItem() as? TextWithToggleItem)?.apply {
+                withAdapterItem<TextWithToggleItem> {
                     pressed = !buttonField.isChecked
                     notifyItemChanged()
                 }

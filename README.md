@@ -394,13 +394,13 @@ open class ExampleItem(private val context: Context, private val text: String)
 
         init {
             titleField.setOnClickListener {
-                (getAdapterItem() as? ExampleItem)?.apply {
+                withAdapterItem<ExampleItem> {
                     onTitleClicked(adapterPosition)
                 }
             }
 
             subtitleField.setOnClickListener {
-                (getAdapterItem() as? ExampleItem)?.apply {
+                withAdapterItem<ExampleItem> {
                     onSubTitleClicked(adapterPosition)
                 }
             }
@@ -412,7 +412,7 @@ open class ExampleItem(private val context: Context, private val text: String)
 As you can see, to handle click events on a view, you have to create a click listener in the ViewHolder and propagate an event to the `AdapterItem`:
 ```kotlin
 titleField.setOnClickListener {
-    (getAdapterItem() as? ExampleItem)?.apply {
+    withAdapterItem<ExampleItem> {
         onTitleClicked(adapterPosition)
     }
 }
@@ -420,7 +420,7 @@ titleField.setOnClickListener {
 You can call any method defined in your `AdapterItem` and pass whatever parameters you want. It's important that you honor nullability, as each ViewHolder has a weak reference to its `AdapterItem`, so to prevent crashes at runtime always use the form:
 
 ```kotlin
-(getAdapterItem() as? YourAdapterItem)?.apply {
+withAdapterItem<ExampleItem> {
     // methods to call on the adapter item
 }
 ```
@@ -482,7 +482,7 @@ class TextWithButtonItem(private val text: String) : AdapterItem<TextWithButtonI
 
         init {
             buttonField.setOnClickListener {
-                (getAdapterItem() as? TextWithButtonItem)?.apply {
+                withAdapterItem<TextWithButtonItem> {
                     pressed = buttonField.isChecked
                     notifyItemChanged()
                 }
@@ -496,7 +496,7 @@ In the `Holder` we have added a click listener to the `ToggleButton`. When the u
 So, to recap, the <a name="eventLifecycle"></a>event lifecycle is:
 ```kotlin
 // gets ViewHolder's AdapterItem
-(getAdapterItem() as? YourAdapterItem)?.apply {
+withAdapterItem<YourAdapterItem> {
     // methods to call on the adapter item
 
     // (optional)

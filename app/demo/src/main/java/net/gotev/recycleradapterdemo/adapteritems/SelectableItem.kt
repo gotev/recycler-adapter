@@ -28,7 +28,7 @@ open class SelectableItem(val label: String, val onClick: ((item: SelectableItem
 
         init {
             toggleField.setOnClickListener {
-                (getAdapterItem() as? SelectableItem)?.apply {
+                withAdapterItem<SelectableItem> {
                     selected = !selected
                     onClick?.invoke(this)
                 }

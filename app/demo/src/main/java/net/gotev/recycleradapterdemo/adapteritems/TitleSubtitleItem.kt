@@ -39,13 +39,13 @@ open class TitleSubtitleItem(private val title: String, private val subtitle: St
 
         init {
             titleField.setOnClickListener {
-                (getAdapterItem() as? TitleSubtitleItem)?.apply {
+                withAdapterItem<TitleSubtitleItem> {
                     onTitleClicked(itemView.context, adapterPosition)
                 }
             }
 
             subtitleField.setOnClickListener {
-                (getAdapterItem() as? TitleSubtitleItem)?.apply {
+                withAdapterItem<TitleSubtitleItem> {
                     onSubTitleClicked(itemView.context, adapterPosition)
                 }
             }
