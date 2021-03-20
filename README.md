@@ -12,6 +12,11 @@ Standard `RecyclerView.Adapter` is tedious to work with, because you have to wri
 
 In this way every item of the recycler view has its own set of files, resulting in a cleaner and easier to maintain code base.
 
+## Examples
+Before diving into some details, it's worth mentioning you can download and try those example apps which are using the library:
+- [Recycler Adapter Demo App](https://github.com/gotev/recycler-adapter/tree/master/app)
+- [Star Wars Api Demo App](https://github.com/gotev/swapi-android)
+
 # Index
 
 * [Setup](#setup)
