@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.gotev.recycleradapter.RecyclerAdapter
+import net.gotev.recycleradapter.ext.adapterItems
 import net.gotev.recycleradapter.ext.enableDragDrop
 import net.gotev.recycleradapter.ext.modifyItemsAndRender
 import net.gotev.recycleradapterdemo.R
@@ -16,22 +17,19 @@ import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.TextWithToggleItem
 import net.gotev.recycleradapterdemo.adapteritems.TitleSubtitleItem
 import net.gotev.recycleradapterdemo.adapteritems.leavebehind.MyLeaveBehindItem
-import java.util.*
-
+import java.util.Random
+import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
 
-    private val random by lazy {
-        Random(System.currentTimeMillis())
-    }
+    private val random by lazy { Random(System.currentTimeMillis()) }
 
-    private lateinit var recyclerAdapter: RecyclerAdapter
+    private val recyclerAdapter = RecyclerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        recyclerAdapter = RecyclerAdapter()
         recyclerAdapter.setEmptyItem(LabelItem(getString(R.string.empty_list)))
 
         recycler_view.apply {
@@ -40,20 +38,21 @@ class MainActivity : AppCompatActivity() {
             recyclerAdapter.enableDragDrop(this)
         }
 
-        // add an item
-        recyclerAdapter.add(MyLeaveBehindItem("swipe to left to leave behind", "option"))
-
-        // add many items of two kinds
-        val items = (0..random.nextInt(200) + 50).map {
-            if (it % 2 == 0)
-                TitleSubtitleItem("Item $it")
-            else
-                TextWithToggleItem("Toggle $it")
-        }
-
-        recyclerAdapter.add(items)
-
         configureActions()
+
+        recyclerAdapter.syncWithItems(
+            adapterItems(
+                MyLeaveBehindItem("swipe to left to leave behind", "option"),
+
+                // add many items of two kinds
+                *(0..random.nextInt(200) + 50).map {
+                    if (it % 2 == 0)
+                        TitleSubtitleItem("Item $it")
+                    else
+                        TextWithToggleItem("Toggle $it")
+                }.toTypedArray()
+            )
+        )
     }
 
     private fun configureActions() {
@@ -110,7 +109,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-
         R.id.sync_demo -> {
             SyncActivity.show(this)
             true

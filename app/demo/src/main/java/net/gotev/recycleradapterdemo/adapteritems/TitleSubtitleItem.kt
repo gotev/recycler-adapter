@@ -1,6 +1,5 @@
 package net.gotev.recycleradapterdemo.adapteritems
 
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -21,33 +20,25 @@ open class TitleSubtitleItem(private val title: String, private val subtitle: St
         holder.subtitleField.text = subtitle
     }
 
-    private fun onTitleClicked(context: Context, position: Int) {
-        showToast(context, "clicked TITLE at position $position")
-    }
-
-    private fun onSubTitleClicked(context: Context, position: Int) {
-        showToast(context, "clicked SUBTITLE at position $position")
-    }
-
-    private fun showToast(context: Context, message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
     class Holder(itemView: View) : RecyclerAdapterViewHolder(itemView) {
         internal val titleField: TextView = itemView.findViewById(R.id.title)
         internal val subtitleField: TextView = itemView.findViewById(R.id.subtitle)
 
         init {
-            titleField.setOnClickListener {
-                withAdapterItem<TitleSubtitleItem> {
-                    onTitleClicked(itemView.context, adapterPosition)
-                }
+            titleField.onClickWith<TitleSubtitleItem> {
+                Toast.makeText(
+                    itemView.context,
+                    "clicked TITLE at position $adapterPosition",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
-            subtitleField.setOnClickListener {
-                withAdapterItem<TitleSubtitleItem> {
-                    onSubTitleClicked(itemView.context, adapterPosition)
-                }
+            subtitleField.onClickWith<TitleSubtitleItem> {
+                Toast.makeText(
+                    itemView.context,
+                    "clicked SUBTITLE at position $adapterPosition",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

@@ -24,6 +24,8 @@ class Carousels : AppCompatActivity() {
         }
     }
 
+    private val recyclerAdapter = RecyclerAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler_view)
@@ -41,8 +43,6 @@ class Carousels : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        val recyclerAdapter = RecyclerAdapter()
-
         recycler_view.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recycler_view.adapter = recyclerAdapter
 
@@ -57,7 +57,6 @@ class Carousels : AppCompatActivity() {
         swipeRefresh.setOnRefreshListener {
             swipeRefresh.isRefreshing = false
         }
-
     }
 
     private fun createCarouselItems(): List<LabelItem> {

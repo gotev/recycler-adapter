@@ -7,10 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_selection.*
+import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapter.ext.AdapterItems
 import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
-import net.gotev.recycleradapter.ext.adapterItems
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SelectableItem
@@ -46,46 +45,46 @@ class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterP
             text = getString(R.string.finish_loading)
 
             setOnClickListener { button ->
-                render(list(loading = false))
+                render(*groups(loading = false))
                 button.visibility = View.GONE
             }
         }
 
-        render(list(loading = true))
+        render(*groups(loading = true))
     }
 
-    private fun list(
+    private fun groups(
         loading: Boolean,
         selectedMainGroupItem: SelectableItem? = null
-    ): AdapterItems = arrayListOf(
+    ): Array<AdapterItem<*>> = arrayOf(
         LabelItem("Food categories"),
 
         *if (loading) {
-            listOf(LabelItem("Loading ..."))
+            arrayOf(LabelItem("Loading ..."))
         } else {
-            loadMainGroupItems(selectedMainGroupItem)
-        }.toTypedArray(),
+            mainGroupItems(selectedMainGroupItem)
+        },
 
         *if (loading) {
-            adapterItems()
+            emptyArray()
         } else {
-            adapterItems(
+            arrayOf(
                 LabelItem("Details"),
 
                 *if (selectedMainGroupItem != null) {
-                    loadSubordinateGroupItems(selectedMainGroupItem)
+                    subordinateGroupItems(selectedMainGroupItem)
                 } else {
-                    adapterItems(LabelItem("Please select a food category first"))
-                }.toTypedArray(),
+                    arrayOf(LabelItem("Please select a food category first"))
+                },
 
                 LabelItem("End of selection list")
             )
-        }.toTypedArray()
+        }
     )
 
-    private fun loadMainGroupItems(selectedItem: SelectableItem? = null): AdapterItems {
+    private fun mainGroupItems(selectedItem: SelectableItem? = null): Array<AdapterItem<*>> {
         val action: (SelectableItem) -> Unit = {
-            render(list(loading = false, it))
+            render(*groups(loading = false, it))
         }
 
         fun SelectableItem.applySelection(selectedItem: SelectableItem?): SelectableItem {
@@ -93,26 +92,26 @@ class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterP
             return this
         }
 
-        return adapterItems(
+        return arrayOf(
             SelectableItem("\uD83C\uDF52 Fruits", action).applySelection(selectedItem),
             SelectableItem("\uD83E\uDD6C Vegetables", action).applySelection(selectedItem),
             SelectableItem("\uD83C\uDF6E Desserts", action).applySelection(selectedItem)
         )
     }
 
-    private fun loadSubordinateGroupItems(selectedMainGroupItem: SelectableItem) = when {
-        selectedMainGroupItem.label.contains("Fruits") -> adapterItems(
+    private fun subordinateGroupItems(selectedMainGroupItem: SelectableItem) = when {
+        selectedMainGroupItem.label.contains("Fruits") -> arrayOf(
             SelectableItem("\uD83C\uDF4F Apple"),
             SelectableItem("\uD83C\uDF53 Strawberry"),
             SelectableItem("\uD83C\uDF52 Cherry")
         )
 
-        selectedMainGroupItem.label.contains("Vegetables") -> adapterItems(
+        selectedMainGroupItem.label.contains("Vegetables") -> arrayOf(
             SelectableItem("\uD83E\uDD55 Carrot"),
             SelectableItem("\uD83E\uDD52 Cucumber")
         )
 
-        else -> adapterItems(
+        else -> arrayOf(
             SelectableItem("\uD83C\uDF70 Cake"),
             SelectableItem("\uD83C\uDF69 Donut"),
             SelectableItem("\uD83C\uDF66 Ice cream")
