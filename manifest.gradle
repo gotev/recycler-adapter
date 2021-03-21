@@ -41,9 +41,7 @@ ext {
     // App dependencies
     okhttp_version = '4.9.1'
     retrofit_version = '2.9.0'
-    rxjava2_version = '2.2.19'
-    rxkotlin_version = '2.4.0'
-    rxandroid_version = '2.1.1'
+    coroutines_version = '1.3.9'
 
     // Paging
     paging_version = '2.1.2'

@@ -11,7 +11,7 @@ import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
 import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
-import net.gotev.recycleradapterdemo.adapteritems.TitledCarousel
+import net.gotev.recycleradapterdemo.adapteritems.CarouselItem
 
 class Carousels : AppCompatActivity(), RecyclerAdapterProvider {
 
@@ -63,7 +63,7 @@ class Carousels : AppCompatActivity(), RecyclerAdapterProvider {
         // 60 carousels with 40 items each
         render {
             (0..60).map { carouselNumber ->
-                +TitledCarousel(
+                +CarouselItem(
                     title = "Carousel $carouselNumber",
                     adapter = renderableItems {
                         (0..40).map { itemNumber ->

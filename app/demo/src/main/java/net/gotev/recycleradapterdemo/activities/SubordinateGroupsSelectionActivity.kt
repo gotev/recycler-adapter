@@ -13,7 +13,7 @@ import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.ButtonItem
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
-import net.gotev.recycleradapterdemo.adapteritems.SelectableItem
+import net.gotev.recycleradapterdemo.adapteritems.SwitchItem
 
 class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
 
@@ -46,7 +46,7 @@ class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterP
 
     private fun groups(
         loading: Boolean,
-        selectedMainGroupItem: SelectableItem? = null
+        selectedMainGroupItem: SwitchItem? = null
     ): RenderableItems = renderableItems {
         +LabelItem("Food categories")
 
@@ -73,40 +73,40 @@ class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterP
         }
     }
 
-    private fun mainGroupItems(selectedItem: SelectableItem? = null): RenderableItems {
-        val action: (SelectableItem) -> Unit = {
+    private fun mainGroupItems(selectedItem: SwitchItem? = null): RenderableItems {
+        val action: (SwitchItem) -> Unit = {
             render(groups(loading = false, it))
         }
 
-        fun SelectableItem.applySelection(selectedItem: SelectableItem?): SelectableItem {
+        fun SwitchItem.applySelection(selectedItem: SwitchItem?): SwitchItem {
             selected = equals(selectedItem)
             return this
         }
 
         return renderableItems {
-            +SelectableItem("\uD83C\uDF52 Fruits", action).applySelection(selectedItem)
-            +SelectableItem("\uD83E\uDD6C Vegetables", action).applySelection(selectedItem)
-            +SelectableItem("\uD83C\uDF6E Desserts", action).applySelection(selectedItem)
+            +SwitchItem("\uD83C\uDF52 Fruits", action).applySelection(selectedItem)
+            +SwitchItem("\uD83E\uDD6C Vegetables", action).applySelection(selectedItem)
+            +SwitchItem("\uD83C\uDF6E Desserts", action).applySelection(selectedItem)
         }
     }
 
-    private fun subordinateGroupItems(selectedMainGroupItem: SelectableItem) = renderableItems {
+    private fun subordinateGroupItems(selectedMainGroupItem: SwitchItem) = renderableItems {
         when {
             selectedMainGroupItem.label.contains("Fruits") -> {
-                +SelectableItem("\uD83C\uDF4F Apple")
-                +SelectableItem("\uD83C\uDF53 Strawberry")
-                +SelectableItem("\uD83C\uDF52 Cherry")
+                +SwitchItem("\uD83C\uDF4F Apple")
+                +SwitchItem("\uD83C\uDF53 Strawberry")
+                +SwitchItem("\uD83C\uDF52 Cherry")
             }
 
             selectedMainGroupItem.label.contains("Vegetables") -> {
-                +SelectableItem("\uD83E\uDD55 Carrot")
-                +SelectableItem("\uD83E\uDD52 Cucumber")
+                +SwitchItem("\uD83E\uDD55 Carrot")
+                +SwitchItem("\uD83E\uDD52 Cucumber")
             }
 
             else -> {
-                +SelectableItem("\uD83C\uDF70 Cake")
-                +SelectableItem("\uD83C\uDF69 Donut")
-                +SelectableItem("\uD83C\uDF66 Ice cream")
+                +SwitchItem("\uD83C\uDF70 Cake")
+                +SwitchItem("\uD83C\uDF69 Donut")
+                +SwitchItem("\uD83C\uDF66 Ice cream")
             }
         }
     }

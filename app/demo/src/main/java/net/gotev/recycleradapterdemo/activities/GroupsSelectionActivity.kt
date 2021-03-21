@@ -16,7 +16,7 @@ import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.ButtonItem
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
-import net.gotev.recycleradapterdemo.adapteritems.SelectableItem
+import net.gotev.recycleradapterdemo.adapteritems.SwitchItem
 
 class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
 
@@ -27,8 +27,8 @@ class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
     }
 
     override val recyclerAdapter = RecyclerAdapter()
-    private var groupAselected: List<SelectableItem> = emptyList()
-    private var groupBselected: List<SelectableItem> = emptyList()
+    private var groupAselected: List<SwitchItem> = emptyList()
+    private var groupBselected: List<SwitchItem> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,11 +77,11 @@ class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
     private fun singleSelectionGroup(): RenderableItems {
         val selectedItem = groupAselected.firstOrNull()
 
-        fun SelectableItem.applySelection(selectedItem: SelectableItem?) = apply {
+        fun SwitchItem.applySelection(selectedItem: SwitchItem?) = apply {
             selected = equals(selectedItem)
         }
 
-        val action: (item: SelectableItem) -> Unit = {
+        val action: (item: SwitchItem) -> Unit = {
             val selected = listOf(it)
             onGroupChangedSelection("Group A", selected)
             groupAselected = selected
@@ -89,20 +89,20 @@ class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
         }
 
         return renderableItems {
-            +SelectableItem("Option 1", action).applySelection(selectedItem)
-            +SelectableItem("Option 2", action).applySelection(selectedItem)
-            +SelectableItem("Option 3", action).applySelection(selectedItem)
+            +SwitchItem("Option 1", action).applySelection(selectedItem)
+            +SwitchItem("Option 2", action).applySelection(selectedItem)
+            +SwitchItem("Option 3", action).applySelection(selectedItem)
         }
     }
 
     private fun multipleSelectionGroup(): RenderableItems {
         val selectedItems = groupBselected
 
-        fun SelectableItem.applySelection() = apply {
+        fun SwitchItem.applySelection() = apply {
             selected = selectedItems.contains(this)
         }
 
-        val action: (item: SelectableItem) -> Unit = { item ->
+        val action: (item: SwitchItem) -> Unit = { item ->
             val selected = ArrayList(groupBselected)
             val isCurrentlySelected = selected.any { it == item }
 
@@ -118,9 +118,9 @@ class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
         }
 
         return renderableItems {
-            +SelectableItem("Option 4", action).applySelection()
-            +SelectableItem("Option 5", action).applySelection()
-            +SelectableItem("Option 6", action).applySelection()
+            +SwitchItem("Option 4", action).applySelection()
+            +SwitchItem("Option 5", action).applySelection()
+            +SwitchItem("Option 6", action).applySelection()
         }
     }
 
@@ -128,6 +128,6 @@ class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
         Toast.makeText(this, "$group: ${selected.asString()}", Toast.LENGTH_SHORT).show()
     }
 
-    private fun List<AdapterItem<*>>.asString() = joinToString { (it as SelectableItem).label }
+    private fun List<AdapterItem<*>>.asString() = joinToString { (it as SwitchItem).label }
         .let { if (it.isBlank()) "None" else it }
 }

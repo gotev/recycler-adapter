@@ -11,11 +11,11 @@ import net.gotev.recycleradapterdemo.R
 /**
  * @author Aleksandar Gotev
  */
-class TitledCarousel(
-        val title: String,
-        adapter: RecyclerAdapter,
-        recycledViewPool: RecyclerView.RecycledViewPool?
-) : NestedRecyclerAdapterItem<TitledCarousel.Holder>(adapter, recycledViewPool, title) {
+class CarouselItem(
+    val title: String,
+    adapter: RecyclerAdapter,
+    recycledViewPool: RecyclerView.RecycledViewPool?
+) : NestedRecyclerAdapterItem<CarouselItem.Holder>(adapter, recycledViewPool, title) {
 
     override fun getView(parent: ViewGroup): View = parent.inflating(R.layout.item_titled_carousel)
 
