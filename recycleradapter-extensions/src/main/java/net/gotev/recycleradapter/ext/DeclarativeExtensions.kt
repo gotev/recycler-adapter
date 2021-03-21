@@ -2,7 +2,7 @@ package net.gotev.recycleradapter.ext
 
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
-import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @author Aleksandar Gotev
@@ -76,11 +76,55 @@ inline fun <T> Array<T>.mapToAdapterItems(transform: (T) -> AdapterItem<*>?): Ad
     return ArrayList(mapNotNull(transform))
 }
 
+class RenderableItems internal constructor() {
+    internal val items = ArrayList<AdapterItem<*>>()
+
+    operator fun AdapterItem<*>.unaryPlus() {
+        items.add(this)
+    }
+
+    operator fun Array<out AdapterItem<*>>.unaryPlus() {
+        items.addAll(this)
+    }
+
+    operator fun ArrayList<out AdapterItem<*>>.unaryPlus() {
+        items.addAll(this)
+    }
+
+    operator fun List<AdapterItem<*>>.unaryPlus() {
+        items.addAll(this)
+    }
+
+    operator fun RenderableItems.unaryPlus() {
+        this@RenderableItems.items.addAll(items)
+    }
+
+    fun toAdapter(): RecyclerAdapter {
+        return RecyclerAdapter().apply { add(items) }
+    }
+}
+
+fun renderableItems(action: RenderableItems.() -> Unit): RenderableItems {
+    val builder = RenderableItems()
+    action(builder)
+    return builder
+}
+
 interface RecyclerAdapterProvider {
     val recyclerAdapter: RecyclerAdapter
 
     fun AdapterItems.render() {
         recyclerAdapter.syncWithItems(this)
+    }
+
+    fun render(renderableItems: RenderableItems) {
+        recyclerAdapter.syncWithItems(renderableItems.items)
+    }
+
+    fun render(action: RenderableItems.() -> Unit) {
+        val builder = RenderableItems()
+        action(builder)
+        recyclerAdapter.syncWithItems(builder.items)
     }
 
     fun render(vararg items: AdapterItem<*>?) {

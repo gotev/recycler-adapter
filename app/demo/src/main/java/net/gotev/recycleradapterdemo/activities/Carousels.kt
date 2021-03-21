@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_recycler_view.*
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapter.ext.NestedRecyclerAdapterItem
+import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
+import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.TitledCarousel
 
-
-class Carousels : AppCompatActivity() {
+class Carousels : AppCompatActivity(), RecyclerAdapterProvider {
 
     companion object {
         private const val PARAM_POOL = "withPool"
@@ -24,7 +24,7 @@ class Carousels : AppCompatActivity() {
         }
     }
 
-    private val recyclerAdapter = RecyclerAdapter()
+    override val recyclerAdapter = RecyclerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,19 +32,27 @@ class Carousels : AppCompatActivity() {
 
         val withPool = intent.getBooleanExtra(PARAM_POOL, false)
 
-        title = getString(if (withPool) {
-            R.string.carousels_pool
-        } else {
-            R.string.carousels_plain
-        })
+        title = getString(
+            if (withPool) {
+                R.string.carousels_pool
+            } else {
+                R.string.carousels_plain
+            }
+        )
 
         supportActionBar?.apply {
             setHomeButtonEnabled(true)
             setDisplayHomeAsUpEnabled(true)
         }
 
-        recycler_view.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recycler_view.adapter = recyclerAdapter
+        recycler_view.apply {
+            layoutManager = LinearLayoutManager(this@Carousels, RecyclerView.VERTICAL, false)
+            adapter = recyclerAdapter
+        }
+
+        swipeRefresh.setOnRefreshListener {
+            swipeRefresh.isRefreshing = false
+        }
 
         val recycledViewPool = if (withPool) {
             RecyclerView.RecycledViewPool()
@@ -52,28 +60,19 @@ class Carousels : AppCompatActivity() {
             null
         }
 
-        recyclerAdapter.add(createCarousels(recycledViewPool))
-
-        swipeRefresh.setOnRefreshListener {
-            swipeRefresh.isRefreshing = false
-        }
-    }
-
-    private fun createCarouselItems(): List<LabelItem> {
-        return (0..40).map {
-            LabelItem("Text $it")
-        }
-    }
-
-    private fun createCarousels(recycledViewPool: RecyclerView.RecycledViewPool?)
-            : List<NestedRecyclerAdapterItem<*>> {
-        return (0..60).map {
-            val adapter = RecyclerAdapter().apply {
-                add(createCarouselItems())
+        // 60 carousels with 40 items each
+        render {
+            (0..60).map { carouselNumber ->
+                +TitledCarousel(
+                    title = "Carousel $carouselNumber",
+                    adapter = renderableItems {
+                        (0..40).map { itemNumber ->
+                            +LabelItem("Text $itemNumber")
+                        }
+                    }.toAdapter(),
+                    recycledViewPool = recycledViewPool
+                )
             }
-
-            TitledCarousel("Carousel $it", adapter, recycledViewPool)
         }
     }
-
 }

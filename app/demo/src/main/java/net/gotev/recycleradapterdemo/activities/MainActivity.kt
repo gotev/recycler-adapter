@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapter.ext.adapterItems
+import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
 import net.gotev.recycleradapter.ext.enableDragDrop
 import net.gotev.recycleradapter.ext.modifyItemsAndRender
 import net.gotev.recycleradapterdemo.R
@@ -20,11 +20,11 @@ import net.gotev.recycleradapterdemo.adapteritems.leavebehind.MyLeaveBehindItem
 import java.util.Random
 import java.util.UUID
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
 
     private val random by lazy { Random(System.currentTimeMillis()) }
 
-    private val recyclerAdapter = RecyclerAdapter()
+    override val recyclerAdapter = RecyclerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,19 +40,16 @@ class MainActivity : AppCompatActivity() {
 
         configureActions()
 
-        recyclerAdapter.syncWithItems(
-            adapterItems(
-                MyLeaveBehindItem("swipe to left to leave behind", "option"),
+        render {
+            +MyLeaveBehindItem("swipe to left to leave behind", "option")
 
-                // add many items of two kinds
-                *(0..random.nextInt(200) + 50).map {
-                    if (it % 2 == 0)
-                        TitleSubtitleItem("Item $it")
-                    else
-                        TextWithToggleItem("Toggle $it")
-                }.toTypedArray()
-            )
-        )
+            (0..random.nextInt(200) + 50).map {
+                if (it % 2 == 0)
+                    +TitleSubtitleItem("Item $it")
+                else
+                    +TextWithToggleItem("Toggle $it")
+            }
+        }
     }
 
     private fun configureActions() {

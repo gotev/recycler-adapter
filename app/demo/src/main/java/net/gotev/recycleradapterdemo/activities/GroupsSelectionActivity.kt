@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_selection.*
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapter.ext.AdapterItems
 import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
-import net.gotev.recycleradapter.ext.adapterItems
+import net.gotev.recycleradapter.ext.RenderableItems
+import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SelectableItem
@@ -67,15 +67,15 @@ class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
         render(selectionGroups())
     }
 
-    private fun selectionGroups() = adapterItems(
-        LabelItem(getString(R.string.single_selection)),
-        *singleSelectionGroup().toTypedArray(),
+    private fun selectionGroups() = renderableItems {
+        +LabelItem(getString(R.string.single_selection))
+        +singleSelectionGroup()
 
-        LabelItem(getString(R.string.multiple_selection)),
-        *multipleSelectionGroup().toTypedArray()
-    )
+        +LabelItem(getString(R.string.multiple_selection))
+        +multipleSelectionGroup()
+    }
 
-    private fun singleSelectionGroup(): AdapterItems {
+    private fun singleSelectionGroup(): RenderableItems {
         val selectedItem = groupAselected.firstOrNull()
 
         fun SelectableItem.applySelection(selectedItem: SelectableItem?) = apply {
@@ -89,14 +89,14 @@ class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
             render(selectionGroups())
         }
 
-        return adapterItems(
-            SelectableItem("Option 1", action).applySelection(selectedItem),
-            SelectableItem("Option 2", action).applySelection(selectedItem),
-            SelectableItem("Option 3", action).applySelection(selectedItem)
-        )
+        return renderableItems {
+            +SelectableItem("Option 1", action).applySelection(selectedItem)
+            +SelectableItem("Option 2", action).applySelection(selectedItem)
+            +SelectableItem("Option 3", action).applySelection(selectedItem)
+        }
     }
 
-    private fun multipleSelectionGroup(): AdapterItems {
+    private fun multipleSelectionGroup(): RenderableItems {
         val selectedItems = groupBselected
 
         fun SelectableItem.applySelection() = apply {
@@ -118,11 +118,11 @@ class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
             render(selectionGroups())
         }
 
-        return adapterItems(
-            SelectableItem("Option 4", action).applySelection(),
-            SelectableItem("Option 5", action).applySelection(),
-            SelectableItem("Option 6", action).applySelection()
-        )
+        return renderableItems {
+            +SelectableItem("Option 4", action).applySelection()
+            +SelectableItem("Option 5", action).applySelection()
+            +SelectableItem("Option 6", action).applySelection()
+        }
     }
 
     private fun onGroupChangedSelection(group: String, selected: List<AdapterItem<*>>) {

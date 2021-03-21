@@ -42,8 +42,8 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
     )
 
     private fun listB(): ArrayList<SyncItem> {
-        listB.add(SyncItem(listB.last().id + 1, "listB${listB.last().id + 1}"))
-        listB.add(SyncItem(listB.last().id + 1, "listB${listB.last().id + 1}"))
+        listB.add(SyncItem(listB.last().id + 1, "listB ${listB.last().id + 1}"))
+        listB.add(SyncItem(listB.last().id + 1, "listB ${listB.last().id + 1}"))
         return listB
     }
 
@@ -104,7 +104,7 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
                 shuffle.text = getString(R.string.button_shuffle_stop)
                 executor.scheduleAtFixedRate({
                     runOnUiThread {
-                        render(ArrayList(createItems()))
+                        render(createItems())
                     }
                 }, 1, 100, TimeUnit.MILLISECONDS)
             } else {
