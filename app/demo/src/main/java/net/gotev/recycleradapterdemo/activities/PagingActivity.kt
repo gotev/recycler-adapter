@@ -34,26 +34,26 @@ class PagingActivity : AppCompatActivity() {
         }
 
         pagingAdapter = PagingAdapter(
-                dataSource = { StarWarsPeopleDataSource(App.starWarsClient) },
-                config = PagedList.Config.Builder()
-                        .setPageSize(20)
-                        .setEnablePlaceholders(false)
-                        .setPrefetchDistance(10)
-                        .setMaxSize(50)
-                        .build()
+            dataSource = { StarWarsPeopleDataSource(App.starWarsClient) },
+            config = PagedList.Config.Builder()
+                .setPageSize(20)
+                .setEnablePlaceholders(false)
+                .setPrefetchDistance(10)
+                .setMaxSize(50)
+                .build()
         )
 
         recycler_view.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recycler_view.adapter = pagingAdapter
 
-        pagingAdapter.startObserving(this, onLoadingComplete = { swipeRefresh.isRefreshing = false })
+        pagingAdapter.startObserving(
+            this,
+            onLoadingComplete = { swipeRefresh.isRefreshing = false })
 
         swipeRefresh.isRefreshing = true
 
         swipeRefresh.setOnRefreshListener {
             pagingAdapter.reload()
         }
-
     }
-
 }

@@ -2,7 +2,6 @@ package net.gotev.recycleradapterdemo.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +11,7 @@ import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
 import net.gotev.recycleradapter.ext.RenderableItems
 import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
+import net.gotev.recycleradapterdemo.adapteritems.ButtonItem
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SelectableItem
 
@@ -37,18 +37,8 @@ class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterP
         }
 
         recycler_view.apply {
-            itemAnimator?.changeDuration = 0
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = recyclerAdapter
-        }
-
-        action_button.apply {
-            text = getString(R.string.finish_loading)
-
-            setOnClickListener { button ->
-                render(groups(loading = false))
-                button.visibility = View.GONE
-            }
         }
 
         render(groups(loading = true))
@@ -57,11 +47,17 @@ class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterP
     private fun groups(
         loading: Boolean,
         selectedMainGroupItem: SelectableItem? = null
-    ) = renderableItems {
+    ): RenderableItems = renderableItems {
         +LabelItem("Food categories")
 
         if (loading) {
             +LabelItem("Loading ...")
+            +ButtonItem(
+                text = getString(R.string.finish_loading),
+                onClick = {
+                    render(groups(loading = false))
+                }
+            )
         } else {
             +mainGroupItems(selectedMainGroupItem)
 

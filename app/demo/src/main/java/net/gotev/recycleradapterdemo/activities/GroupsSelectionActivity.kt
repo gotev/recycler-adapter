@@ -14,6 +14,7 @@ import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
 import net.gotev.recycleradapter.ext.RenderableItems
 import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
+import net.gotev.recycleradapterdemo.adapteritems.ButtonItem
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SelectableItem
 
@@ -46,10 +47,18 @@ class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
             adapter = recyclerAdapter
         }
 
-        action_button.apply {
-            text = getString(R.string.show_selections)
+        render(selectionGroups())
+    }
 
-            setOnClickListener {
+    private fun selectionGroups() = renderableItems {
+        +LabelItem(getString(R.string.single_selection))
+        +singleSelectionGroup()
+
+        +LabelItem(getString(R.string.multiple_selection))
+        +multipleSelectionGroup()
+        +ButtonItem(
+            text = getString(R.string.show_selections),
+            onClick = {
                 val selectedA = groupAselected.asString()
                 val selectedB = groupBselected.asString()
 
@@ -62,17 +71,7 @@ class GroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
                     .setPositiveButton("Ok", null)
                     .show()
             }
-        }
-
-        render(selectionGroups())
-    }
-
-    private fun selectionGroups() = renderableItems {
-        +LabelItem(getString(R.string.single_selection))
-        +singleSelectionGroup()
-
-        +LabelItem(getString(R.string.multiple_selection))
-        +multipleSelectionGroup()
+        )
     }
 
     private fun singleSelectionGroup(): RenderableItems {
