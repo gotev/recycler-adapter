@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_recycler_view.*
+import kotlinx.android.synthetic.main.activity_paging.*
 import net.gotev.recycleradapter.paging.PagingAdapter
 import net.gotev.recycleradapterdemo.App
 import net.gotev.recycleradapterdemo.R
@@ -24,7 +24,7 @@ class PagingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_recycler_view)
+        setContentView(R.layout.activity_paging)
 
         title = getString(R.string.paged_scrolling)
 
