@@ -9,11 +9,11 @@ Using stock Android View system and Recycler Adapter, you can already write UIs 
 render {
     +Items.leaveBehind("swipe to left to leave behind", "option")
 
-    (0..random.nextInt(200) + 50).map {
-        if (it % 2 == 0)
-            +Items.Card.titleSubtitle("Item $it", "subtitle $it")
+    (0..random.nextInt(200) + 50).map { randomNumber ->
+        if (randomNumber % 2 == 0)
+            +Items.Card.titleSubtitle("Item $randomNumber", "subtitle $randomNumber")
         else
-            +Items.Card.labelWithToggle("Toggle $it")
+            +Items.Card.labelWithToggle("Toggle $randomNumber")
     }
 }
 ```
