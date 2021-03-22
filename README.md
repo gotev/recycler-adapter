@@ -1,5 +1,5 @@
 # Recycler Adapter [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion) [ ![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.gotev/recycleradapter/badge.svg) ](https://search.maven.org/search?q=g:net.gotev)
-#### [Latest version Release Notes and Demo App](https://github.com/gotev/recycler-adapter/releases/tag/3.1.0)
+#### [Latest version Release Notes and Demo App](https://github.com/gotev/recycler-adapter/releases/latest)
 
 RecyclerView-driven declarative UIs.
 
