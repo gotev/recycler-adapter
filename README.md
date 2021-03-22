@@ -5,6 +5,19 @@ RecyclerView-driven declarative UIs.
 
 Using stock Android View system and Recycler Adapter, you can already write UIs similar to [JetPack Compose](https://developer.android.com/jetpack/compose) and use it in production.
 
+```kotlin
+render {
+    +Items.leaveBehind("swipe to left to leave behind", "option")
+
+    (0..random.nextInt(200) + 50).map {
+        if (it % 2 == 0)
+            +Items.Card.titleSubtitle("Item $it", "subtitle $it")
+        else
+            +Items.Card.labelWithToggle("Toggle $it")
+    }
+}
+```
+
 Standard `RecyclerView.Adapter` is tedious to work with, because you have to write repetitive boilerplate and spaghetti code and to concentrate all your items view logic and binding into the adapter itself, which is really bad. This library was born to be able to have the following for each element in a recycler view:
 
 * a `model`, which is a simple `data class`
