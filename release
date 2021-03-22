@@ -4,6 +4,7 @@
 version=$(cat manifest.gradle | grep "library_version" | tr "'" '\n' | head -n 2 | tail -n 1)
 
 function generate-debug-apk {
+    rm -rf *.apk
     cd app
     ./gradlew clean assembleDebug
     cp demo/build/outputs/apk/debug/demo-debug.apk ../"recycler-adapter-demo-debug-$version.apk"
