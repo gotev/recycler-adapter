@@ -3,19 +3,13 @@ package net.gotev.recycleradapterdemo.activities
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_selection.*
-import net.gotev.recycleradapter.RecyclerAdapter
-import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
 import net.gotev.recycleradapter.ext.RenderableItems
 import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
-import net.gotev.recycleradapterdemo.adapteritems.ButtonItem
-import net.gotev.recycleradapterdemo.adapteritems.LabelItem
+import net.gotev.recycleradapterdemo.adapteritems.Items
 import net.gotev.recycleradapterdemo.adapteritems.SwitchItem
 
-class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterProvider {
+class SubordinateGroupsSelectionActivity : RecyclerViewActivity() {
 
     companion object {
         fun show(activity: AppCompatActivity) {
@@ -23,23 +17,10 @@ class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterP
         }
     }
 
-    override val recyclerAdapter = RecyclerAdapter()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_selection)
 
         title = getString(R.string.subordinate_groups_selection)
-
-        supportActionBar?.apply {
-            setHomeButtonEnabled(true)
-            setDisplayHomeAsUpEnabled(true)
-        }
-
-        recycler_view.apply {
-            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            adapter = recyclerAdapter
-        }
 
         render(groups(loading = true))
     }
@@ -48,11 +29,11 @@ class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterP
         loading: Boolean,
         selectedMainGroupItem: SwitchItem? = null
     ): RenderableItems = renderableItems {
-        +LabelItem("Food categories")
+        +Items.label("Food categories")
 
         if (loading) {
-            +LabelItem("Loading ...")
-            +ButtonItem(
+            +Items.label("Loading ...")
+            +Items.button(
                 text = getString(R.string.finish_loading),
                 onClick = {
                     render(groups(loading = false))
@@ -61,52 +42,50 @@ class SubordinateGroupsSelectionActivity : AppCompatActivity(), RecyclerAdapterP
         } else {
             +mainGroupItems(selectedMainGroupItem)
 
-            +LabelItem("Details")
+            +Items.label("Details")
 
             if (selectedMainGroupItem != null) {
                 +subordinateGroupItems(selectedMainGroupItem)
             } else {
-                +LabelItem("Please select a food category first")
+                +Items.label("Please select a food category first")
             }
 
-            +LabelItem("End of selection list")
+            +Items.label("End of selection list")
         }
     }
 
     private fun mainGroupItems(selectedItem: SwitchItem? = null): RenderableItems {
-        val action: (SwitchItem) -> Unit = {
-            render(groups(loading = false, it))
-        }
-
-        fun SwitchItem.applySelection(selectedItem: SwitchItem?): SwitchItem {
+        fun createMainGroupSwitchItem(label: String) = Items.switch(
+            label = label,
+            onClick = { item -> render(groups(loading = false, item)) }
+        ).apply {
             selected = equals(selectedItem)
-            return this
         }
 
         return renderableItems {
-            +SwitchItem("\uD83C\uDF52 Fruits", action).applySelection(selectedItem)
-            +SwitchItem("\uD83E\uDD6C Vegetables", action).applySelection(selectedItem)
-            +SwitchItem("\uD83C\uDF6E Desserts", action).applySelection(selectedItem)
+            +createMainGroupSwitchItem("\uD83C\uDF52 Fruits")
+            +createMainGroupSwitchItem("\uD83E\uDD6C Vegetables")
+            +createMainGroupSwitchItem("\uD83C\uDF6E Desserts")
         }
     }
 
     private fun subordinateGroupItems(selectedMainGroupItem: SwitchItem) = renderableItems {
         when {
             selectedMainGroupItem.label.contains("Fruits") -> {
-                +SwitchItem("\uD83C\uDF4F Apple")
-                +SwitchItem("\uD83C\uDF53 Strawberry")
-                +SwitchItem("\uD83C\uDF52 Cherry")
+                +Items.switch("\uD83C\uDF4F Apple")
+                +Items.switch("\uD83C\uDF53 Strawberry")
+                +Items.switch("\uD83C\uDF52 Cherry")
             }
 
             selectedMainGroupItem.label.contains("Vegetables") -> {
-                +SwitchItem("\uD83E\uDD55 Carrot")
-                +SwitchItem("\uD83E\uDD52 Cucumber")
+                +Items.switch("\uD83E\uDD55 Carrot")
+                +Items.switch("\uD83E\uDD52 Cucumber")
             }
 
             else -> {
-                +SwitchItem("\uD83C\uDF70 Cake")
-                +SwitchItem("\uD83C\uDF69 Donut")
-                +SwitchItem("\uD83C\uDF66 Ice cream")
+                +Items.switch("\uD83C\uDF70 Cake")
+                +Items.switch("\uD83C\uDF69 Donut")
+                +Items.switch("\uD83C\uDF66 Ice cream")
             }
         }
     }

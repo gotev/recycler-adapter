@@ -8,7 +8,7 @@ import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
-open class TitleSubtitleItem(private val title: String, private val subtitle: String = "subtitle") :
+open class TitleSubtitleItem(private val title: String, private val subtitle: String) :
     AdapterItem<TitleSubtitleItem.Holder>(title) {
 
     override fun getView(parent: ViewGroup): View = parent.inflating(R.layout.item_title_subtitle)

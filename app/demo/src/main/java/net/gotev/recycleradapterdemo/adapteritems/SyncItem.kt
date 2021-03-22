@@ -2,7 +2,7 @@ package net.gotev.recycleradapterdemo.adapteritems
 
 import net.gotev.recycleradapter.AdapterItem
 
-class SyncItem(val id: Int, private val suffix: String) : TitleSubtitleItem("item $id $suffix") {
+class SyncItem(val id: Int, private val suffix: String) : TitleSubtitleItem("item $id $suffix", suffix) {
 
     override fun diffingId() = javaClass.name + id
 

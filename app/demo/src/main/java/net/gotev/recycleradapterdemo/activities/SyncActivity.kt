@@ -15,6 +15,7 @@ import net.gotev.recycleradapter.ext.adapterItems
 import net.gotev.recycleradapter.ext.lockScrollingWhileInserting
 import net.gotev.recycleradapter.ext.modifyItemsAndRender
 import net.gotev.recycleradapterdemo.R
+import net.gotev.recycleradapterdemo.adapteritems.Items
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SyncItem
 import java.util.concurrent.ScheduledFuture
@@ -34,28 +35,6 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
     private var executor = ScheduledThreadPoolExecutor(1)
     private var scheduledOperation: ScheduledFuture<*>? = null
 
-    private var listB = arrayListOf(
-        SyncItem(1, "listA"),
-        SyncItem(3, "listB"),
-        SyncItem(4, "listB"),
-        SyncItem(5, "listB")
-    )
-
-    private fun listB(): ArrayList<SyncItem> {
-        listB.add(SyncItem(listB.last().id + 1, "listB ${listB.last().id + 1}"))
-        listB.add(SyncItem(listB.last().id + 1, "listB ${listB.last().id + 1}"))
-        return listB
-    }
-
-    private fun listA() = adapterItems(
-        SyncItem(1, "listA"),
-        SyncItem(2, "listA")
-    )
-
-    private fun listC() = adapterItems(
-        SyncItem(1, "listC")
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sync)
@@ -70,7 +49,7 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
         recyclerAdapter.apply {
-            setEmptyItem(LabelItem(getString(R.string.empty_list)))
+            setEmptyItem(Items.label(getString(R.string.empty_list)))
             lockScrollingWhileInserting(linearLayoutManager)
         }
 
@@ -121,9 +100,31 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
         scheduledOperation = null
     }
 
+    private var listB = arrayListOf(
+        Items.Card.sync(1, "listA"),
+        Items.Card.sync(3, "listB"),
+        Items.Card.sync(4, "listB"),
+        Items.Card.sync(5, "listB")
+    )
+
+    private fun listB(): ArrayList<SyncItem> {
+        listB.add(Items.Card.sync(listB.last().id + 1, "listB ${listB.last().id + 1}"))
+        listB.add(Items.Card.sync(listB.last().id + 1, "listB ${listB.last().id + 1}"))
+        return listB
+    }
+
+    private fun listA() = adapterItems(
+        Items.Card.sync(1, "listA"),
+        Items.Card.sync(2, "listA")
+    )
+
+    private fun listC() = adapterItems(
+        Items.Card.sync(1, "listC")
+    )
+
     fun createItems(): List<AdapterItem<*>> {
         return (0..Random.nextInt(from = 2, until = 20)).flatMap {
-            listOf(LabelItem("TITLE $it"), SyncItem(it, "ListC"))
+            listOf(Items.label("TITLE $it"), Items.Card.sync(it, "ListC"))
         }
     }
 

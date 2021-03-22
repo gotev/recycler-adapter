@@ -8,7 +8,7 @@ import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapterViewHolder
 import net.gotev.recycleradapterdemo.R
 
-class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleItem.Holder>(text) {
+class LabelWithToggleItem(private val text: String) : AdapterItem<LabelWithToggleItem.Holder>(text) {
 
     private var pressed = false
 
@@ -26,7 +26,7 @@ class TextWithToggleItem(private val text: String) : AdapterItem<TextWithToggleI
         internal val buttonField: SwitchCompat = itemView.findViewById(R.id.toggleButton)
 
         init {
-            itemView.onClickWith<TextWithToggleItem> {
+            itemView.onClickWith<LabelWithToggleItem> {
                 pressed = !buttonField.isChecked
                 notifyItemChanged()
             }

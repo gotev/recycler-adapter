@@ -13,8 +13,9 @@ import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
 import net.gotev.recycleradapter.ext.enableDragDrop
 import net.gotev.recycleradapter.ext.modifyItemsAndRender
 import net.gotev.recycleradapterdemo.R
+import net.gotev.recycleradapterdemo.adapteritems.Items
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
-import net.gotev.recycleradapterdemo.adapteritems.TextWithToggleItem
+import net.gotev.recycleradapterdemo.adapteritems.LabelWithToggleItem
 import net.gotev.recycleradapterdemo.adapteritems.TitleSubtitleItem
 import net.gotev.recycleradapterdemo.adapteritems.leavebehind.MyLeaveBehindItem
 import java.util.Random
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        recyclerAdapter.setEmptyItem(LabelItem(getString(R.string.empty_list)))
+        recyclerAdapter.setEmptyItem(Items.label(getString(R.string.empty_list)))
 
         recycler_view.apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -41,13 +42,13 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
         configureActions()
 
         render {
-            +MyLeaveBehindItem("swipe to left to leave behind", "option")
+            +Items.leaveBehind("swipe to left to leave behind", "option")
 
             (0..random.nextInt(200) + 50).map {
                 if (it % 2 == 0)
-                    +TitleSubtitleItem("Item $it")
+                    +Items.Card.titleSubtitle("Item $it", "subtitle $it")
                 else
-                    +TextWithToggleItem("Toggle $it")
+                    +Items.Card.labelWithToggle("Toggle $it")
             }
         }
     }
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
     private fun configureActions() {
         add_item.setOnClickListener {
             recyclerAdapter.add(
-                TitleSubtitleItem("Item ${UUID.randomUUID()}"),
+                Items.Card.titleSubtitle("Item ${UUID.randomUUID()}", "subtitle"),
                 position = 1
             )
         }
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
             // remove last item with class TextWithToggleItem
             recyclerAdapter.modifyItemsAndRender { items ->
                 items.apply {
-                    remove(lastOrNull { it::class.java == TextWithToggleItem::class.java })
+                    remove(lastOrNull { it::class.java == LabelWithToggleItem::class.java })
                 }
             }
         }
@@ -127,12 +128,12 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
         }
 
         R.id.carousels_plain -> {
-            Carousels.show(this, withPool = false)
+            CarouselsActivity.show(this, withPool = false)
             true
         }
 
         R.id.carousels_pool -> {
-            Carousels.show(this, withPool = true)
+            CarouselsActivity.show(this, withPool = true)
             true
         }
 
