@@ -63,14 +63,6 @@ implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 ```
 This is the latest version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
 
-Due to some prolonged Bintray outages, an alternative maven repo has been set. If the dependencies are not resolved, add this to your maven repos:
-
-```groovy
-maven {
-    url "https://raw.githubusercontent.com/gotev/recycler-adapter/master/releases"
-}
-```
-
 ## <a name="basicTutorial"></a>Basic usage tutorial
 ### 1. Declare the RecyclerView
 In your layout resource file or where you want the `RecyclerView` (e.g. `activity_main.xml`) add the following:
