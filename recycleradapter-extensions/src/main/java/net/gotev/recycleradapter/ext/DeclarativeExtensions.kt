@@ -79,24 +79,24 @@ inline fun <T> Array<T>.mapToAdapterItems(transform: (T) -> AdapterItem<*>?): Ad
 class RenderableItems internal constructor() {
     internal val items = ArrayList<AdapterItem<*>>()
 
-    operator fun AdapterItem<*>.unaryPlus() {
-        items.add(this)
+    operator fun AdapterItem<*>?.unaryPlus() {
+        if (this != null) { items.add(this) }
     }
 
-    operator fun Array<out AdapterItem<*>>.unaryPlus() {
-        items.addAll(this)
+    operator fun Array<out AdapterItem<*>>?.unaryPlus() {
+        if (this != null) { items.addAll(this) }
     }
 
-    operator fun ArrayList<out AdapterItem<*>>.unaryPlus() {
-        items.addAll(this)
+    operator fun ArrayList<out AdapterItem<*>>?.unaryPlus() {
+        if (this != null) { items.addAll(this) }
     }
 
-    operator fun List<AdapterItem<*>>.unaryPlus() {
-        items.addAll(this)
+    operator fun List<AdapterItem<*>>?.unaryPlus() {
+        if (this != null) { items.addAll(this) }
     }
 
-    operator fun RenderableItems.unaryPlus() {
-        this@RenderableItems.items.addAll(items)
+    operator fun RenderableItems?.unaryPlus() {
+        if (this != null) { this@RenderableItems.items.addAll(items) }
     }
 
     fun toAdapter(): RecyclerAdapter {
