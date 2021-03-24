@@ -205,7 +205,7 @@ One of the most common type of nested RecyclerViews are Carousels, like those yo
 implementation "net.gotev:recycleradapter-extensions:$recyclerAdapterVersion"
 ```
 
-The concept is really simple. You want to have a whole recycler view inside a single `AdapterItem`. To make things modular and to not reinvent the wheel, you want to be able to use a `RecyclerAdapter` in this nested `RecyclerView`. Please welcome `NestedRecyclerAdapterItem` which eases things for you. Override it to implement your custom nested recycler views. You can find a complete example in [Carousels Activity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/activities/Carousels.kt) together with a custom [TitledCarousel](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/adapteritems/TitledCarousel.kt)
+The concept is really simple. You want to have a whole recycler view inside a single `AdapterItem`. To make things modular and to not reinvent the wheel, you want to be able to use a `RecyclerAdapter` in this nested `RecyclerView`. Please welcome `NestedRecyclerAdapterItem` which eases things for you. Override it to implement your custom nested recycler views. You can find a complete example in [Carousels Activity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/activities/CarouselsActivity.kt) together with a custom [CarouselItem](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/adapteritems/CarouselItem.kt)
 
 Since having nested recycler views consumes a lot of memory and you may experience lags in your app, it's recommended to share a single `RecycledViewPool` across all your root and nested `RecyclerView`s. In that way all the `RecyclerView`s will use a single recycled pool like there's only one `RecyclerView`. You can see the performance difference by running the demo app on a low end device and trying Carousels both with pool and without pool.
 
@@ -336,6 +336,9 @@ recyclerAdapter.modifyItemsAndRender { items ->
 You can safely use [ButterKnife](https://github.com/JakeWharton/butterknife) in your ViewHolders, however Kotlin Android Extensions are more widely used and recommended.
 
 ## <a name="kotlinAndroidExt"></a>Using Kotlin Android Extensions
+
+> WARNING! JetBrains officially deprecated Kotlin Android Extensions starting from Kotlin 1.4.20: https://youtrack.jetbrains.com/issue/KT-42121
+
 If you use Kotlin in your project, you can also use Kotlin Android Extensions to bind your views in ViewHolder, but be careful to not fall in a common pitfall, explained very well here: https://proandroiddev.com/kotlin-android-extensions-using-view-binding-the-right-way-707cd0c9e648
 
 ## <a name="dragDrop"></a>Reorder items with drag & drop
