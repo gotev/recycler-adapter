@@ -552,7 +552,7 @@ When dynamically loading many data at once in the RecyclerView, specially when w
 ```kotlin
 recyclerAdapter.lockScrollingWhileInserting(layoutManager)
 ```
-To get a better comprehension of this behavior, try commenting `lockScrollingWhileInserting` in [SyncActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/SyncActivity.kt) and run the demo app again pressing the `shuffle` button to see the difference.
+To get a better comprehension of this behavior, try commenting `lockScrollingWhileInserting` in [SyncActivity](https://github.com/gotev/recycler-adapter/blob/master/app/demo/src/main/java/net/gotev/recycleradapterdemo/activities/SyncActivity.kt) and run the demo app again pressing the `shuffle` button to see the difference.
 
 ## <a name="contributors"></a>Contributors and Credits
 Thanks to:
