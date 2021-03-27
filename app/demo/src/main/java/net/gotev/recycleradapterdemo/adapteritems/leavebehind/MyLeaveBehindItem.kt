@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.TextView
 import net.gotev.recycleradapterdemo.R
 
-class MyLeaveBehindItem(private val value: String, private val background: String) :
+class MyLeaveBehindItem(private val value: String, private val background: String, private val onClick: ((MyLeaveBehindItem) -> Unit)? = null) :
     LeaveBehindAdapterItem<MyLeaveBehindItem.Holder>(value) {
 
     override fun onFilter(searchTerm: String) = value.contains(searchTerm, ignoreCase = true)
@@ -24,5 +24,11 @@ class MyLeaveBehindItem(private val value: String, private val background: Strin
 
         override val leaveBehindId: Int
             get() = R.layout.swipe_background_layout
+
+        init {
+            leaveBehindView.onClickWith<MyLeaveBehindItem> {
+                onClick?.invoke(this)
+            }
+        }
     }
 }

@@ -42,16 +42,26 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
         configureActions()
 
         render {
-            +Items.leaveBehind("swipe to left to leave behind", "option")
+            +Items.leaveBehind("swipe to left to reveal options", "delete", onClick = {
+                recyclerAdapter.removeItem(it)
+            })
 
             // only non-null elements of lists and arrays are rendered
-            +listOf(null, Items.leaveBehind("swipe to left to leave behind 2", "option"))
+            +listOf(null, Items.leaveBehind("swipe to left to reveal options 2", "delete", onClick = {
+                recyclerAdapter.removeItem(it)
+            }))
             +arrayListOf(
-                Items.leaveBehind("swipe to left to leave behind 3", "option"),
+                Items.leaveBehind("swipe to left to reveal options 3", "delete", onClick = {
+                    recyclerAdapter.removeItem(it)
+                }),
                 null,
-                Items.leaveBehind("swipe to left to leave behind 4", "option"),
+                Items.leaveBehind("swipe to left to reveal options 4", "delete", onClick = {
+                    recyclerAdapter.removeItem(it)
+                }),
             )
-            +arrayOf(null, Items.leaveBehind("swipe to left to leave behind 5", "option"))
+            +arrayOf(null, Items.leaveBehind("swipe to left to reveal options 5", "option", onClick = {
+                recyclerAdapter.removeItem(it)
+            }))
 
             (0..random.nextInt(200) + 50).map {
                 if (it % 2 == 0)

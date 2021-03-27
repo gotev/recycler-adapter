@@ -13,8 +13,8 @@ import net.gotev.recycleradapterdemo.R
 
 abstract class LeaveBehindViewHolder(itemView: View) : RecyclerAdapterViewHolder(itemView) {
 
-    private val contentView: FrameLayout = itemView.findViewById(R.id.swipe_content_view)
-    private val leaveBehindView: FrameLayout = itemView.findViewById(R.id.swipe_background_layout)
+    internal val contentView: FrameLayout = itemView.findViewById(R.id.swipe_content_view)
+    internal val leaveBehindView: FrameLayout = itemView.findViewById(R.id.swipe_background_layout)
 
     abstract val contentViewId: Int
     abstract val leaveBehindId: Int

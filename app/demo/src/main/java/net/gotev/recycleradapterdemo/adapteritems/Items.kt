@@ -31,5 +31,5 @@ object Items {
     fun switch(label: String, onClick: ((item: SwitchItem) -> Unit)? = null) =
         SwitchItem(label, onClick)
 
-    fun leaveBehind(value: String, background: String) = MyLeaveBehindItem(value, background)
+    fun leaveBehind(value: String, background: String, onClick: ((MyLeaveBehindItem) -> Unit)? = null) = MyLeaveBehindItem(value, background, onClick)
 }
