@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.Items
-import net.gotev.recycleradapterdemo.network.AsyncState
+import net.gotev.recycleradapterdemo.network.State
 
 class AsyncLoadingActivity : RecyclerViewActivity() {
 
@@ -30,13 +30,13 @@ class AsyncLoadingActivity : RecyclerViewActivity() {
 
         model.people.status.observe(this) { status ->
             when (status) {
-                is AsyncState.Loading -> {
+                is State.Loading -> {
                     render {
                         +Items.label("Loading ...")
                     }
                 }
 
-                is AsyncState.Success -> {
+                is State.Success -> {
                     render {
                         if (status.data.results.isEmpty()) {
                             +Items.label("No results")
@@ -53,7 +53,7 @@ class AsyncLoadingActivity : RecyclerViewActivity() {
                     }
                 }
 
-                is AsyncState.Error -> {
+                is State.Error -> {
                     render {
                         +Items.label("An error occurred!")
                         +Items.label(status.error.toString())
