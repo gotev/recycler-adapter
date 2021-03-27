@@ -60,6 +60,7 @@ In your gradle dependencies add:
 ```groovy
 def recyclerAdapterVersion = "x.y.z" // change it with the version you want to use
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
+implementation "net.gotev:recycleradapter-extensions:$recyclerAdapterVersion"
 ```
 This is the latest version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
 
