@@ -138,6 +138,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      *
      * @param item item to show when the recycler adapter is empty
      */
+    @Deprecated(
+        message = "instead of using setEmptyItem(YourItem), you should re-render your list with the empty item: render { +YourItem }",
+        level = DeprecationLevel.WARNING,
+        replaceWith = ReplaceWith("render")
+    )
     fun setEmptyItem(item: AdapterItem<*>?) {
         val previouslyEmpty = emptyItem == null
         val afterEmpty = item == null
