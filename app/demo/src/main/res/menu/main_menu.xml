@@ -27,6 +27,12 @@
         android:enabled="true"
         android:id="@+id/selection_multi_groups" />
 
+    <item android:title="@string/async_loading"
+        app:showAsAction="never|withText"
+        android:visible="true"
+        android:enabled="true"
+        android:id="@+id/async_loading" />
+
     <item android:title="@string/paged_scrolling"
         app:showAsAction="never|withText"
         android:visible="true"

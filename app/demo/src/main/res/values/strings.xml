@@ -4,6 +4,7 @@
     <string name="remove_last_of_a_kind">Remove last text with toggle item</string>
     <string name="empty_list">No items in the list</string>
     <string name="add_item">Add item</string>
+    <string name="async_loading">Async Loading</string>
     <string name="sync_with_items">Sync with items</string>
     <string name="groups_selection">Groups Selection</string>
     <string name="subordinate_groups_selection">Subordinate Groups Selection</string>

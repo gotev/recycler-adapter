@@ -131,6 +131,11 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
             true
         }
 
+        R.id.async_loading -> {
+            AsyncLoadingActivity.show(this)
+            true
+        }
+
         R.id.api_integration -> {
             PagingActivity.show(this)
             true

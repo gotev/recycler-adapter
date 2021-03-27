@@ -33,6 +33,10 @@
             android:parentActivityName=".activities.MainActivity"/>
 
         <activity
+            android:name=".activities.AsyncLoadingActivity"
+            android:parentActivityName=".activities.MainActivity"/>
+
+        <activity
             android:name=".activities.GroupsSelectionActivity"
             android:parentActivityName=".activities.MainActivity"/>
 

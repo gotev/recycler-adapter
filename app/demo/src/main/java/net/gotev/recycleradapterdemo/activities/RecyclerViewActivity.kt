@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_recycler_view.*
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
+import net.gotev.recycleradapter.ext.lockScrollingWhileInserting
 import net.gotev.recycleradapterdemo.R
 
 open class RecyclerViewActivity : AppCompatActivity(), RecyclerAdapterProvider {
@@ -24,13 +25,16 @@ open class RecyclerViewActivity : AppCompatActivity(), RecyclerAdapterProvider {
         }
 
         recycler_view.apply {
-            itemAnimator?.changeDuration = 0
-            layoutManager = LinearLayoutManager(
+            val layout = LinearLayoutManager(
                 this@RecyclerViewActivity,
                 RecyclerView.VERTICAL,
                 false
             )
+            itemAnimator?.changeDuration = 0
+            layoutManager = layout
             adapter = recyclerAdapter
+
+            recyclerAdapter.lockScrollingWhileInserting(layout)
         }
     }
 }
