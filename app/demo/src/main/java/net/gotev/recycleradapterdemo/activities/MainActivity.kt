@@ -44,6 +44,15 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
         render {
             +Items.leaveBehind("swipe to left to leave behind", "option")
 
+            // only non-null elements of lists and arrays are rendered
+            +listOf(null, Items.leaveBehind("swipe to left to leave behind 2", "option"))
+            +arrayListOf(
+                Items.leaveBehind("swipe to left to leave behind 3", "option"),
+                null,
+                Items.leaveBehind("swipe to left to leave behind 4", "option"),
+            )
+            +arrayOf(null, Items.leaveBehind("swipe to left to leave behind 5", "option"))
+
             (0..random.nextInt(200) + 50).map {
                 if (it % 2 == 0)
                     +Items.Card.titleSubtitle("Item $it", "subtitle $it")
