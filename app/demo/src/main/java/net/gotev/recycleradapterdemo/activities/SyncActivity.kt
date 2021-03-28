@@ -48,10 +48,7 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
 
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
-        recyclerAdapter.apply {
-            setEmptyItem(Items.label(getString(R.string.empty_list)))
-            lockScrollingWhileInserting(linearLayoutManager)
-        }
+        recyclerAdapter.lockScrollingWhileInserting(linearLayoutManager)
 
         recycler_view.apply {
             // fix blinking of first item when shuffling
@@ -76,7 +73,10 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
 
         empty.setOnClickListener {
             recyclerAdapter.clear()
+            recyclerAdapter.add(Items.label(getString(R.string.empty_list)))
         }
+
+        recyclerAdapter.add(Items.label(getString(R.string.empty_list)))
 
         shuffle.setOnClickListener {
             scheduledOperation = if (scheduledOperation == null) {

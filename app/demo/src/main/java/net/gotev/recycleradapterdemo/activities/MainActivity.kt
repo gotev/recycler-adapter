@@ -14,10 +14,8 @@ import net.gotev.recycleradapter.ext.enableDragDrop
 import net.gotev.recycleradapter.ext.modifyItemsAndRender
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.Items
-import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.LabelWithToggleItem
 import net.gotev.recycleradapterdemo.adapteritems.TitleSubtitleItem
-import net.gotev.recycleradapterdemo.adapteritems.leavebehind.MyLeaveBehindItem
 import java.util.Random
 import java.util.UUID
 
@@ -42,26 +40,44 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
         configureActions()
 
         render {
-            +Items.leaveBehind("swipe to left to reveal options", "delete", onClick = {
-                recyclerAdapter.removeItem(it)
-            })
+            +Items.leaveBehind(
+                value = "swipe to left to reveal options",
+                background = "delete",
+                onClick = { item -> recyclerAdapter.removeItem(item) }
+            )
 
             // only non-null elements of lists and arrays are rendered
-            +listOf(null, Items.leaveBehind("swipe to left to reveal options 2", "delete", onClick = {
-                recyclerAdapter.removeItem(it)
-            }))
-            +arrayListOf(
-                Items.leaveBehind("swipe to left to reveal options 3", "delete", onClick = {
-                    recyclerAdapter.removeItem(it)
-                }),
+            +listOf(
                 null,
-                Items.leaveBehind("swipe to left to reveal options 4", "delete", onClick = {
-                    recyclerAdapter.removeItem(it)
-                }),
+                Items.leaveBehind(
+                    value = "swipe to left to reveal options 2",
+                    background = "delete",
+                    onClick = { item -> recyclerAdapter.removeItem(item) }
+                )
             )
-            +arrayOf(null, Items.leaveBehind("swipe to left to reveal options 5", "option", onClick = {
-                recyclerAdapter.removeItem(it)
-            }))
+
+            +arrayListOf(
+                Items.leaveBehind(
+                    value = "swipe to left to reveal options 3",
+                    background = "delete",
+                    onClick = { item -> recyclerAdapter.removeItem(item) }
+                ),
+                null,
+                Items.leaveBehind(
+                    value = "swipe to left to reveal options 4",
+                    background = "delete",
+                    onClick = { item -> recyclerAdapter.removeItem(item) }
+                )
+            )
+
+            +arrayOf(
+                null,
+                Items.leaveBehind(
+                    value = "swipe to left to reveal options 5",
+                    background = "delete",
+                    onClick = { item -> recyclerAdapter.removeItem(item) }
+                )
+            )
 
             (0..random.nextInt(200) + 50).map {
                 if (it % 2 == 0)
