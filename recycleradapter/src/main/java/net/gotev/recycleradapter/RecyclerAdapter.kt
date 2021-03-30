@@ -38,7 +38,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     private fun Int.isOutOfItemsRange() = this < 0 || this >= items.size
 
-    private fun <R> emptyListWithEmptyItem(action: (emptyItem: AdapterItem<in RecyclerAdapterViewHolder>) -> R): R? {
+    private fun <R> emptyListWithEmptyItem(action: (emptyItem: AdapterItem<in RecyclerAdapterViewHolder>) -> R?): R? {
         val safeEmptyItem = emptyItem
 
         return if (items.isEmpty() && safeEmptyItem != null) {
