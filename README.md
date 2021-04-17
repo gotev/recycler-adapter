@@ -1,4 +1,4 @@
-# Recycler Adapter [ ![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.gotev/recycleradapter/badge.svg) ](https://search.maven.org/search?q=g:net.gotev)
+# Recycler Adapter ![Maven Central](https://img.shields.io/maven-central/v/net.gotev/recycleradapter)
 #### [Latest version Release Notes and Demo App](https://github.com/gotev/recycler-adapter/releases/latest)
 
 RecyclerView-driven declarative UIs.
@@ -62,7 +62,7 @@ def recyclerAdapterVersion = "x.y.z" // change it with the version you want to u
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 implementation "net.gotev:recycleradapter-extensions:$recyclerAdapterVersion"
 ```
-This is the latest version: [ ![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.gotev/recycleradapter/badge.svg) ](https://search.maven.org/search?q=g:net.gotev)
+This is the latest version: ![Maven Central](https://img.shields.io/maven-central/v/net.gotev/recycleradapter)
 
 ## <a name="basicTutorial"></a>Basic usage tutorial
 ### 1. Declare the RecyclerView
