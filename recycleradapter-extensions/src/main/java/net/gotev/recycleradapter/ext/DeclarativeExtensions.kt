@@ -10,6 +10,11 @@ import kotlin.collections.ArrayList
 
 typealias AdapterItems = ArrayList<AdapterItem<*>>
 
+@Deprecated(
+    message = "use renderableItems{ }.toAdapter() instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 fun createRecyclerAdapterWith(vararg items: AdapterItem<*>?): RecyclerAdapter {
     return RecyclerAdapter().apply {
         val filtered = items.filterNotNull()
@@ -19,6 +24,11 @@ fun createRecyclerAdapterWith(vararg items: AdapterItem<*>?): RecyclerAdapter {
     }
 }
 
+@Deprecated(
+    message = "use renderableItems{ }.toAdapter() instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 fun createRecyclerAdapterWith(list: List<AdapterItem<*>?>?): RecyclerAdapter {
     return RecyclerAdapter().apply {
         val filtered = list?.filterNotNull() ?: emptyList()
@@ -28,6 +38,11 @@ fun createRecyclerAdapterWith(list: List<AdapterItem<*>?>?): RecyclerAdapter {
     }
 }
 
+@Deprecated(
+    message = "use renderableItems{ } instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 fun listOfAdapterItems(vararg items: AdapterItem<*>?): AdapterItems {
     return if (items.isEmpty()) {
         ArrayList(1)
@@ -36,6 +51,11 @@ fun listOfAdapterItems(vararg items: AdapterItem<*>?): AdapterItems {
     }
 }
 
+@Deprecated(
+    message = "use renderableItems{ +itemToAdd(..) } instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 fun AdapterItems.adding(item: AdapterItem<*>?): AdapterItems {
     return if (item == null) {
         this
@@ -44,34 +64,75 @@ fun AdapterItems.adding(item: AdapterItem<*>?): AdapterItems {
     }
 }
 
+@Deprecated(
+    message = "use renderableItems{ } instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 fun adapterItems(vararg items: AdapterItem<*>?): AdapterItems {
     return ArrayList(listOfNotNull(*items))
 }
 
+@Deprecated(
+    message = "use renderableItems{ } instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 inline fun <T> Iterable<T>.mapItems(transform: (T) -> AdapterItem<*>?): Array<AdapterItem<*>> {
     return mapNotNull(transform).toTypedArray()
 }
 
+@Deprecated(
+    message = "use renderableItems{ map.forEach{ (key, value) -> +item(..) } } instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 inline fun <K, V> Map<out K, V>.mapToManyAdapterItems(transform: (Map.Entry<K, V>) -> List<AdapterItem<*>>): Array<AdapterItem<*>> {
     return map(transform).flatten().toTypedArray()
 }
 
+@Deprecated(
+    message = "use renderableItems{ array.forEach{ +item(..) } } instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 inline fun <T> Array<T>.mapToManyAdapterItems(transform: (T) -> List<AdapterItem<*>>): Array<AdapterItem<*>> {
     return map(transform).flatten().toTypedArray()
 }
 
+@Deprecated(
+    message = "use renderableItems{ iterable.forEach{ +item(..) } } instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 inline fun <T> Iterable<T>.mapToManyAdapterItems(transform: (T) -> List<AdapterItem<*>>): Array<AdapterItem<*>> {
     return map(transform).flatten().toTypedArray()
 }
 
+@Deprecated(
+    message = "use renderableItems{ }.toAdapter() instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
+@Suppress("DEPRECATION")
 inline fun <T> Iterable<T>.createRecyclerAdapterByMapping(transform: (T) -> AdapterItem<*>?): RecyclerAdapter {
     return RecyclerAdapter().add(mapToAdapterItems(transform))
 }
 
+@Deprecated(
+    message = "use renderableItems{ iterable.forEach{ +item(..) } } instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 inline fun <T> Iterable<T>.mapToAdapterItems(transform: (T) -> AdapterItem<*>?): AdapterItems {
     return ArrayList(mapNotNull(transform))
 }
 
+@Deprecated(
+    message = "use renderableItems{ array.forEach{ +item(..) } } instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("renderableItems")
+)
 inline fun <T> Array<T>.mapToAdapterItems(transform: (T) -> AdapterItem<*>?): AdapterItems {
     return ArrayList(mapNotNull(transform))
 }
@@ -115,6 +176,11 @@ fun renderableItems(action: RenderableItems.() -> Unit): RenderableItems {
 interface RecyclerAdapterProvider {
     val recyclerAdapter: RecyclerAdapter
 
+    @Deprecated(
+        message = "use render(renderableItems) instead",
+        level = DeprecationLevel.WARNING,
+        replaceWith = ReplaceWith("render(renderableItems)")
+    )
     fun AdapterItems.render() {
         recyclerAdapter.syncWithItems(this)
     }
@@ -129,14 +195,25 @@ interface RecyclerAdapterProvider {
         recyclerAdapter.syncWithItems(builder.items)
     }
 
+    @Deprecated(
+        message = "use render(renderableItems) instead",
+        level = DeprecationLevel.WARNING,
+        replaceWith = ReplaceWith("render(renderableItems)")
+    )
     fun render(vararg items: AdapterItem<*>?) {
         renderList(items.filterNotNull())
     }
 
+    @Deprecated(
+        message = "use render(renderableItems) instead",
+        level = DeprecationLevel.WARNING,
+        replaceWith = ReplaceWith("render(renderableItems)")
+    )
     fun render(list: List<AdapterItem<*>?>?) {
         renderList(list?.filterNotNull() ?: emptyList())
     }
 
+    @Suppress("DEPRECATION")
     private fun renderList(list: List<AdapterItem<*>>) {
         if (list.isEmpty()) {
             recyclerAdapter.clear()

@@ -1,4 +1,4 @@
-# Recycler Adapter [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion) [ ![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.gotev/recycleradapter/badge.svg) ](https://search.maven.org/search?q=g:net.gotev)
+# Recycler Adapter [ ![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.gotev/recycleradapter/badge.svg) ](https://search.maven.org/search?q=g:net.gotev)
 #### [Latest version Release Notes and Demo App](https://github.com/gotev/recycler-adapter/releases/latest)
 
 RecyclerView-driven declarative UIs.
@@ -62,7 +62,7 @@ def recyclerAdapterVersion = "x.y.z" // change it with the version you want to u
 implementation "net.gotev:recycleradapter:$recyclerAdapterVersion"
 implementation "net.gotev:recycleradapter-extensions:$recyclerAdapterVersion"
 ```
-This is the latest version: [ ![Download](https://api.bintray.com/packages/gotev/maven/recycler-adapter/images/download.svg) ](https://bintray.com/gotev/maven/recycler-adapter/_latestVersion)
+This is the latest version: [ ![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.gotev/recycleradapter/badge.svg) ](https://search.maven.org/search?q=g:net.gotev)
 
 ## <a name="basicTutorial"></a>Basic usage tutorial
 ### 1. Declare the RecyclerView

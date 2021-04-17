@@ -122,13 +122,13 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         get() = items.lastIndex
 
     override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*>? {
-        val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return null
+        val position = holder.bindingAdapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return null
 
         return items[position]
     }
 
     override fun notifyItemChanged(holder: RecyclerAdapterViewHolder) {
-        val position = holder.adapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
+        val position = holder.bindingAdapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
 
         notifyChangedPosition(position)
     }

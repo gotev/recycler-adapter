@@ -88,7 +88,7 @@ class PagingAdapter(
     }
 
     override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*>? {
-        return getItem(holder.adapterPosition)
+        return getItem(holder.bindingAdapterPosition)
     }
 
     override fun notifyItemChanged(holder: RecyclerAdapterViewHolder) {

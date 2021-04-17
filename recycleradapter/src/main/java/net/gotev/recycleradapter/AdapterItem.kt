@@ -55,6 +55,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
      * Returns the view for this item
      * @param parent the parent ViewGroup, which is the current root, from which you can infer context
      */
+    @Suppress("DEPRECATION")
     open fun getView(parent: ViewGroup): View = parent.inflating(getLayoutId())
 
     /**

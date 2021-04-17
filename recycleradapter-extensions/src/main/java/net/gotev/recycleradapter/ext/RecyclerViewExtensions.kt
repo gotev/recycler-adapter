@@ -27,7 +27,7 @@ fun RecyclerView.applySwipeGesture(listener: SwipeListener) {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-            listener.onItemSwiped(viewHolder.adapterPosition, swipeDir)
+            listener.onItemSwiped(viewHolder.bindingAdapterPosition, swipeDir)
         }
     }).attachToRecyclerView(this)
 }
@@ -96,8 +96,8 @@ fun RecyclerAdapter.enableDragDrop(recyclerView: RecyclerView, directions: Int =
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
-            val sourcePosition = viewHolder.adapterPosition
-            val targetPosition = target.adapterPosition
+            val sourcePosition = viewHolder.bindingAdapterPosition
+            val targetPosition = target.bindingAdapterPosition
 
             swap(sourcePosition, targetPosition)
 
