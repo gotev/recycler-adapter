@@ -14,6 +14,7 @@ import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
 import net.gotev.recycleradapter.ext.adapterItems
 import net.gotev.recycleradapter.ext.lockScrollingWhileInserting
 import net.gotev.recycleradapter.ext.modifyItemsAndRender
+import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.Items
 import net.gotev.recycleradapterdemo.adapteritems.LabelItem
@@ -100,31 +101,31 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
         scheduledOperation = null
     }
 
-    private var listB = arrayListOf(
-        Items.Card.sync(1, "listA"),
-        Items.Card.sync(3, "listB"),
-        Items.Card.sync(4, "listB"),
-        Items.Card.sync(5, "listB")
-    )
-
-    private fun listB(): ArrayList<SyncItem> {
-        listB.add(Items.Card.sync(listB.last().id + 1, "listB ${listB.last().id + 1}"))
-        listB.add(Items.Card.sync(listB.last().id + 1, "listB ${listB.last().id + 1}"))
-        return listB
+    private var listB = renderableItems {
+        +Items.Card.sync(1, "listA")
+        +Items.Card.sync(3, "listB")
+        +Items.Card.sync(4, "listB")
+        +Items.Card.sync(5, "listB")
     }
 
-    private fun listA() = adapterItems(
-        Items.Card.sync(1, "listA"),
-        Items.Card.sync(2, "listA")
-    )
+    private fun listB() = listB.apply {
+        +Items.Card.sync((listB.last() as SyncItem).id + 1, "listB ${listB.last().diffingId()}")
+        +Items.Card.sync((listB.last() as SyncItem).id + 1, "listB ${listB.last().diffingId()}")
+    }
 
-    private fun listC() = adapterItems(
-        Items.Card.sync(1, "listC")
-    )
+    private fun listA() = renderableItems {
+        +Items.Card.sync(1, "listA")
+        +Items.Card.sync(2, "listA")
+    }
 
-    fun createItems(): List<AdapterItem<*>> {
-        return (0..Random.nextInt(from = 2, until = 20)).flatMap {
-            listOf(Items.label("TITLE $it"), Items.Card.sync(it, "ListC"))
+    private fun listC() = renderableItems {
+        +Items.Card.sync(1, "listC")
+    }
+
+    fun createItems() = renderableItems {
+        (0..Random.nextInt(from = 2, until = 20)).forEach {
+            +Items.label("TITLE $it")
+            +Items.Card.sync(it, "ListC")
         }
     }
 

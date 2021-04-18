@@ -190,9 +190,7 @@ interface RecyclerAdapterProvider {
     }
 
     fun render(action: RenderableItems.() -> Unit) {
-        val builder = RenderableItems()
-        action(builder)
-        recyclerAdapter.syncWithItems(builder.items)
+        recyclerAdapter.syncWithItems(renderableItems(action).items)
     }
 
     @Deprecated(

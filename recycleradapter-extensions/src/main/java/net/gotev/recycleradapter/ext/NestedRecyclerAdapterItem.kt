@@ -2,6 +2,7 @@ package net.gotev.recycleradapter.ext
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
@@ -18,7 +19,7 @@ abstract class NestedRecyclerAdapterItem<T : NestedRecyclerAdapterItem.Holder>(
     model: Any
 ) : AdapterItem<T>(model) {
 
-    override fun getLayoutId() = R.layout.item_nested
+    override fun getView(parent: ViewGroup) = parent.inflating(R.layout.item_nested)
 
     open fun getLayoutManager(context: Context): RecyclerView.LayoutManager =
         LinearLayoutManager(context, HORIZONTAL, false)

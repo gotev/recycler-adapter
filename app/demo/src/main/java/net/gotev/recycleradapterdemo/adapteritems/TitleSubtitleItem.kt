@@ -28,7 +28,7 @@ open class TitleSubtitleItem(private val title: String, private val subtitle: St
             titleField.onClickWith<TitleSubtitleItem> {
                 Toast.makeText(
                     itemView.context,
-                    "clicked TITLE at position $adapterPosition",
+                    "clicked TITLE at position $bindingAdapterPosition",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -36,7 +36,7 @@ open class TitleSubtitleItem(private val title: String, private val subtitle: St
             subtitleField.onClickWith<TitleSubtitleItem> {
                 Toast.makeText(
                     itemView.context,
-                    "clicked SUBTITLE at position $adapterPosition",
+                    "clicked SUBTITLE at position $bindingAdapterPosition",
                     Toast.LENGTH_SHORT
                 ).show()
             }
