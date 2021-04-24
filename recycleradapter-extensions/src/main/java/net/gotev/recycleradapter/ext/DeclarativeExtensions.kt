@@ -176,6 +176,14 @@ fun renderableItems(action: RenderableItems.() -> Unit): RenderableItems {
 interface RecyclerAdapterProvider {
     val recyclerAdapter: RecyclerAdapter
 
+    fun render(renderableItems: RenderableItems) {
+        recyclerAdapter.syncWithItems(renderableItems.items)
+    }
+
+    fun render(action: RenderableItems.() -> Unit) {
+        recyclerAdapter.syncWithItems(renderableItems(action).items)
+    }
+
     @Deprecated(
         message = "use render(renderableItems) instead",
         level = DeprecationLevel.WARNING,
@@ -183,14 +191,6 @@ interface RecyclerAdapterProvider {
     )
     fun AdapterItems.render() {
         recyclerAdapter.syncWithItems(this)
-    }
-
-    fun render(renderableItems: RenderableItems) {
-        recyclerAdapter.syncWithItems(renderableItems.items)
-    }
-
-    fun render(action: RenderableItems.() -> Unit) {
-        recyclerAdapter.syncWithItems(renderableItems(action).items)
     }
 
     @Deprecated(

@@ -73,11 +73,14 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
         }
 
         empty.setOnClickListener {
-            recyclerAdapter.clear()
-            recyclerAdapter.add(Items.label(getString(R.string.empty_list)))
+            render {
+                +Items.label(getString(R.string.empty_list))
+            }
         }
 
-        recyclerAdapter.add(Items.label(getString(R.string.empty_list)))
+        render {
+            +Items.label(getString(R.string.empty_list))
+        }
 
         shuffle.setOnClickListener {
             scheduledOperation = if (scheduledOperation == null) {
