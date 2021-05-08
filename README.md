@@ -18,6 +18,8 @@ render {
 }
 ```
 
+<img width="324" alt="Schermata 2021-05-08 alle 07 39 59" src="https://user-images.githubusercontent.com/16792495/117528089-bb938e00-afd0-11eb-8564-eeb1d0b8efb3.png">
+
 Standard `RecyclerView.Adapter` is tedious to work with, because you have to write repetitive boilerplate and spaghetti code and to concentrate all your items view logic and binding into the adapter itself, which is really bad. This library was born to be able to have the following for each element in a recycler view:
 
 * a `model`, which is a simple `data class`
