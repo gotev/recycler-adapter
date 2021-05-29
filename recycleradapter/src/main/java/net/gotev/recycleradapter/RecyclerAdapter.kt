@@ -1,6 +1,7 @@
 package net.gotev.recycleradapter
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import java.util.ArrayList
 import java.util.Collections
@@ -11,6 +12,21 @@ import java.util.Collections
  * @author Aleksandar Gotev
  */
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), RecyclerAdapterNotifier {
+
+    private class Differ(
+        private val oldList: List<AdapterItem<*>>,
+        private val newList: List<AdapterItem<*>>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition] == newList[newItemPosition]
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            !oldList[oldItemPosition].hasToBeReplacedBy(newList[newItemPosition])
+    }
 
     private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
     private val types = LinkedHashMap<Int, AdapterItem<*>>()
@@ -104,7 +120,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     override fun notifyItemChanged(holder: RecyclerAdapterViewHolder) {
         val position = holder.bindingAdapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
-
         notifyChangedPosition(position)
     }
 
@@ -237,41 +252,24 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * [RecyclerAdapter.clear] method call.
      * @return [RecyclerAdapter]
      */
-    fun syncWithItems(newItems: ArrayList<out AdapterItem<*>>): RecyclerAdapter {
+    fun syncWithItems(newItems: List<AdapterItem<*>>): RecyclerAdapter {
         if (newItems.isEmpty()) {
             clear()
             return this
         }
 
-        items.ensureCapacity(newItems.size)
+        val diffResult = DiffUtil.calculateDiff(Differ(oldList = items, newList = newItems))
 
-        newItems.forEachIndexed { newItemsIndex, newItem ->
-            val internalItemIndex = items.indexOf(newItem)
+        items.clear()
+        types.clear()
 
-            if (internalItemIndex < 0) { // new item does not exist
-                add(newItem, newItemsIndex)
-            } else {
-                val internalItem = items[internalItemIndex]
-
-                if (internalItem.hasToBeReplacedBy(newItem)) {
-                    if (internalItemIndex != newItemsIndex) {
-                        removeItemAtPosition(internalItemIndex)
-                        add(newItem, newItemsIndex)
-                    } else {
-                        items[internalItemIndex] = newItem.castAsIn()
-                        registerItemType(newItem)
-                        notifyChangedPosition(internalItemIndex)
-                    }
-                } else {
-                    if (internalItemIndex != newItemsIndex) {
-                        removeItemAtPosition(internalItemIndex)
-                        add(internalItem, newItemsIndex)
-                    }
-                }
-            }
+        newItems.forEach {
+            val newItem = it.castAsIn()
+            registerItemType(newItem)
+            items.add(newItem)
         }
 
-        items.filter { newItems.indexOf(it) < 0 }.forEach { removeItem(it) }
+        diffResult.dispatchUpdatesTo(this)
 
         return this
     }
@@ -301,7 +299,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * is out of bounds
      */
     fun removeItemAtPosition(position: Int) =
-        items.takeIf { !it.isEmpty() && !position.isOutOfItemsRange() }?.let { items ->
+        items.takeIf { it.isNotEmpty() && !position.isOutOfItemsRange() }?.let { items ->
             items.removeAt(position)
             notifyItemRemoved(position)
             true
