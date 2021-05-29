@@ -17,13 +17,6 @@ abstract class RecyclerAdapterViewHolder(itemView: View) : RecyclerView.ViewHold
         adapter = WeakReference(recyclerAdapter)
     }
 
-    @Deprecated(
-        message = "use withAdapterItem<Type> { } instead",
-        level = DeprecationLevel.WARNING,
-        replaceWith = ReplaceWith("withAdapterItem<Type>")
-    )
-    protected fun getAdapterItem() = adapter?.get()?.getAdapterItem(this)
-
     /**
      * Performs an action by safely getting the associated AdapterItem.
      */

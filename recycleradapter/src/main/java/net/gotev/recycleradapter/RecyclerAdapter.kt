@@ -14,7 +14,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
     private val types = LinkedHashMap<Int, AdapterItem<*>>()
-    private var emptyItem: AdapterItem<in RecyclerAdapterViewHolder>? = null
 
     private var filtered = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
     private var showFiltered = false
@@ -38,16 +37,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     private fun Int.isOutOfItemsRange() = this < 0 || this >= items.size
 
-    private fun <R> emptyListWithEmptyItem(action: (emptyItem: AdapterItem<in RecyclerAdapterViewHolder>) -> R?): R? {
-        val safeEmptyItem = emptyItem
-
-        return if (items.isEmpty() && safeEmptyItem != null) {
-            action(safeEmptyItem)
-        } else {
-            null
-        }
-    }
-
     private fun updateItemAtPosition(
         item: AdapterItem<in RecyclerAdapterViewHolder>,
         position: Int
@@ -64,32 +53,17 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
     }
 
-    private fun removeEmptyItemIfItHasBeenConfigured(insertPosition: Int) {
-        // this is necessary to prevent IndexOutOfBoundsException on RecyclerView when the
-        // first item gets added and an empty item has been configured
-        if (insertPosition == 0 && items.size >= 1 && emptyItem != null) {
-            notifyItemChanged(0)
-        }
-    }
+    override fun getItemViewType(position: Int): Int = items[position].viewType()
 
-    override fun getItemViewType(position: Int): Int =
-        emptyListWithEmptyItem { it.viewType() } ?: items[position].viewType()
-
-    override fun getItemId(position: Int) =
-        emptyListWithEmptyItem { it.hashCode().toLong() }
-            ?: items[position].diffingId().hashCode().toLong()
+    override fun getItemId(position: Int) = items[position].diffingId().hashCode().toLong()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapterViewHolder {
-        val item = emptyListWithEmptyItem {
-            if (viewType == it.viewType()) it else null
-        } ?: types.getValue(viewType)
-
+        val item = types.getValue(viewType)
         return item.createItemViewHolder(parent)
     }
 
     private fun bindItem(holder: RecyclerAdapterViewHolder, position: Int, firstTime: Boolean) {
-        val item = emptyListWithEmptyItem { it } ?: items[position]
-
+        val item = items[position]
         holder.setAdapter(this)
         item.bind(firstTime, holder)
     }
@@ -111,7 +85,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         holder.prepareForReuse()
     }
 
-    override fun getItemCount() = emptyListWithEmptyItem { 1 } ?: items.size
+    override fun getItemCount() = items.size
 
     /**
      * Gets the index of the last item in the list.
@@ -122,7 +96,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         get() = items.lastIndex
 
     override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*>? {
-        val position = holder.bindingAdapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return null
+        val position =
+            holder.bindingAdapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return null
 
         return items[position]
     }
@@ -131,33 +106,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         val position = holder.bindingAdapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return
 
         notifyChangedPosition(position)
-    }
-
-    /**
-     * Sets the item to show when the recycler adapter is empty.
-     *
-     * @param item item to show when the recycler adapter is empty
-     */
-    @Deprecated(
-        message = "instead of using setEmptyItem(YourItem), you should re-render your list with the empty item: render { +YourItem }",
-        level = DeprecationLevel.WARNING,
-        replaceWith = ReplaceWith("render")
-    )
-    fun setEmptyItem(item: AdapterItem<*>?) {
-        val previouslyEmpty = emptyItem == null
-        val afterEmpty = item == null
-
-        emptyItem = item?.castAsIn()
-
-        if (items.isEmpty()) {
-            if (previouslyEmpty && !afterEmpty) {
-                notifyItemInserted(0)
-            } else if (!previouslyEmpty && afterEmpty) {
-                notifyItemRemoved(0)
-            } else if (!previouslyEmpty && !afterEmpty) {
-                notifyItemChanged(0)
-            }
-        }
     }
 
     /**
@@ -193,7 +141,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
         }
 
         registerItemType(item)
-        removeEmptyItemIfItHasBeenConfigured(insertPosition)
         notifyItemInserted(insertPosition)
         return this
     }
@@ -229,7 +176,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
             }
         }
 
-        removeEmptyItemIfItHasBeenConfigured(firstIndex)
         notifyItemRangeInserted(firstIndex, newItems.size)
         return this
     }
@@ -314,7 +260,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
                     } else {
                         items[internalItemIndex] = newItem.castAsIn()
                         registerItemType(newItem)
-                        removeEmptyItemIfItHasBeenConfigured(internalItemIndex)
                         notifyChangedPosition(internalItemIndex)
                     }
                 } else {

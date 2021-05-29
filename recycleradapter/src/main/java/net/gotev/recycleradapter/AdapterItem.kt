@@ -11,7 +11,8 @@ import java.lang.reflect.InvocationTargetException
  * @author Aleksandar Gotev
  * @param <T> ViewHolder subclass
 </T> */
-abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any) : Comparable<AdapterItem<*>> {
+abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any) :
+    Comparable<AdapterItem<*>> {
 
     /**
      * Returns the identifier for this adapter item. Used in diffing operations.
@@ -37,17 +38,6 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
      */
     open fun diffingId(): String = model.javaClass.name + model.hashCode().toString()
 
-    /**
-     * Returns the layout ID for this item
-     * @return layout ID
-     */
-    @Deprecated(
-        message = "getLayoutId is deprecated. Use getView(parent: ViewGroup)",
-        replaceWith = ReplaceWith("override fun getView(parent: ViewGroup): View = parent.inflating(yourLayoutId)"),
-        level = DeprecationLevel.WARNING
-    )
-    open fun getLayoutId(): Int = 0
-
     fun ViewGroup.inflating(@LayoutRes layoutId: Int): View =
         LayoutInflater.from(context).inflate(layoutId, this, false)
 
@@ -55,8 +45,7 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
      * Returns the view for this item
      * @param parent the parent ViewGroup, which is the current root, from which you can infer context
      */
-    @Suppress("DEPRECATION")
-    open fun getView(parent: ViewGroup): View = parent.inflating(getLayoutId())
+    abstract fun getView(parent: ViewGroup): View
 
     /**
      * Gets called for every item when the [RecyclerAdapter.filter] method gets called.
@@ -92,10 +81,12 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
      * @throws IllegalAccessException if a method, field or class has been declared with insufficient access control modifiers
      */
     @Suppress("UNCHECKED_CAST")
-    @Throws(NoSuchMethodException::class,
+    @Throws(
+        NoSuchMethodException::class,
         InstantiationException::class,
         InvocationTargetException::class,
-        IllegalAccessException::class)
+        IllegalAccessException::class
+    )
     private fun getViewHolder(view: View): T {
 
         // analyze all the public classes and interfaces that are members of the class represented
@@ -108,10 +99,11 @@ abstract class AdapterItem<T : RecyclerAdapterViewHolder>(private val model: Any
             }
         }
 
-        throw RuntimeException("${javaClass.simpleName} - No ViewHolder implementation found! " +
-            "Please check that all your ViewHolder implementations are: 'public static' and " +
-            "not private or protected, otherwise reflection will not work!")
-
+        throw RuntimeException(
+            "${javaClass.simpleName} - No ViewHolder implementation found! " +
+                "Please check that all your ViewHolder implementations are: 'public static' and " +
+                "not private or protected, otherwise reflection will not work!"
+        )
     }
 
     fun createItemViewHolder(parent: ViewGroup): RecyclerAdapterViewHolder {

@@ -8,16 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_sync.*
-import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
-import net.gotev.recycleradapter.ext.adapterItems
 import net.gotev.recycleradapter.ext.lockScrollingWhileInserting
 import net.gotev.recycleradapter.ext.modifyItemsAndRender
 import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.Items
-import net.gotev.recycleradapterdemo.adapteritems.LabelItem
 import net.gotev.recycleradapterdemo.adapteritems.SyncItem
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.ScheduledThreadPoolExecutor
