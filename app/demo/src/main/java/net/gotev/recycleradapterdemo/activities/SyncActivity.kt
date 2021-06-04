@@ -7,7 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_sync.*
+import com.google.android.material.button.MaterialButton
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
 import net.gotev.recycleradapter.ext.lockScrollingWhileInserting
@@ -48,7 +48,7 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
 
         recyclerAdapter.lockScrollingWhileInserting(linearLayoutManager)
 
-        recycler_view.apply {
+        findViewById<RecyclerView>(R.id.recycler_view).apply {
             // fix blinking of first item when shuffling
             itemAnimator?.changeDuration = 0
 
@@ -57,19 +57,19 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
             adapter = recyclerAdapter
         }
 
-        syncA.setOnClickListener {
+        findViewById<MaterialButton>(R.id.syncA).setOnClickListener {
             render(listA())
         }
 
-        syncB.setOnClickListener {
+        findViewById<MaterialButton>(R.id.syncB).setOnClickListener {
             render(listB())
         }
 
-        syncC.setOnClickListener {
+        findViewById<MaterialButton>(R.id.syncC).setOnClickListener {
             render(listC())
         }
 
-        empty.setOnClickListener {
+        findViewById<MaterialButton>(R.id.empty).setOnClickListener {
             render {
                 +Items.label(getString(R.string.empty_list))
             }
@@ -79,18 +79,20 @@ class SyncActivity : AppCompatActivity(), RecyclerAdapterProvider {
             +Items.label(getString(R.string.empty_list))
         }
 
-        shuffle.setOnClickListener {
-            scheduledOperation = if (scheduledOperation == null) {
-                shuffle.text = getString(R.string.button_shuffle_stop)
-                executor.scheduleAtFixedRate({
-                    runOnUiThread {
-                        render(createItems())
-                    }
-                }, 1, 100, TimeUnit.MILLISECONDS)
-            } else {
-                shuffle.text = getString(R.string.button_shuffle_start)
-                scheduledOperation?.cancel(true)
-                null
+        findViewById<MaterialButton>(R.id.shuffle).apply {
+            setOnClickListener {
+                scheduledOperation = if (scheduledOperation == null) {
+                    text = getString(R.string.button_shuffle_stop)
+                    executor.scheduleAtFixedRate({
+                        runOnUiThread {
+                            render(createItems())
+                        }
+                    }, 1, 100, TimeUnit.MILLISECONDS)
+                } else {
+                    text = getString(R.string.button_shuffle_start)
+                    scheduledOperation?.cancel(true)
+                    null
+                }
             }
         }
     }

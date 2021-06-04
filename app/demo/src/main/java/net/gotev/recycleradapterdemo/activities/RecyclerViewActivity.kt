@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_recycler_view.*
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
 import net.gotev.recycleradapter.ext.lockScrollingWhileInserting
@@ -24,7 +23,7 @@ open class RecyclerViewActivity : AppCompatActivity(), RecyclerAdapterProvider {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        recycler_view.apply {
+        findViewById<RecyclerView>(R.id.recycler_view).apply {
             val layout = LinearLayoutManager(
                 this@RecyclerViewActivity,
                 RecyclerView.VERTICAL,
