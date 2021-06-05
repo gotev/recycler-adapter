@@ -26,7 +26,7 @@ class PagingAdapter(
                 oldItem == newItem
 
             override fun areContentsTheSame(oldItem: AdapterItem<*>, newItem: AdapterItem<*>) =
-                !oldItem.hasToBeReplacedBy(oldItem)
+                !oldItem.hasToBeReplacedBy(newItem)
         }
     }
 

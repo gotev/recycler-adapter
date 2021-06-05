@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.material.button.MaterialButton
 import net.gotev.recycleradapter.AdapterItem
 import net.gotev.recycleradapter.RecyclerAdapter
 import net.gotev.recycleradapter.ext.RecyclerAdapterProvider
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        recycler_view.apply {
+        findViewById<RecyclerView>(R.id.recycler_view).apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = recyclerAdapter
             recyclerAdapter.enableDragDrop(this)
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
     }
 
     private fun configureActions() {
-        add_item.setOnClickListener {
+        findViewById<MaterialButton>(R.id.add_item).setOnClickListener {
             // handle empty item
             if (recyclerAdapter.itemCount == 1 && recyclerAdapter.adapterItems[0] is LabelItem) {
                 recyclerAdapter.clear()
@@ -102,11 +102,11 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
             )
         }
 
-        remove_all.setOnClickListener {
+        findViewById<MaterialButton>(R.id.remove_all).setOnClickListener {
             clearWithEmpty()
         }
 
-        remove_last_item_of_a_kind.setOnClickListener {
+        findViewById<MaterialButton>(R.id.remove_last_item_of_a_kind).setOnClickListener {
             // remove last item with class TextWithToggleItem
             recyclerAdapter.modifyItemsAndRender { items ->
                 items.apply {
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), RecyclerAdapterProvider {
             }
         }
 
-        remove_all_items_of_a_kind.setOnClickListener {
+        findViewById<MaterialButton>(R.id.remove_all_items_of_a_kind).setOnClickListener {
             // remove all items with class TitleSubtitleItem
             recyclerAdapter.modifyItemsAndRender { items ->
                 items.filter { it::class.java != TitleSubtitleItem::class.java }.withEmpty()

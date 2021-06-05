@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_paging.*
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import net.gotev.recycleradapter.paging.PagingAdapter
 import net.gotev.recycleradapterdemo.App
 import net.gotev.recycleradapterdemo.R
@@ -43,17 +43,22 @@ class PagingActivity : AppCompatActivity() {
                 .build()
         )
 
-        recycler_view.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recycler_view.adapter = pagingAdapter
+        findViewById<RecyclerView>(R.id.recycler_view).apply {
+            layoutManager = LinearLayoutManager(this@PagingActivity, RecyclerView.VERTICAL, false)
+            adapter = pagingAdapter
+        }
 
-        pagingAdapter.startObserving(
-            this,
-            onLoadingComplete = { swipeRefresh.isRefreshing = false })
+        findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).apply {
+            setOnRefreshListener {
+                pagingAdapter.reload()
+            }
 
-        swipeRefresh.isRefreshing = true
+            pagingAdapter.startObserving(
+                this@PagingActivity,
+                onLoadingComplete = { isRefreshing = false }
+            )
 
-        swipeRefresh.setOnRefreshListener {
-            pagingAdapter.reload()
+            isRefreshing = true
         }
     }
 }
