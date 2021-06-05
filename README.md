@@ -42,7 +42,6 @@ Before diving into some details, it's worth mentioning you can download and try 
 * [Adding different kind of items](#differentItems)
 * [Carousels and nested RecyclerViews](#carousels)
 * [Paged Lists](#pagedLists)
-* [Empty item](#emptyItem)
 * [Empty item in Paged Lists](#emptyItemPagedLists)
 * [Filter items (to implement searchBar)](#filterItems)
 * [Sort items](#sortItems)
@@ -224,25 +223,12 @@ It's strongly advised to study Google's Paging Library first so you can better u
 
 The paging module aims to provide an essential and thin layer on top of Google's `Paging Library`, to allow you to benefit the RecyclerAdapter abstractions and reuse all your existing Adapter items. `PagingAdapter` does not have all the features of the standard `RecyclerAdapter` on purpose, because `PagingAdapter` doesn't have the entire list in memory and it's intended to be used for different use cases.
 
-## <a name="emptyItem"></a>Empty item
-It's often useful to display something on the screen when the RecyclerView is empty. To do so, simply implement a new `Item` just as you would do with a normal item in the list, then:
-
-```kotlin
-recyclerAdapter.setEmptyItem(yourEmptyItem)
-```
-wherever you need it in your code. It doesn't necessarily have to be invoked before
-
-```kotlin
-recyclerView.setAdapter(recyclerAdapter)
-```
-
 ## <a name="emptyItemPagedLists"></a>Empty item in Paged Lists
 If you want to add an Empty Item when RecyclerView is empty also when you're using the `PagingAdapter` extension, you have to implement a new `Item` (like described before) then, in your `DataSource` `LoadInitial` method, use the `withEmptyItem` enxtension for your callback instead of `onResult`:
 
 ```kotlin
 callback.withEmptyItem(emptyItem,response.results)
 ```
-
 
 ## <a name="filterItems"></a>Filter items
 If you need to search items in your recycler view, you have to override `onFilter` method in each one of your items implementation. Let's say our `AdapterItem` has a `text` field and we want to check if the search term matches it:
