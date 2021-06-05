@@ -1,5 +1,5 @@
 # Recycler Adapter ![Maven Central](https://img.shields.io/maven-central/v/net.gotev/recycleradapter)
-#### [Latest version Release Notes and Demo App](https://github.com/gotev/recycler-adapter/releases/latest)
+#### [Latest version Release Notes and Demo App](https://github.com/gotev/recycler-adapter/releases/latest) | [Demo App Sources](https://github.com/gotev/recycler-adapter/tree/master/app/demo/src/main/java/net/gotev/recycleradapterdemo)
 
 RecyclerView-driven declarative UIs.
 
