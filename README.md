@@ -17,6 +17,7 @@ render {
     }
 }
 ```
+Every time you call `render`, RecyclerAdapter takes care of updating the RecyclerView and make the needed diffings to reflect the new status.
 
 <img width="324" alt="Schermata 2021-05-08 alle 07 39 59" src="https://user-images.githubusercontent.com/16792495/117528089-bb938e00-afd0-11eb-8564-eeb1d0b8efb3.png">
 
