@@ -103,14 +103,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
     override fun getItemCount() = items.size
 
-    /**
-     * Gets the index of the last item in the list.
-     *
-     * @return index
-     */
-    val lastItemIndex
-        get() = items.lastIndex
-
     override fun getAdapterItem(holder: RecyclerAdapterViewHolder): AdapterItem<*>? {
         val position =
             holder.bindingAdapterPosition.takeIf { !it.isOutOfItemsRange() } ?: return null
@@ -229,8 +221,6 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
      * @return [RecyclerAdapter]
      */
     fun addOrUpdate(items: List<AdapterItem<*>>): RecyclerAdapter {
-        //TODO: this can be improved for performance by getting all the new added positions
-        //and all the updated positions
         items.forEach { addOrUpdate(it) }
         return this
     }
