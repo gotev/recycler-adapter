@@ -25,9 +25,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: set up JDK 1.8
+    - name: set up JDK 11
       uses: actions/setup-java@v2
       with:
+        distribution: 'temurin'
         java-version: '11'
     - name: Build with Gradle
       run: ./gradlew clean build
@@ -37,9 +38,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: set up JDK 1.8
+    - name: set up JDK 11
       uses: actions/setup-java@v2
       with:
+        distribution: 'temurin'
         java-version: '11'
     - name: Build with Gradle
       run: cd app && ./gradlew clean build
