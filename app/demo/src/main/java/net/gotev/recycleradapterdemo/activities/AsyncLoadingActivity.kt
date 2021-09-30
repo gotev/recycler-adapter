@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import net.gotev.recycleradapter.ext.renderableItems
 import net.gotev.recycleradapterdemo.R
 import net.gotev.recycleradapterdemo.adapteritems.Items
 import net.gotev.recycleradapterdemo.network.State
@@ -37,20 +38,20 @@ class AsyncLoadingActivity : RecyclerViewActivity() {
                 }
 
                 is State.Success -> {
-                    render {
-                        if (status.data.results.isEmpty()) {
-                            +Items.label("No results")
+                    render(onEmptyCanvas = renderableItems {
+                        +Items.label("No results")
+                        +reloadButton()
+                    }, canvas = {
+                        val results = status.data.results
+                        if (results.isNotEmpty())
                             +reloadButton()
-                        } else {
-                            +reloadButton()
-                            status.data.results.forEach { person ->
-                                +Items.Card.titleSubtitle(
-                                    title = person.name,
-                                    subtitle = "Height (cm): ${person.height}"
-                                )
-                            }
+                        results.forEach { person ->
+                            +Items.Card.titleSubtitle(
+                                title = person.name,
+                                subtitle = "Height (cm): ${person.height}"
+                            )
                         }
-                    }
+                    })
                 }
 
                 is State.Error -> {

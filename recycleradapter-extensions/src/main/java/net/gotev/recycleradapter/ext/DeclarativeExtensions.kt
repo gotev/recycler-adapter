@@ -43,11 +43,24 @@ fun renderableItems(action: RenderableItems.() -> Unit): RenderableItems {
 interface RecyclerAdapterProvider {
     val recyclerAdapter: RecyclerAdapter
 
-    fun render(renderableItems: RenderableItems) {
-        recyclerAdapter.syncWithItems(renderableItems.items)
+    fun render(canvas: RenderableItems) {
+        syncItemsOrEmpty(null, canvas)
     }
 
-    fun render(action: RenderableItems.() -> Unit) {
-        recyclerAdapter.syncWithItems(renderableItems(action).items)
+    fun render(onEmptyCanvas: RenderableItems? = null, canvas: RenderableItems) {
+        syncItemsOrEmpty(onEmptyCanvas, canvas)
+    }
+
+    fun render(onEmptyCanvas: RenderableItems? = null, canvas: RenderableItems.() -> Unit) {
+        syncItemsOrEmpty(onEmptyCanvas, renderableItems(canvas))
+    }
+
+    private fun syncItemsOrEmpty(onEmptyCanvas: RenderableItems?, canvas: RenderableItems) {
+        val items = canvas.items
+
+        if (items.isNotEmpty())
+            recyclerAdapter.syncWithItems(items)
+        else
+            onEmptyCanvas?.let { recyclerAdapter.syncWithItems(it.items) } ?: recyclerAdapter.clear()
     }
 }
