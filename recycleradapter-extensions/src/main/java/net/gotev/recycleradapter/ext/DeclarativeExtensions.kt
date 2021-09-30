@@ -43,14 +43,30 @@ fun renderableItems(action: RenderableItems.() -> Unit): RenderableItems {
 interface RecyclerAdapterProvider {
     val recyclerAdapter: RecyclerAdapter
 
+    /**
+     * Renders items in the recycler view.
+     * @param canvas renderable items to display in the list
+     */
     fun render(canvas: RenderableItems) {
         syncItemsOrEmpty(null, canvas)
     }
 
+    /**
+     * Renders items in the recycler view.
+     * @param onEmptyCanvas renderable items to be displayed if and only if [canvas]
+     * renderable items are empty. null by default.
+     * @param canvas renderable items to display in the list
+     */
     fun render(onEmptyCanvas: RenderableItems? = null, canvas: RenderableItems) {
         syncItemsOrEmpty(onEmptyCanvas, canvas)
     }
 
+    /**
+     * Renders items in the recycler view.
+     * @param onEmptyCanvas renderable items to be displayed if and only if [canvas]
+     * renderable items are empty. null by default.
+     * @param canvas renderable items to display in the list
+     */
     fun render(onEmptyCanvas: RenderableItems? = null, canvas: RenderableItems.() -> Unit) {
         syncItemsOrEmpty(onEmptyCanvas, renderableItems(canvas))
     }
