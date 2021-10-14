@@ -26,6 +26,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapterViewHolder>(), Recyc
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
             !oldList[oldItemPosition].hasToBeReplacedBy(newList[newItemPosition])
+
+        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int) = true
     }
 
     private val itemsList = ArrayList<AdapterItem<in RecyclerAdapterViewHolder>>()
